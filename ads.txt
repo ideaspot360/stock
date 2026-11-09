@@ -1,0 +1,2 @@
+# Google AdSense ads.txt (추후 승인 시 pub ID 입력)
+# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0

@@ -1,0 +1,33 @@
+---
+layout: default
+---
+
+<section class="hero">
+  <h1>국내 주식 실전 분석 & ETF 백테스팅 인사이트</h1>
+  <p>코스피·코스닥 정규장 핵심 맥락부터 커버드콜 ETF vs 본주 성과 실측 비교, 데이트레이더를 위한 실전 차트 강의 노트를 팩트 기반으로 전달합니다.</p>
+</section>
+
+<section>
+  <div class="post-list">
+    {% for post in site.posts %}
+    <a href="{{ post.url | relative_url }}" class="post-card">
+      <div class="post-meta">
+        <time datetime="{{ post.date | date_to_xmlschema }}">📅 {{ post.date | date: "%Y년 %m월 %d일" }}</time>
+        <span>&bull;</span>
+        <span>{{ post.category | default: "주식 리서치" }}</span>
+      </div>
+      <h2>{{ post.title }}</h2>
+      <p class="post-excerpt">{{ post.excerpt | strip_html | strip_newlines | truncate: 180 }}</p>
+      {% if post.tags %}
+      <div class="tags">
+        {% for tag in post.tags %}
+        <span class="tag">#{{ tag }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </a>
+    {% else %}
+    <p style="color: var(--text-muted); text-align: center; padding: 40px 0;">아직 발행된 분석 글이 없습니다. 곧 유익한 콘텐츠가 업데이트됩니다!</p>
+    {% endfor %}
+  </div>
+</section>

@@ -1,0 +1,49 @@
+# Site settings
+title: 증시 맥락 1분 | 주식·ETF 실전 분석
+subtitle: 월배당 커버드콜 백테스팅 & 데이트레이더 실전 차트 강의
+email: everhashk@gmail.com
+description: >-
+  코스피·코스닥 정규장 핵심 맥락, 커버드콜 ETF vs 본주 성과 실측 비교,
+  데이트레이더를 위한 60편 실전 차트 강의 노트를 공유합니다.
+baseurl: ""
+url: "https://stock.ideaspot360.com"
+twitter_username: ideaspot360
+github_username: ideaspot360
+
+# Build settings
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    css_class: 'highlight'
+
+# SEO and Social
+author:
+  name: 증시 맥락 리서치팀
+  bio: 팩트와 백테스팅 데이터 기반의 ETF 비교 분석 및 실전 데이트레이딩 차트 인사이트를 제공합니다.
+  avatar: /assets/images/author.png
+
+# Navigation
+header_pages:
+  - about.md
+
+# Ads & Analytics (Configurable)
+google_analytics: "G-8SMMP0YD5B" # GA4 연동
+google_adsense_client: "" # e.g. ca-pub-XXXXXXXXXXXXXXXX
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Exclude from processing
+exclude:
+  - .sass-cache/
+  - .jekyll-cache/
+  - gemfiles/
+  - Gemfile
+  - Gemfile.lock
+  - node_modules/
+  - vendor/

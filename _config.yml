@@ -12,6 +12,7 @@ github_username: ideaspot360
 
 # Build settings
 markdown: kramdown
+future: false # 예약된 미래 날짜 글의 사전 노출 원천 차단
 kramdown:
   input: GFM
   syntax_highlighter: rouge

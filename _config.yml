@@ -30,7 +30,7 @@ header_pages:
   - about.md
 
 # Ads & Analytics (Configurable)
-google_analytics: "GTM-KF5TL3SM" # Google 태그 연동
+google_analytics: "G-BDB09QTVXM" # GA4 증시 블로그 전용 측정 ID
 google_adsense_client: "" # e.g. ca-pub-XXXXXXXXXXXXXXXX
 
 # Plugins

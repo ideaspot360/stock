@@ -5,3 +5,4 @@
 - **도메인**: [https://stock.ideaspot360.com](https://stock.ideaspot360.com)
 - **배포 환경**: GitHub Pages (Jekyll 기반)
 - **자동 빌드 스케줄러**: GitHub Actions 안티봇 랜덤 지터(Anti-Bot Jitter) 스케줄러 적용
+

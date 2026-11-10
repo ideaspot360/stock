@@ -23,3 +23,4 @@ permalink: /privacy.html
   <h3>4. 개인정보 보호책임자 및 문의</h3>
   <p>문의사항이 있으신 경우 <a href="mailto:{{ site.email }}">{{ site.email }}</a>로 연락해 주시기 바랍니다.</p>
 </article>
+

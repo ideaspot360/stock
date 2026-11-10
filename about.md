@@ -19,3 +19,4 @@ permalink: /about.html
   <h3>📩 문의 및 피드백</h3>
   <p>블로그 콘텐츠 및 제휴 문의: <a href="mailto:{{ site.email }}">{{ site.email }}</a></p>
 </article>
+

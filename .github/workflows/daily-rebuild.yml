@@ -34,3 +34,4 @@ jobs:
         run: |
           git commit --allow-empty -m "chore(schedule): trigger daily Jekyll rebuild for $(date '+%Y-%m-%d')"
           git push origin main
+

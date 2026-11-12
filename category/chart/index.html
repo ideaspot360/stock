@@ -29,7 +29,7 @@ permalink: /category/chart/
   <div class="post-list">
     {% assign has_posts = false %}
     {% for post in site.posts %}
-      {% if post.category == 'chart' or post.category == '차트강의' or post.category == '차트' or post.categories contains 'chart' or post.categories contains '차트강의' or post.categories contains '차트' %}
+      {% if post.category == 'chart' or post.category == '차트강의' or post.category == '차트 강의' or post.category == '차트' or post.categories contains 'chart' or post.categories contains '차트강의' or post.categories contains '차트 강의' or post.categories contains '차트' %}
         {% assign has_posts = true %}
         <a href="{{ post.url | relative_url }}" class="post-card">
           <div class="post-meta">

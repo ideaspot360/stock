@@ -491,12 +491,19 @@ footer.site-footer {
     flex-wrap: nowrap;
     overflow-x: auto;
     padding-bottom: 6px;
-    gap: 12px;
+    gap: 8px;
     -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
     scrollbar-width: none;
   }
   nav.site-nav::-webkit-scrollbar {
     display: none;
+  }
+  nav.site-nav a {
+    padding: 6px 10px;
+    border-radius: 6px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
   }
   nav.site-nav a,
   nav.site-nav .theme-toggle {

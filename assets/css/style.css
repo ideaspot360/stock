@@ -105,6 +105,10 @@ header.site-header {
   backdrop-filter: blur(8px);
 }
 
+.site-header .container {
+  max-width: 1140px;
+}
+
 .header-inner {
   display: flex;
   justify-content: space-between;
@@ -148,14 +152,14 @@ header.site-header {
 nav.site-nav {
   display: flex;
   align-items: center;
-  gap: 14px;
-  flex-wrap: wrap;
+  gap: 12px;
+  flex-wrap: nowrap;
 }
 
 nav.site-nav a {
   color: var(--text-muted);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 500;
   transition: color 0.15s ease;
   white-space: nowrap;
@@ -166,17 +170,26 @@ nav.site-nav a:hover {
 }
 
 .theme-toggle {
-  background: none;
+  background: var(--card-bg);
   border: 1px solid var(--border-color);
   color: var(--text-color);
-  padding: 6px 10px;
-  border-radius: 6px;
+  padding: 4px 10px;
+  border-radius: 9999px;
   cursor: pointer;
-  font-size: 0.88rem;
-  display: flex;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 4px;
   white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
 }
 
 .site-slogan-bar {
@@ -478,6 +491,18 @@ footer.site-footer {
 }
 
 /* Responsive */
+@media (max-width: 992px) and (min-width: 769px) {
+  .site-title .brand-en {
+    display: none;
+  }
+  nav.site-nav {
+    gap: 8px;
+  }
+  nav.site-nav a {
+    font-size: 0.82rem;
+  }
+}
+
 @media (max-width: 768px) {
   .header-inner {
     flex-direction: column;

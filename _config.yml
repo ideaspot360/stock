@@ -1,13 +1,20 @@
 # Site settings
-title: 맥락트레이딩 | 주식·ETF 실전 분석
-subtitle: 월배당 커버드콜 백테스팅 & 데이트레이더 실전 차트 강의
+title: "맥락트레이딩 (Alpha Context)"
+subtitle: "시황으로 맥락을 읽고, 차트로 타점을 잡으며, 백테스팅으로 계좌를 지킨다."
+slogan: "시황으로 맥락을 읽고, 차트로 타점을 잡으며, 백테스팅으로 계좌를 지킨다."
+channel_name: "맥락트레이딩"
+channel_en: "Alpha Context"
+channel_handle: "@Alpha_Context"
+youtube_channel_url: "https://www.youtube.com/@Alpha_Context"
 email: everhashk@gmail.com
 description: >-
-  코스피·코스닥 정규장 핵심 맥락, 커버드콜 ETF vs 본주 성과 실측 비교,
-  데이트레이더를 위한 60편 실전 차트 강의 노트를 공유합니다.
+  유튜브 공식 채널 『맥락트레이딩』(Alpha Context, @Alpha_Context) 공식 블로그.
+  "시황으로 맥락을 읽고, 차트로 타점을 잡으며, 백테스팅으로 계좌를 지킨다."
+  코스피·코스닥 정규장 핵심 맥락, 데이트레이더를 위한 실전 차트·매매기법 강의,
+  월배당 커버드콜 ETF vs 본주 성과 실측 백테스팅 데이터를 제공합니다.
 baseurl: ""
 url: "https://stock.ideaspot360.com"
-twitter_username: ideaspot360
+twitter_username: Alpha_Context
 github_username: ideaspot360
 
 # Build settings
@@ -21,8 +28,8 @@ kramdown:
 
 # SEO and Social
 author:
-  name: 맥락트레이딩 리서치팀
-  bio: 팩트와 백테스팅 데이터 기반의 ETF 비교 분석 및 실전 데이트레이딩 차트 인사이트를 제공합니다.
+  name: "맥락트레이딩 리서치팀"
+  bio: "시황 맥락 분석, 실전 데이트레이딩 차트 타점, 월배당 커버드콜 ETF 팩트 백테스팅 데이터를 제공하는 공식 리서치팀입니다."
   avatar: /assets/images/author.png
 
 # Navigation

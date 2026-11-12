@@ -9,7 +9,7 @@ permalink: /privacy.html
   
   <p>최종 수정일: {{ 'now' | date: "%Y년 %m월 %d일" }}</p>
   
-  <p><strong>증시 맥락 1분 (stock.ideaspot360.com)</strong>은 이용자의 개인정보를 중요시하며, 관련 법령을 준수합니다.</p>
+  <p><strong>맥락트레이딩 (Alpha Context, stock.ideaspot360.com)</strong>은 이용자의 개인정보를 중요시하며, 관련 법령을 준수합니다.</p>
 
   <h3>1. 수집하는 개인정보 항목 및 수집 방법</h3>
   <p>본 사이트는 회원가입 없이 누구나 자유롭게 이용할 수 있는 정적 웹사이트(GitHub Pages)입니다. 별도의 개인 식별 정보를 직접 수집하거나 저장하지 않습니다.</p>
@@ -23,4 +23,3 @@ permalink: /privacy.html
   <h3>4. 개인정보 보호책임자 및 문의</h3>
   <p>문의사항이 있으신 경우 <a href="mailto:{{ site.email }}">{{ site.email }}</a>로 연락해 주시기 바랍니다.</p>
 </article>
-

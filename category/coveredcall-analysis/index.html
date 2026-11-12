@@ -1,0 +1,75 @@
+---
+layout: default
+title: "커버드콜 ETF 성과 분석 (Covered Call Analysis & Backtesting)"
+permalink: /category/coveredcall-analysis/
+---
+
+<section class="hero">
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+    <span style="font-size: 2rem;">📈</span>
+    <h1 style="margin-bottom: 0;">커버드콜 ETF 성과 분석</h1>
+  </div>
+  <p style="color: var(--accent-color); font-weight: 600; font-size: 1.05rem; margin-bottom: 8px;">
+    국내외 커버드콜 전수 실측, 본주 대비 토탈리턴(TR) 백테스팅, 최대 낙폭(MDD) 검증
+  </p>
+  <p>
+    광고성 고배당 분배율 문구에 현혹되지 않고 파이썬 기반의 실측 데이터로 검증합니다. 코스피 200 커버드콜 vs 코스피 200 본주, JEPI·JEPQ vs QQQ 등 실제 1년·3년·5년간 배당 재투자 총수익률(Total Return)과 원금 회복력을 낱낱이 공개합니다.
+  </p>
+  <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+    <span class="tag">#커버드콜전수실측</span>
+    <span class="tag">#본주대비토탈리턴</span>
+    <span class="tag">#JEPIvsQQQ</span>
+    <span class="tag">#JEPQ백테스팅</span>
+    <span class="tag">#최대낙폭MDD</span>
+  </div>
+</section>
+
+<section>
+  <h2 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 16px;">📚 커버드콜 성과 분석 포스팅 목록</h2>
+  <div class="post-list">
+    {% assign has_posts = false %}
+    {% for post in site.posts %}
+      {% if post.category == 'coveredcall-analysis' or post.category == '커버드콜분석' or post.category == '커버드콜 분석' or post.categories contains 'coveredcall-analysis' or post.categories contains '커버드콜분석' %}
+        {% assign has_posts = true %}
+        <a href="{{ post.url | relative_url }}" class="post-card">
+          <div class="post-meta">
+            <time datetime="{{ post.date | date_to_xmlschema }}">📅 {{ post.date | date: "%Y년 %m월 %d일" }}</time>
+            <span>&bull;</span>
+            <span>📈 커버드콜 분석</span>
+            <span>&bull;</span>
+            <span>✍️ {{ post.author | default: site.author.name }}</span>
+          </div>
+          <h2>{{ post.title }}</h2>
+          <p class="post-excerpt">{{ post.excerpt | strip_html | strip_newlines | truncate: 180 }}</p>
+          {% if post.tags %}
+          <div class="tags">
+            {% for tag in post.tags %}
+            <span class="tag">#{{ tag }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </a>
+      {% endif %}
+    {% endfor %}
+
+    {% unless has_posts %}
+    <div style="border: 1px dashed var(--border-color); background: var(--card-bg); border-radius: 8px; padding: 40px 20px; text-align: center;">
+      <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; color: var(--text-color);">🚀 토요일 정규 커버드콜 백테스팅 리포트 오픈 예정</p>
+      <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 16px;">
+        유튜브 <strong>『맥락트레이딩』(@Alpha_Context)</strong> 토요일 롱폼 영상과 연동되어<br>
+        실측 성과 그래프, 배당금 재투자 시뮬레이션, 파이썬 백테스팅 원본 데이터가 공개됩니다.
+      </p>
+      <a href="{{ '/' | relative_url }}" style="color: var(--link-color); font-weight: 500; text-decoration: none;">&larr; 전체 글 목록으로 돌아가기</a>
+    </div>
+    {% endunless %}
+  </div>
+</section>
+
+<div style="margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border-color); text-align: center;">
+  <span style="color: var(--text-muted); font-size: 0.9rem;">다른 카테고리 둘러보기:</span>
+  <div style="display: inline-flex; gap: 12px; margin-left: 8px; flex-wrap: wrap; justify-content: center;">
+    <a href="{{ '/category/chart/' | relative_url }}" style="color: var(--link-color); text-decoration: none; font-weight: 500;">📊 차트강의</a>
+    <a href="{{ '/category/strategy/' | relative_url }}" style="color: var(--link-color); text-decoration: none; font-weight: 500;">⚔️ 실전 매매기법</a>
+    <a href="{{ '/category/coveredcall-theory/' | relative_url }}" style="color: var(--link-color); text-decoration: none; font-weight: 500;">🔬 커버드콜 이론</a>
+  </div>
+</div>

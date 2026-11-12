@@ -1,15 +1,18 @@
 <footer class="site-footer">
   <div class="container footer-inner">
     <div>
-      <p>&copy; {{ 'now' | date: "%Y" }} <strong>{{ site.title }}</strong>. Powered by GitHub Pages.</p>
-      <p style="font-size: 0.8rem; margin-top: 4px;">국내 주식 시장 및 ETF 성과 분석 전문 미디어 &bull; IdeaSpot360 Network</p>
+      <p>&copy; {{ 'now' | date: "%Y" }} <strong>{{ site.title }}</strong> ({{ site.author.name }}). Powered by GitHub Pages.</p>
+      <p style="font-size: 0.8rem; margin-top: 4px;">{{ site.slogan }}</p>
+      <p style="font-size: 0.78rem; margin-top: 4px; color: var(--text-muted);">유튜브 공식 채널: <a href="{{ site.youtube_channel_url }}" target="_blank" rel="noopener" style="color: var(--link-color); text-decoration: none;">{{ site.channel_handle }}</a> &bull; IdeaSpot360 Financial Network</p>
     </div>
     <div>
+      <a href="{{ '/category/chart/' | relative_url }}" style="color: var(--text-muted); text-decoration: none;">차트강의</a> &bull;
+      <a href="{{ '/category/strategy/' | relative_url }}" style="color: var(--text-muted); text-decoration: none;">실전매매기법</a> &bull;
+      <a href="{{ '/category/coveredcall-theory/' | relative_url }}" style="color: var(--text-muted); text-decoration: none;">커버드콜이론</a> &bull;
+      <a href="{{ '/category/coveredcall-analysis/' | relative_url }}" style="color: var(--text-muted); text-decoration: none;">커버드콜분석</a> &bull;
       <a href="{{ '/about.html' | relative_url }}" style="color: var(--text-muted); text-decoration: none;">소개</a> &bull;
       <a href="{{ '/privacy.html' | relative_url }}" style="color: var(--text-muted); text-decoration: none;">개인정보처리방침</a> &bull;
-      <a href="{{ '/feed.xml' | relative_url }}" style="color: var(--text-muted); text-decoration: none;">RSS Feed</a> &bull;
-      <a href="https://github.com/ideaspot360/stock" target="_blank" rel="noopener" style="color: var(--text-muted); text-decoration: none;">GitHub</a>
+      <a href="{{ '/feed.xml' | relative_url }}" style="color: var(--text-muted); text-decoration: none;">RSS Feed</a>
     </div>
   </div>
 </footer>
-

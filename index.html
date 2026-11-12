@@ -3,11 +3,41 @@ layout: default
 ---
 
 <section class="hero">
-  <h1>국내 주식 실전 분석 & ETF 백테스팅 인사이트</h1>
-  <p>코스피·코스닥 정규장 핵심 맥락부터 커버드콜 ETF vs 본주 성과 실측 비교, 데이트레이더를 위한 실전 차트 강의 노트를 팩트 기반으로 전달합니다.</p>
+  <h1>맥락트레이딩 (Alpha Context)</h1>
+  <p style="color: var(--accent-color); font-weight: 600; font-size: 1.15rem; margin-bottom: 8px;">
+    "{{ site.slogan }}"
+  </p>
+  <p>
+    유튜브 공식 채널 <strong>『맥락트레이딩』(<a href="{{ site.youtube_channel_url }}" target="_blank" rel="noopener" style="color: var(--link-color); text-decoration: none;">{{ site.channel_handle }}</a>)</strong> 연계 기술·리서치 블로그입니다.<br>
+    감정이 아닌 데이터로 매매하고, 단타의 알파를 월배당 캐시카우로 잠그는 3-Pillar 플라이휠 지식 생태계를 구축합니다.
+  </p>
+</section>
+
+<!-- 4대 핵심 카테고리 퀵 내비게이션 -->
+<section style="margin-bottom: 40px;">
+  <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 16px;">📂 4대 핵심 분석 카테고리</h2>
+  <div class="category-grid">
+    <a href="{{ '/category/chart/' | relative_url }}" class="category-card">
+      <h3>📊 차트강의</h3>
+      <p>캔들, 이동평균선, 거래량, 호가창 체결강도 등 기술적 분석 이론 아카데미</p>
+    </a>
+    <a href="{{ '/category/strategy/' | relative_url }}" class="category-card">
+      <h3>⚔️ 실전 매매기법</h3>
+      <p>3분봉 눌림목 타점, 시초가 갭, 종가베팅, -1.5% 기계적 손절 원칙</p>
+    </a>
+    <a href="{{ '/category/coveredcall-theory/' | relative_url }}" class="category-card">
+      <h3>🔬 커버드콜 이론</h3>
+      <p>옵션 원리, 상방 제한·하방 노출, 원금 잠식 구조 해부, 절세(ISA) 전략</p>
+    </a>
+    <a href="{{ '/category/coveredcall-analysis/' | relative_url }}" class="category-card">
+      <h3>📈 커버드콜 분석</h3>
+      <p>국내외 커버드콜 전수 실측, 토탈리턴(배당재투자) 백테스팅, MDD 검증</p>
+    </a>
+  </div>
 </section>
 
 <section>
+  <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 16px;">📝 최신 리서치 & 분석 포스팅</h2>
   <div class="post-list">
     {% for post in site.posts %}
     <a href="{{ post.url | relative_url }}" class="post-card">
@@ -15,6 +45,8 @@ layout: default
         <time datetime="{{ post.date | date_to_xmlschema }}">📅 {{ post.date | date: "%Y년 %m월 %d일" }}</time>
         <span>&bull;</span>
         <span>{{ post.category | default: "주식 리서치" }}</span>
+        <span>&bull;</span>
+        <span>✍️ {{ post.author | default: site.author.name }}</span>
       </div>
       <h2>{{ post.title }}</h2>
       <p class="post-excerpt">{{ post.excerpt | strip_html | strip_newlines | truncate: 180 }}</p>
@@ -31,4 +63,3 @@ layout: default
     {% endfor %}
   </div>
 </section>
-

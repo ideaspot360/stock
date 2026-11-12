@@ -29,7 +29,7 @@ permalink: /category/strategy/
   <div class="post-list">
     {% assign has_posts = false %}
     {% for post in site.posts %}
-      {% if post.category == 'strategy' or post.category == '실전매매기법' or post.category == '매매기법' or post.categories contains 'strategy' or post.categories contains '실전매매기법' or post.categories contains '매매기법' %}
+      {% if post.category == 'strategy' or post.category == '실전 매매기법' or post.category == '실전매매기법' or post.category == '매매기법' or post.categories contains 'strategy' or post.categories contains '실전 매매기법' or post.categories contains '실전매매기법' or post.categories contains '매매기법' %}
         {% assign has_posts = true %}
         <a href="{{ post.url | relative_url }}" class="post-card">
           <div class="post-meta">

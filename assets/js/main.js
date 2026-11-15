@@ -58,5 +58,71 @@ document.addEventListener("DOMContentLoaded", () => {
 
     pre.appendChild(button);
   });
+
+  // 3. Image Lightbox Zoom Modal (그래프 클릭 시 고해상도 확대 모달)
+  const postImages = document.querySelectorAll(".entry-content img, article.post-content img");
+  if (postImages.length > 0) {
+    const modal = document.createElement("div");
+    modal.className = "image-lightbox-modal";
+    modal.setAttribute("role", "dialog");
+    modal.setAttribute("aria-modal", "true");
+    modal.setAttribute("aria-label", "차트 및 이미지 확대 보기");
+
+    modal.innerHTML = `
+      <div class="lightbox-backdrop"></div>
+      <div class="lightbox-content">
+        <button class="lightbox-close" aria-label="닫기" title="닫기 (ESC)">✕</button>
+        <img class="lightbox-img" src="" alt="확대된 이미지" />
+        <div class="lightbox-caption"></div>
+        <div class="lightbox-hint">💡 ESC 키를 누르거나 바깥 영역을 클릭하면 닫힙니다</div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    const modalImg = modal.querySelector(".lightbox-img");
+    const caption = modal.querySelector(".lightbox-caption");
+    const closeBtn = modal.querySelector(".lightbox-close");
+    const backdrop = modal.querySelector(".lightbox-backdrop");
+    const content = modal.querySelector(".lightbox-content");
+
+    function openModal(img) {
+      modalImg.src = img.src;
+      modalImg.alt = img.alt || "확대된 차트";
+      caption.textContent = img.alt || "";
+      modal.classList.add("active");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+      modal.classList.remove("active");
+      document.body.style.overflow = "";
+      setTimeout(() => {
+        modalImg.src = "";
+      }, 250);
+    }
+
+    postImages.forEach((img) => {
+      img.classList.add("zoomable-image");
+      img.setAttribute("title", "🔍 클릭하여 고해상도 전체화면 확대");
+      img.addEventListener("click", () => openModal(img));
+    });
+
+    closeBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      closeModal();
+    });
+    backdrop.addEventListener("click", closeModal);
+    content.addEventListener("click", (e) => {
+      if (e.target === content) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modal.classList.contains("active")) {
+        closeModal();
+      }
+    });
+  }
 });
 

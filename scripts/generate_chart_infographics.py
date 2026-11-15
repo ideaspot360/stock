@@ -240,10 +240,11 @@ class RedesignedChartInfographics:
 
         # -------------------------------------------------------------------------
         # ★ 차트 내부: ax.annotate 기반 완벽한 정원(Circle) 뱃지 & 화살표 지시선 장착
+        # (원 안에 또 원번호를 그리지 않고 깔끔한 아라비아 숫자 1, 2, 3, 4 단일 렌더링)
         # -------------------------------------------------------------------------
-        # ① 1차 급등 돌파 파동 (캔들 8 고점 지시)
+        # 1 1차 급등 돌파 파동 (캔들 8 고점 지시)
         ax_main.annotate(
-            "①",
+            "1",
             xy=(8, 11250), xytext=(8, 11620),
             ha="center", va="center", fontsize=16, fontweight="bold", color="#FFFFFF",
             bbox=dict(boxstyle="circle,pad=0.35", facecolor=DARK["bull_red"], edgecolor="#FFFFFF", lw=1.5),
@@ -252,9 +253,9 @@ class RedesignedChartInfographics:
         )
         ax_main.text(8, 11770, "1차 급등 돌파", color=DARK["bull_red"], fontsize=13, fontweight="bold", ha="center", zorder=10)
 
-        # ② 10이평 수렴 눌림목 (캔들 12 저점 지시)
+        # 2 10이평 수렴 눌림목 (캔들 12 저점 지시)
         ax_main.annotate(
-            "②",
+            "2",
             xy=(12, 10750), xytext=(12, 11280),
             ha="center", va="center", fontsize=16, fontweight="bold", color="#FFFFFF",
             bbox=dict(boxstyle="circle,pad=0.35", facecolor=DARK["cyan"], edgecolor="#FFFFFF", lw=1.5),
@@ -263,9 +264,9 @@ class RedesignedChartInfographics:
         )
         ax_main.text(12, 11430, "10선 눌림 (거래급감)", color=DARK["cyan"], fontsize=13, fontweight="bold", ha="center", zorder=10)
 
-        # ③ ★ 10이평 지지 양봉 타점 (캔들 15 밑꼬리 지시 - 뱃지와 텍스트 수평 배치로 오버랩 0%)
+        # 3 ★ 10이평 지지 양봉 타점 (캔들 15 밑꼬리 지시 - 뱃지와 텍스트 수평 배치로 오버랩 0%)
         ax_main.annotate(
-            "③",
+            "3",
             xy=(15, 10610), xytext=(13.6, 10220),
             ha="center", va="center", fontsize=16, fontweight="bold", color="#000000",
             bbox=dict(boxstyle="circle,pad=0.35", facecolor=DARK["gold"], edgecolor="#FFFFFF", lw=1.5),
@@ -277,9 +278,9 @@ class RedesignedChartInfographics:
             color=DARK["gold"], fontsize=12.5, fontweight="bold", ha="left", va="center", zorder=10
         )
 
-        # ④ 2차 랠리 & 신고가 돌파 (캔들 19 고점 지시)
+        # 4 2차 랠리 & 신고가 돌파 (캔들 19 고점 지시)
         ax_main.annotate(
-            "④",
+            "4",
             xy=(19, 11520), xytext=(19, 11800),
             ha="center", va="center", fontsize=16, fontweight="bold", color="#FFFFFF",
             bbox=dict(boxstyle="circle,pad=0.35", facecolor=DARK["target_green"], edgecolor="#FFFFFF", lw=1.5),
@@ -375,18 +376,19 @@ class RedesignedChartInfographics:
                 card_y -= 0.030
             card_y -= 0.018
 
-        # 하단 자금관리 박스 (textwrap 자동 줄바꿈으로 완벽한 안전 여백 확보)
+        # 하단 자금관리 박스 (완벽한 중앙 정렬 및 상하 균일 간격 배치)
         rule_box = FancyBboxPatch(
             (0.04, 0.035), 0.92, 0.13, boxstyle="round,pad=0.02",
             facecolor="#2A1B1D", edgecolor=DARK["stop_red"], linewidth=1.5
         )
         ax_panel.add_patch(rule_box)
-        ax_panel.text(0.08, 0.125, "[필독] 맥락트레이딩 절대 생존 수칙", color=DARK["stop_red"], fontsize=13.5, fontweight="bold")
+        # 박스 가로 중앙(x=0.50) 정렬 및 상하 균일 3단 배치
+        ax_panel.text(0.50, 0.128, "[필독] 맥락트레이딩 절대 생존 수칙", color=DARK["stop_red"], fontsize=13.5, fontweight="bold", ha="center", va="center")
         
         rule_text_1 = "1. 원하는 타점(10이평 지지) 미도달 시 종일 매매 쉰다."
         rule_text_2 = "2. 손절선(-1.5%) 터치 시 망설임 없이 기계적 칼손절!"
-        ax_panel.text(0.08, 0.085, rule_text_1, color=DARK["text_secondary"], fontsize=11.5)
-        ax_panel.text(0.08, 0.055, rule_text_2, color=DARK["gold"], fontsize=11.5, fontweight="bold")
+        ax_panel.text(0.50, 0.090, rule_text_1, color=DARK["text_secondary"], fontsize=11.5, ha="center", va="center")
+        ax_panel.text(0.50, 0.056, rule_text_2, color=DARK["gold"], fontsize=11.5, fontweight="bold", ha="center", va="center")
 
         # 시각 무결성 자동 검증 하드 가드
         assert_zero_visual_defects(fig, "10MA_Pullback_Chart")
@@ -490,7 +492,7 @@ class RedesignedChartInfographics:
             facecolor="#1A1214", edgecolor=DARK["stop_red"], linewidth=1.5
         )
         ax_left.add_patch(alert_box_l)
-        ax_left.text(0.08, 0.195, "[주의] 세력의 '허매수벽(Fake Bid)' 트랩 작동 원리", color=DARK["stop_red"], fontsize=15, fontweight="bold")
+        ax_left.text(0.50, 0.195, "[주의] 세력의 '허매수벽(Fake Bid)' 트랩 작동 원리", color=DARK["stop_red"], fontsize=15, fontweight="bold", ha="center")
         ax_left.text(0.08, 0.155, "1. 매수 3호가에 13만 주 대형 벽을 쌓아 개미에게 '안전판' 착시 유도", color=DARK["text_secondary"], fontsize=13)
         ax_left.text(0.08, 0.115, "2. 개미가 안심하고 매수할 때 세력은 위에서 시장가로 전량 물량 투하", color=DARK["text_secondary"], fontsize=13)
         ax_left.text(0.08, 0.075, "3. 물량 털기 완료 즉시 13만 주 일거 취소 ➔ 호가 공백 수직 폭락!", color=DARK["stop_red"], fontsize=13.5, fontweight="bold")
@@ -545,7 +547,7 @@ class RedesignedChartInfographics:
             facecolor="#12251D", edgecolor=DARK["target_green"], linewidth=1.5
         )
         ax_right.add_patch(alert_box_r)
-        ax_right.text(0.08, 0.195, "[돌파] 세력의 '매도벽 흡수(Wall Absorption)' 랠리 원리", color=DARK["target_green"], fontsize=15, fontweight="bold")
+        ax_right.text(0.50, 0.195, "[돌파] 세력의 '매도벽 흡수(Wall Absorption)' 랠리 원리", color=DARK["target_green"], fontsize=15, fontweight="bold", ha="center")
         ax_right.text(0.08, 0.155, "1. 상단 매도 1~3호가에 빽빽한 물량은 세력의 '진짜 매수 연료'", color=DARK["text_secondary"], fontsize=13)
         ax_right.text(0.08, 0.115, "2. 대형 시장가 매수세(체결강도 148%)가 매도벽을 단숨에 흡수 돌파", color=DARK["text_secondary"], fontsize=13)
         ax_right.text(0.08, 0.075, "3. 매도벽 돌파 즉시 거래대금 폭증하며 전고점 랠리 시작!", color=DARK["gold"], fontsize=13.5, fontweight="bold")

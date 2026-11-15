@@ -796,3 +796,42 @@ footer.site-footer {
     grid-template-columns: 1fr;
   }
 }
+
+/* ============================================================
+   Financial Research & Covered Call Article Elements
+   ============================================================ */
+.post-disclaimer {
+  margin-top: 40px;
+  margin-bottom: 20px;
+  padding: 16px 20px;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  background-color: var(--card-bg);
+  border-left: 3px solid var(--border-color);
+  border-radius: 4px;
+}
+
+.post-tags {
+  margin-top: 16px;
+  margin-bottom: 32px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+
+.post-tags .tag-item {
+  color: var(--accent-color);
+  background-color: var(--accent-light);
+  padding: 4px 10px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.post-tags .tag-item:hover {
+  background-color: var(--accent-color);
+  color: #ffffff;
+}

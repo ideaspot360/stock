@@ -62,12 +62,8 @@ excerpt: 'KODEX 200커버드콜액티브의 1년 실측 종합수익률(TR), 누
 - **투자자 적합성**: 과도한 고배당 추구로 인한 원금 녹아내림을 경계하고, 본주 주가 변동성을 적절히 완화하면서 꾸준한 인컴을 쌓아가려는 보수적 투자자에게 적합합니다.
 ---
 
-> ⚠️ **[법적 면책 고지]**  
-> ※ 본 포스팅은 특정 종목에 대한 매수·매도 추천이나 투자 권유가 아니며, ETF 상품의 구조와 과거 백테스팅 데이터를 객관적으로 분석한 학술·정보 제공용 콘텐츠입니다. 모든 투자에 대한 판단과 책임은 투자자 본인에게 있습니다.
+<div class="post-disclaimer">
+  ※ 본 포스팅은 특정 종목에 대한 매수·매도 추천이나 투자 권유가 아니며, ETF 상품의 구조와 과거 백테스팅 데이터를 객관적으로 분석한 학술·정보 제공용 콘텐츠입니다. 모든 투자에 대한 판단과 책임은 투자자 본인에게 있습니다.
+</div>
 
----
-
-### 🏷️ 포스팅 메타데이터 & 검색 태그
-- **카테고리**: `주식·ETF 실전 분석`
-- **공식 주제**: `비즈니스·경제`
-- **검색 해시태그**: `#ETF #커버드콜 #ETF분석 #KODEX200커버드콜액티브 #0219E0 #월배당 #배당수익률 #백테스팅 #맥락트레이딩`
+<div class="post-tags"><span class="tag-item">#ETF</span> <span class="tag-item">#커버드콜</span> <span class="tag-item">#ETF분석</span> <span class="tag-item">#KODEX200커버드콜액티브</span> <span class="tag-item">#0219E0</span> <span class="tag-item">#월배당</span> <span class="tag-item">#배당수익률</span> <span class="tag-item">#백테스팅</span> <span class="tag-item">#맥락트레이딩</span></div>

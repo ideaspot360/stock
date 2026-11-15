@@ -546,7 +546,8 @@ article.post-content table th,
   background-color: var(--accent-light);
   color: var(--accent-color);
   font-weight: 700;
-  text-align: center;
+  text-align: center !important;
+  vertical-align: middle !important;
   padding: 12px 14px;
   border: 1px solid var(--border-color);
   white-space: nowrap;

@@ -274,12 +274,24 @@ class ChartLectureValidator:
         )
 
         # ---------------------------------------------------------------------
-        # RULE-06: IMAGE_ASSETS_INTEGRITY
+        # RULE-06: IMAGE_ASSETS_INTEGRITY (SHA-256 매니페스트 및 16:9 정밀 검증)
         # ---------------------------------------------------------------------
         r6_errors = []
         image_matches = re.findall(r"!\[([^\]]*)\]\(([^)]+)\)", body)
         if len(image_matches) < 2:
             r6_errors.append(f"Post must contain at least 2 infographics images, found {len(image_matches)}")
+
+        # layout_audit.json 매니페스트 로드
+        manifest_path = self.assets_dir / "posts" / "layout_audit.json"
+        manifest_data = {}
+        if manifest_path.exists():
+            try:
+                import json
+                manifest_data = json.loads(manifest_path.read_text(encoding="utf-8"))
+            except Exception as e:
+                r6_errors.append(f"Failed to parse layout_audit.json: {e}")
+        else:
+            r6_errors.append(f"Layout audit manifest not found: {manifest_path}")
 
         for alt_text, img_rel_path in image_matches:
             # Strip query params or hash if any
@@ -287,10 +299,8 @@ class ChartLectureValidator:
 
             # Resolve physical file path
             if clean_path.startswith("/"):
-                # URL absolute from blog root (e.g. /assets/img/posts/foo.png)
                 local_path = self.blog_root / clean_path.lstrip("/")
             else:
-                # Relative to post file directory
                 local_path = (post_path.parent / clean_path).resolve()
 
             if not local_path.exists():
@@ -301,18 +311,39 @@ class ChartLectureValidator:
                 with Image.open(local_path) as im:
                     w, h = im.size
                     ratio = w / h
-                    # Check 16:9 ratio tolerance [1.65, 1.85]
-                    if not (1.65 <= ratio <= 1.85):
-                        r6_errors.append(f"Image {local_path.name} aspect ratio is {ratio:.4f}, expected 16:9 (~1.7778 in [1.65, 1.85])")
-                    # Check resolution
+                    # 1. 16:9 정밀 비율 검증 [1.76, 1.80] (목표 1.7778)
+                    if not (1.76 <= ratio <= 1.80):
+                        r6_errors.append(f"Image {local_path.name} aspect ratio is {ratio:.4f}, expected strict 16:9 [1.76, 1.80]")
+                    # 2. 해상도 검증 (1920x1080 권장, 최소 1200px)
                     if w < 1200 or h < 675:
                         r6_errors.append(f"Image {local_path.name} resolution is too low ({w}x{h} px), expected width >= 1200 px")
+
+                # 3. SHA-256 해시 및 매니페스트 대조
+                if manifest_data:
+                    file_name = local_path.name
+                    if file_name not in manifest_data:
+                        r6_errors.append(f"Image {file_name} is not registered in layout_audit.json")
+                    else:
+                        entry = manifest_data[file_name]
+                        if entry.get("qa_status") != "PASS":
+                            r6_errors.append(f"Image {file_name} Visual QA status is '{entry.get('qa_status')}', expected 'PASS'")
+
+                        import hashlib
+                        h = hashlib.sha256()
+                        with open(local_path, "rb") as f:
+                            while chunk := f.read(65536):
+                                h.update(chunk)
+                        actual_sha = h.hexdigest()
+                        expected_sha = entry.get("sha256")
+                        if actual_sha != expected_sha:
+                            r6_errors.append(f"SHA-256 mismatch for {file_name}: actual={actual_sha[:12]}... != manifest={expected_sha[:12]}...")
+
             except Exception as e:
                 r6_errors.append(f"Failed to inspect image file {local_path}: {e}")
 
         report.add_result(
             "RULE-06", "IMAGE_ASSETS_INTEGRITY", len(r6_errors) == 0,
-            f"All {len(image_matches)} images verified (16:9 dark theme, high resolution, physical existence)" if not r6_errors else f"Image integrity failure ({len(r6_errors)} errors)",
+            f"All {len(image_matches)} images verified (Strict 16:9, SHA-256 manifest audited, QA-PASS confirmed)" if not r6_errors else f"Image integrity failure ({len(r6_errors)} errors)",
             r6_errors
         )
 

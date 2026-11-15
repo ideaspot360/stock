@@ -1,0 +1,54 @@
+{
+  "chart_3min_5min_10ma_pullback.png": {
+    "file_name": "chart_3min_5min_10ma_pullback.png",
+    "sha256": "a76512f2cc5e96946b7031937ee3c097f500baf7325a3d9e8d2417ed4176241e",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "aspect_ratio": 1.7778,
+    "canvas_margin_min_px": 42.4,
+    "box_padding_min_px": 27.7,
+    "badge_ratios": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "text_count": 44,
+    "passed_gates": [
+      "GATE_1_CANVAS_BOUNDS",
+      "GATE_2_ZERO_COLLISIONS",
+      "GATE_3_TRUE_CIRCULARITY",
+      "GATE_4_SINGLE_DIGIT_BADGE",
+      "GATE_5_BOX_PADDING_MARGIN",
+      "GATE_6_SHIELDED_PRICE_LINES"
+    ],
+    "qa_status": "PASS",
+    "verified_at": "2026-11-15T23:40:30.781829+00:00"
+  },
+  "orderbook_spoofing_execution_strength.png": {
+    "file_name": "orderbook_spoofing_execution_strength.png",
+    "sha256": "f192237aca6b3530b06f095d6964d9a98455f90f6334c54ed80c0fe80219943b",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "aspect_ratio": 1.7778,
+    "canvas_margin_min_px": 42.4,
+    "box_padding_min_px": 50.6,
+    "badge_ratios": [],
+    "text_count": 46,
+    "passed_gates": [
+      "GATE_1_CANVAS_BOUNDS",
+      "GATE_2_ZERO_COLLISIONS",
+      "GATE_3_TRUE_CIRCULARITY",
+      "GATE_4_SINGLE_DIGIT_BADGE",
+      "GATE_5_BOX_PADDING_MARGIN",
+      "GATE_6_SHIELDED_PRICE_LINES"
+    ],
+    "qa_status": "PASS",
+    "verified_at": "2026-11-15T23:40:31.215635+00:00"
+  }
+}

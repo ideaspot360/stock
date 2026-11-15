@@ -124,5 +124,16 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
+  // 4. Responsive Table Wrapper (모바일 가로 스크롤 및 데스크톱 100% 꽉 채움)
+  const tables = document.querySelectorAll("article.post-content table, .entry-content table");
+  tables.forEach((table) => {
+    if (!table.parentElement.classList.contains("table-responsive")) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "table-responsive";
+      table.parentNode.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    }
+  });
 });
 

@@ -152,14 +152,21 @@ class ChartLectureValidator:
             if not date_val:
                 r1_errors.append("date is missing or empty")
 
-            # category / categories check
-            cat = str(front_matter.get("category", ""))
+            # category / categories check (단일 카테고리 '차트강의' 엄격 격리 가드)
+            cat = str(front_matter.get("category", "")).strip()
             cats = front_matter.get("categories", [])
             if isinstance(cats, str):
                 cats = [cats]
-            all_cats = [cat] + [str(c) for c in cats]
+            all_cats = [c.strip() for c in ([cat] + [str(x) for x in cats]) if c.strip()]
             if not any("차트강의" in c or "chart" in c.lower() for c in all_cats):
                 r1_errors.append("category or categories must contain '차트강의' or 'chart'")
+
+            # 타 카테고리 중복 지정(교차 오염) 엄격 차단 가드
+            forbidden_cats = ["실전 매매기법", "실전매매기법", "매매기법", "strategy", "커버드콜", "coveredcall"]
+            for c in all_cats:
+                for f in forbidden_cats:
+                    if f in c.lower() or f in c:
+                        r1_errors.append(f"Cross-category contamination detected: '{c}' contains '{f}'. Chart lecture posts must strictly belong to '차트강의' only.")
 
             # tags check
             tags = front_matter.get("tags", [])

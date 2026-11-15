@@ -638,6 +638,24 @@ pre code {
 }
 
 /* Callouts / Alerts */
+blockquote {
+  border-left: 4px solid var(--accent-color);
+  background-color: var(--callout-bg);
+  padding: 16px 20px;
+  border-radius: 0 8px 8px 0;
+  margin: 24px 0;
+  color: var(--text-color);
+  font-style: normal;
+}
+
+blockquote p {
+  margin-bottom: 8px;
+}
+
+blockquote p:last-child {
+  margin-bottom: 0;
+}
+
 .callout {
   border-left: 4px solid var(--callout-border);
   background-color: var(--callout-bg);

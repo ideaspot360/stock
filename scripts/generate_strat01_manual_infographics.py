@@ -65,11 +65,11 @@ class Strat01InfographicsGenerator:
         """
         fig = plt.figure(figsize=(16, 9), dpi=120, facecolor=DARK["bg"])
 
-        # Grid: 좌측 차트(0.045~0.675), 우측 설명 패널(0.695~0.965)
+        # Grid: 좌측 차트(0.075~0.675, y축 라벨 안전 여백 확보), 우측 설명 패널(0.695~0.965)
         gs_left = fig.add_gridspec(
             nrows=2, ncols=1,
             height_ratios=[7, 3],
-            top=0.88, bottom=0.06, left=0.045, right=0.675,
+            top=0.88, bottom=0.080, left=0.075, right=0.675,
             hspace=0.08
         )
         ax_main = fig.add_subplot(gs_left[0])
@@ -78,7 +78,7 @@ class Strat01InfographicsGenerator:
         # 우측 설명 패널
         gs_right = fig.add_gridspec(
             nrows=1, ncols=1,
-            top=0.88, bottom=0.06, left=0.695, right=0.965
+            top=0.88, bottom=0.080, left=0.695, right=0.965
         )
         ax_panel = fig.add_subplot(gs_right[0])
         ax_panel.set_facecolor(DARK["panel"])
@@ -92,7 +92,7 @@ class Strat01InfographicsGenerator:
         # 헤더 타이틀 영역 (좌우 분리 완벽 정렬: 절대 충돌 불가)
         # -------------------------------------------------------------------------
         fig.text(
-            0.045, 0.945,
+            0.050, 0.945,
             "맥락트레이딩 실전매뉴얼 #01  |  STRAT-01 주도주 10이평선 첫 눌림목 5단계 매매 프로토콜",
             color=DARK["text_primary"], fontsize=17.5, fontweight="bold", va="center", ha="left"
         )
@@ -144,7 +144,18 @@ class Strat01InfographicsGenerator:
 
         closes = [c[3] for c in candles]
         ma5 = [np.mean(closes[max(0, i-4):i+1]) for i in range(n_bars)]
-        ma10 = [np.mean(closes[max(0, i-9):i+1]) for i in range(n_bars)]
+        # 10지수이평선(EMA): 지수 가중치 alpha = 2 / (10 + 1)
+        def calc_ema(prices: list[float], span: int = 10) -> list[float]:
+            alpha = 2.0 / (span + 1.0)
+            ema = []
+            for idx, p in enumerate(prices):
+                if idx == 0:
+                    ema.append(float(p))
+                else:
+                    ema.append(alpha * float(p) + (1.0 - alpha) * ema[-1])
+            return ema
+
+        ma10 = calc_ema(closes, span=10)
         ma20 = [np.mean(closes[max(0, i-19):i+1]) for i in range(n_bars)]
 
         # 캔들 및 거래량 렌더링
@@ -178,20 +189,20 @@ class Strat01InfographicsGenerator:
         stop_price = 10600
         target_price = 11140
 
-        # +3.5% 1차 분할 익절선
-        ax_main.axhline(target_price, color=DARK["target_green"], linestyle="--", linewidth=1.8, alpha=0.85, zorder=2)
+        # +3.5% 1차 분할 익절선 (매수 타점 x=13.5부터 우측으로 전개하여 1차 급등봉 가림 원천 차단)
+        ax_main.hlines(target_price, xmin=13.5, xmax=24.5, color=DARK["target_green"], linestyle="--", linewidth=1.8, alpha=0.9, zorder=3)
         ax_main.text(
-            0.5, target_price, " +3.5% 1차 분할 익절선 (11,140원) ",
-            color=DARK["target_green"], fontsize=12.5, fontweight="bold", va="center",
+            20.5, target_price, " +3.5% 1차 분할 익절선 (11,140원) ",
+            color=DARK["target_green"], fontsize=11.5, fontweight="bold", va="center", ha="center",
             bbox=dict(boxstyle="round,pad=0.25", facecolor=DARK["panel"], edgecolor=DARK["target_green"], lw=1.2, alpha=0.95),
             zorder=7
         )
 
-        # -1.5% 서버 자동감시 칼손절선
-        ax_main.axhline(stop_price, color=DARK["stop_red"], linestyle="--", linewidth=1.8, alpha=0.85, zorder=2)
+        # -1.5% 서버 자동감시 칼손절선 (매수 타점 x=13.5부터 우측으로 전개)
+        ax_main.hlines(stop_price, xmin=13.5, xmax=24.5, color=DARK["stop_red"], linestyle="--", linewidth=1.8, alpha=0.9, zorder=3)
         ax_main.text(
-            0.5, stop_price, " -1.5% 기계적 칼손절선 (10,600원) ",
-            color=DARK["stop_red"], fontsize=12.5, fontweight="bold", va="center",
+            20.5, stop_price, " -1.5% 기계적 칼손절선 (10,600원) ",
+            color=DARK["stop_red"], fontsize=11.5, fontweight="bold", va="center", ha="center",
             bbox=dict(boxstyle="round,pad=0.25", facecolor=DARK["panel"], edgecolor=DARK["stop_red"], lw=1.2, alpha=0.95),
             zorder=7
         )
@@ -279,8 +290,8 @@ class Strat01InfographicsGenerator:
 
         ax_main.set_ylim(9850, 12150)
         ax_vol.set_ylim(0, 600000)
-        ax_main.set_ylabel("주가 (KRW)", color=DARK["text_secondary"], fontsize=13, labelpad=8)
-        ax_vol.set_ylabel("거래량", color=DARK["text_secondary"], fontsize=13, labelpad=8)
+        ax_main.set_ylabel("주가 (KRW)", color=DARK["text_secondary"], fontsize=12.5, labelpad=10)
+        ax_vol.set_ylabel("거래량", color=DARK["text_secondary"], fontsize=12.5, labelpad=10)
         ax_main.legend(loc="upper left", facecolor=DARK["panel"], edgecolor=DARK["panel_border"],
                        labelcolor=DARK["text_primary"], fontsize=11.5, framealpha=0.9)
 
@@ -288,12 +299,12 @@ class Strat01InfographicsGenerator:
         step = 2
         ax_vol.set_xticks(range(0, n_bars, step))
         ax_vol.set_xticklabels([time_labels[i//2] for i in range(0, n_bars, step)], fontsize=11)
-        ax_vol.set_xlabel("장중 3분봉/5분봉 진행 시간 (Time)", color=DARK["text_secondary"], fontsize=12, labelpad=6)
+        ax_vol.set_xlabel("장중 3분봉/5분봉 진행 시간 (Time)", color=DARK["text_secondary"], fontsize=12, labelpad=5)
 
         # -------------------------------------------------------------------------
-        # 우측 패널: [5단계 실전 매매 프로토콜] 카드 스택
+        # 우측 패널: [5단계 실전 매매 프로토콜] 균형 분할 카드 스택
         # -------------------------------------------------------------------------
-        ax_panel.text(0.06, 0.948, "■ 5단계 실전 매매 프로토콜", color=DARK["gold"], fontsize=18, fontweight="bold")
+        ax_panel.text(0.06, 0.948, "■ 5단계 실전 매매 프로토콜", color=DARK["gold"], fontsize=17.5, fontweight="bold")
 
         steps = [
             (
@@ -338,28 +349,28 @@ class Strat01InfographicsGenerator:
             ),
         ]
 
-        card_y = 0.895
-        for title, col, lines in steps:
-            ax_panel.text(0.06, card_y, title, color=col, fontsize=14.5, fontweight="bold")
-            card_y -= 0.030
+        card_starts = [0.885, 0.745, 0.605, 0.465, 0.325]
+        for idx, (title, col, lines) in enumerate(steps):
+            y_pos = card_starts[idx]
+            ax_panel.text(0.06, y_pos, title, color=col, fontsize=14.5, fontweight="bold")
+            y_pos -= 0.038
             for raw_line in lines:
-                wrapped = textwrap.wrap(raw_line, width=28)
+                wrapped = textwrap.wrap(raw_line, width=30)
                 for w_l in wrapped:
-                    ax_panel.text(0.10, card_y, w_l, color=DARK["text_secondary"], fontsize=12.0)
-                    card_y -= 0.024
-            card_y -= 0.010
+                    ax_panel.text(0.10, y_pos, w_l, color=DARK["text_secondary"], fontsize=12.0)
+                    y_pos -= 0.028
 
         # 하단 자금관리 및 자동감시 박스
         rule_box = FancyBboxPatch(
-            (0.035, 0.030), 0.93, 0.125, boxstyle="round,pad=0.02",
+            (0.035, 0.032), 0.93, 0.140, boxstyle="round,pad=0.02",
             facecolor="#2A1B1D", edgecolor=DARK["stop_red"], linewidth=1.5
         )
         ax_panel.add_patch(rule_box)
-        ax_panel.text(0.50, 0.122, "[필독] 증권사 공통 서버 자동감시 헌법", color=DARK["stop_red"], fontsize=13.0, fontweight="bold", ha="center", va="center")
+        ax_panel.text(0.50, 0.138, "[필독] 증권사 공통 서버 자동감시 헌법", color=DARK["stop_red"], fontsize=12.5, fontweight="bold", ha="center", va="center")
         rule_text_1 = "1. 매수 체결 즉시 서버 감시(-1.5%) 자동 발동 필수"
-        rule_text_2 = "2. 손절선 도달 시 이유 불문 100% 기계적 시장가 청산"
-        ax_panel.text(0.50, 0.084, rule_text_1, color=DARK["text_secondary"], fontsize=11.0, ha="center", va="center")
-        ax_panel.text(0.50, 0.052, rule_text_2, color=DARK["gold"], fontsize=11.0, fontweight="bold", ha="center", va="center")
+        rule_text_2 = "2. 손절선 도달 시 이유 불문 100% 시장가 청산"
+        ax_panel.text(0.50, 0.098, rule_text_1, color=DARK["text_secondary"], fontsize=11.0, ha="center", va="center")
+        ax_panel.text(0.50, 0.062, rule_text_2, color=DARK["gold"], fontsize=11.0, fontweight="bold", ha="center", va="center")
 
         # VisualQAGuard 6대 게이트 검증
         qa_meta = VisualQAGuard.assert_zero_visual_defects(fig, "STRAT01_5Step_Protocol")

@@ -53,14 +53,14 @@
   },
   "chart_strat01_5step_protocol.png": {
     "file_name": "chart_strat01_5step_protocol.png",
-    "sha256": "73538225562abdf2c8509916c28d1966a85b7bc5fa386b5839c219c91e6798ab",
+    "sha256": "84583783a05d02ff0a656605157c98bb16bb552b923781941add718b61d9689c",
     "resolution": [
       1920,
       1080
     ],
     "aspect_ratio": 1.7778,
-    "canvas_margin_min_px": 43.2,
-    "box_padding_min_px": 25.0,
+    "canvas_margin_min_px": 27.4,
+    "box_padding_min_px": 42.2,
     "badge_ratios": [
       1.0,
       1.0,
@@ -69,7 +69,7 @@
       1.0,
       1.0
     ],
-    "text_count": 37,
+    "text_count": 79,
     "passed_gates": [
       "GATE_1_CANVAS_BOUNDS",
       "GATE_2_ZERO_COLLISIONS",
@@ -79,7 +79,7 @@
       "GATE_6_SHIELDED_PRICE_LINES"
     ],
     "qa_status": "PASS",
-    "verified_at": "2026-11-16T00:13:39.057232+00:00"
+    "verified_at": "2026-11-16T00:33:02.771809+00:00"
   },
   "chart_strat01_condition_stoploss_guide.png": {
     "file_name": "chart_strat01_condition_stoploss_guide.png",
@@ -102,6 +102,6 @@
       "GATE_6_SHIELDED_PRICE_LINES"
     ],
     "qa_status": "PASS",
-    "verified_at": "2026-11-16T00:13:39.505478+00:00"
+    "verified_at": "2026-11-16T00:33:03.271769+00:00"
   }
 }

@@ -33,10 +33,20 @@ class VisualQAGuard:
         fig.canvas.draw()
         renderer = fig.canvas.get_renderer()
 
-        # 1. Figure + 모든 Axes 내부 텍스트 객체 전수 수집 (사각지대 0%)
+        # 1. Figure + 모든 Axes 내부 텍스트 객체 전수 수집 (축 라벨 및 틱 라벨 포함 사각지대 0%)
         all_texts: List[mtext.Text] = list(fig.texts)
         for ax in fig.axes:
             all_texts.extend(ax.texts)
+            if ax.xaxis.label and ax.xaxis.label.get_text().strip():
+                all_texts.append(ax.xaxis.label)
+            if ax.yaxis.label and ax.yaxis.label.get_text().strip():
+                all_texts.append(ax.yaxis.label)
+            for t in ax.get_xticklabels():
+                if t.get_text().strip():
+                    all_texts.append(t)
+            for t in ax.get_yticklabels():
+                if t.get_text().strip():
+                    all_texts.append(t)
 
         passed_gates = []
         min_canvas_margin_found = 9999.0
@@ -48,6 +58,8 @@ class VisualQAGuard:
         # =====================================================================
         for t in all_texts:
             bb = t.get_window_extent(renderer)
+            if bb.width <= 0 or bb.height <= 0:
+                continue
             margin_left = bb.x0
             margin_right = cls.CANVAS_WIDTH - bb.x1
             margin_bottom = bb.y0

@@ -69,20 +69,20 @@ class RedesignedChartInfographics:
         """
         fig = plt.figure(figsize=(16, 9), dpi=120, facecolor=DARK["bg"])
 
-        # Grid: 좌측 차트(0.045~0.675), 우측 설명 패널(0.695~0.965)
+        # Grid: 좌측 차트(0.075~0.675), 우측 설명 패널(0.695~0.965)
         gs_left = fig.add_gridspec(
             nrows=2, ncols=1,
             height_ratios=[7, 3],
-            top=0.88, bottom=0.06, left=0.045, right=0.675,
+            top=0.88, bottom=0.080, left=0.075, right=0.675,
             hspace=0.08
         )
         ax_main = fig.add_subplot(gs_left[0])
         ax_vol = fig.add_subplot(gs_left[1], sharex=ax_main)
 
-        # 우측 설명 전용 패널
+        # 우측 설명 전용 패널 (좌측 차트와 top/bottom 완벽 일치)
         gs_right = fig.add_gridspec(
             nrows=1, ncols=1,
-            top=0.88, bottom=0.06, left=0.695, right=0.965
+            top=0.88, bottom=0.080, left=0.695, right=0.965
         )
         ax_panel = fig.add_subplot(gs_right[0])
         ax_panel.set_facecolor(DARK["panel"])
@@ -98,12 +98,12 @@ class RedesignedChartInfographics:
         fig.text(
             0.045, 0.945,
             "맥락트레이딩 차트강의 #01  |  3분봉·5분봉 10선 첫 눌림목 정석 & -1.5% 칼손절",
-            color=DARK["text_primary"], fontsize=18.5, fontweight="bold", va="center", ha="left"
+            color=DARK["text_primary"], fontsize=17.5, fontweight="bold", va="center", ha="left"
         )
         fig.text(
             0.965, 0.945,
-            "★ 승률 85% | 손익비 1:2.3",
-            color=DARK["gold"], fontsize=17, fontweight="bold", va="center", ha="right"
+            "★ 프라이스 액션 타점 & 리스크 관리 프로토콜",
+            color=DARK["gold"], fontsize=15.0, fontweight="bold", va="center", ha="right"
         )
 
         # 차트 스타일링
@@ -275,8 +275,8 @@ class RedesignedChartInfographics:
 
         ax_main.set_ylim(9850, 12150)
         ax_vol.set_ylim(0, 580000)
-        ax_main.set_ylabel("주가 (KRW)", color=DARK["text_secondary"], fontsize=14, labelpad=8)
-        ax_vol.set_ylabel("거래량", color=DARK["text_secondary"], fontsize=14, labelpad=8)
+        ax_main.set_ylabel("주가 (KRW)", color=DARK["text_secondary"], fontsize=13, labelpad=5)
+        ax_vol.set_ylabel("거래량", color=DARK["text_secondary"], fontsize=13, labelpad=5)
         ax_main.legend(loc="upper left", facecolor=DARK["panel"], edgecolor=DARK["panel_border"],
                        labelcolor=DARK["text_primary"], fontsize=12, framealpha=0.9)
 
@@ -285,79 +285,101 @@ class RedesignedChartInfographics:
         step = 2
         ax_vol.set_xticks(range(0, n_bars, step))
         ax_vol.set_xticklabels([time_labels[i//2] for i in range(0, n_bars, step)], fontsize=12)
-        ax_vol.set_xlabel("장중 3분봉 진행 시간 (Time)", color=DARK["text_secondary"], fontsize=13, labelpad=6)
+        ax_vol.set_xlabel("장중 3분봉 진행 시간 (Time)", color=DARK["text_secondary"], fontsize=12.5, labelpad=5)
 
         # -------------------------------------------------------------------------
-        # ★ 우측 패널: [그래프 밖 전용 해설 카드] 실제 textwrap.wrap() 기반 동적 스택
+        # ★ 우측 패널: [독립 카드 패키징 & 수학적 균등 분할 엔진]
+        # 상단 타이틀 바닥선(Y_top=0.895)과 하단 배너 상단선(Y_bottom=0.155) 사이의 가용 높이(0.740)
+        # N=4개 카드, gap=0.024(약 26px) -> 5 * 0.024 = 0.120 -> h = (0.740 - 0.120) / 4 = 0.155
         # -------------------------------------------------------------------------
-        ax_panel.text(0.06, 0.945, "■ 실전 매매 4단계 프로세스", color=DARK["gold"], fontsize=19, fontweight="bold")
+        ax_panel.text(0.50, 0.960, "■ 실전 매매 4단계 프로세스", color=DARK["gold"], fontsize=17.0, fontweight="bold", ha="center")
+        ax_panel.text(0.50, 0.925, "주도주 1차 풀백 포착 및 기계적 익절·손절 룰", color=DARK["cyan"], fontsize=12.0, ha="center")
+
+        Y_TOP = 0.895
+        Y_BOTTOM = 0.155
+        UNIFORM_GAP = 0.024
+
+        def compute_panel_cards(y_top: float, y_bottom: float, n_items: int, gap: float) -> tuple[float, list[float]]:
+            total_h = y_top - y_bottom
+            card_h = (total_h - (n_items + 1) * gap) / n_items
+            card_starts = []
+            for i in range(n_items):
+                b = y_top - (i + 1) * gap - (i + 1) * card_h
+                card_starts.append(b)
+            return card_h, card_starts
 
         steps = [
-            (
-                "① 1차 급등 돌파 파동",
-                DARK["bull_red"],
-                [
-                    "• 당일 거래대금 TOP 1~3위 주도주 압축",
-                    "• 장대양봉 전일 고점 돌파 (+12.5%)",
-                    "• 절대 추격 매수 금지 (1차 눌림 대기)",
+            {
+                "title": "① 1차 급등 돌파 파동",
+                "badge": "[주도주 압축]",
+                "accent": DARK["bull_red"],
+                "bg": "#251619",
+                "lines": [
+                    "• 당일 거래대금 TOP 1~3위 & 전고 돌파 장대양봉",
+                    "• 절대 추격 매수 금지 (10선 1차 눌림 대기)"
                 ]
-            ),
-            (
-                "② 10이평 수렴 눌림목 (Dry-Up)",
-                DARK["cyan"],
-                [
-                    "• 주가가 10이평선 부근 완만한 조정",
-                    "• 거래량이 직전 1/3 (30%) 이하로 급감",
-                    "• 세력 이탈 없는 '건전한 숨고르기' 확인",
+            },
+            {
+                "title": "② 10이평 수렴 눌림목",
+                "badge": "[거래량 1/3 급감]",
+                "accent": DARK["cyan"],
+                "bg": "#151F2A",
+                "lines": [
+                    "• 10이평선 부근 완만한 조정 및 매도세 완전 고갈",
+                    "• 세력 이탈 없는 건전한 숨고르기(Dry-Up)"
                 ]
-            ),
-            (
-                "③ ★ 10선 지지 양봉 종가 매수",
-                DARK["gold"],
-                [
-                    "• 10 EMA 밑꼬리 터치 후 지지 양봉 완성",
-                    "• [진입 타점] 15번 봉 종가: 10,760원",
-                    "• [칼손절] -1.5% 이탈 시 즉시 기계적 손절",
-                    "• [손익비] 리스크 160원 vs 기대 380원",
+            },
+            {
+                "title": "③ ★ 10선 지지 양봉 종가",
+                "badge": "[정석 매수 타점]",
+                "accent": DARK["gold"],
+                "bg": "#232014",
+                "lines": [
+                    "• 10선 밑꼬리 터치 후 지지 양봉 종가 확인 진입",
+                    "• [손익비] 손절 160원(-1.5%) vs 리워드 380원(+3.5%)"
                 ]
-            ),
-            (
-                "④ 2차 랠리 및 분할 청산 공식",
-                DARK["target_green"],
-                [
-                    "• [1차 익절] +3.5% 도달 시 50% 락인",
-                    "• [추세 홀딩] 10선 이탈 전까지 잔여 50%",
-                    "• 당일 신고가 랠리 끝까지 추종 (+8~10%)",
+            },
+            {
+                "title": "④ 2차 랠리 및 분할 청산",
+                "badge": "[신고가 완주]",
+                "accent": DARK["target_green"],
+                "bg": "#14251B",
+                "lines": [
+                    "• [1차 분할 익절] +3.5% 도달 시 보유 물량 50% 락인",
+                    "• [추세 홀딩] 10선 이탈 전까지 잔여 50% 끝까지 완주"
                 ]
-            ),
+            },
         ]
 
-        card_y = 0.885
-        for title, col, lines in steps:
-            ax_panel.text(0.06, card_y, title, color=col, fontsize=15.5, fontweight="bold")
-            card_y -= 0.034
-            for raw_line in lines:
-                wrapped = textwrap.wrap(raw_line, width=25)
-                for w_l in wrapped:
-                    ax_panel.text(0.10, card_y, w_l, color=DARK["text_secondary"], fontsize=12.5)
-                    card_y -= 0.027
-            card_y -= 0.014
+        card_h, card_starts = compute_panel_cards(Y_TOP, Y_BOTTOM, len(steps), UNIFORM_GAP)
+
+        for idx, item in enumerate(steps):
+            c_y = card_starts[idx]
+            card_patch = FancyBboxPatch(
+                (0.025, c_y), 0.950, card_h, boxstyle="round,pad=0.010,rounding_size=0.012",
+                facecolor=item["bg"], edgecolor=item["accent"], linewidth=1.2
+            )
+            ax_panel.add_patch(card_patch)
+
+            # 헤더: 타이틀 (좌측 28px+ 마진) / 배지 요약 (우측 28px+ 마진)
+            ax_panel.text(0.080, c_y + card_h * 0.77, item["title"], color=item["accent"], fontsize=12.5, fontweight="bold", va="center")
+            ax_panel.text(0.920, c_y + card_h * 0.77, item["badge"], color=DARK["text_primary"], fontsize=11.0, fontweight="bold", ha="right", va="center")
+
+            # 내부 설명 2줄 (높이 비례 균등 배치, 좌우 28px+ 마진)
+            ax_panel.text(0.080, c_y + card_h * 0.48, item["lines"][0], color=DARK["text_secondary"], fontsize=10.5, va="center")
+            ax_panel.text(0.080, c_y + card_h * 0.20, item["lines"][1], color=DARK["text_secondary"], fontsize=10.5, va="center")
 
         # -------------------------------------------------------------------------
-        # 하단 자금관리 박스 (실측 여백 30px+ 보장 & 가로 중앙 정렬)
+        # 하단 자금관리 생존 수칙 배너 (실측 여백 보장 & 가로 중앙 정렬)
         # -------------------------------------------------------------------------
         rule_box = FancyBboxPatch(
-            (0.035, 0.032), 0.93, 0.135, boxstyle="round,pad=0.02",
-            facecolor="#2A1B1D", edgecolor=DARK["stop_red"], linewidth=1.5
+            (0.025, 0.035), 0.950, 0.120, boxstyle="round,pad=0.012,rounding_size=0.015",
+            facecolor="#251619", edgecolor=DARK["stop_red"], linewidth=1.4
         )
         ax_panel.add_patch(rule_box)
-        # 박스 중앙(x=0.50) 정렬 및 폰트 11pt로 30px 이상의 안전 여백 확보
-        ax_panel.text(0.50, 0.132, "[필독] 맥락트레이딩 절대 생존 수칙", color=DARK["stop_red"], fontsize=13.5, fontweight="bold", ha="center", va="center")
-        
-        rule_text_1 = "1. 원하는 타점(10선 지지) 미도달 시 종일 매매 쉰다."
-        rule_text_2 = "2. 손절선(-1.5%) 터치 시 망설임 없이 기계적 칼손절!"
-        ax_panel.text(0.50, 0.092, rule_text_1, color=DARK["text_secondary"], fontsize=11.2, ha="center", va="center")
-        ax_panel.text(0.50, 0.058, rule_text_2, color=DARK["gold"], fontsize=11.2, fontweight="bold", ha="center", va="center")
+        ax_panel.text(0.50, 0.124, "[필독] 맥락트레이딩 절대 생존 수칙", color=DARK["stop_red"], fontsize=12.5, fontweight="bold", ha="center", va="center")
+        ax_panel.text(0.50, 0.088, "1. 원하는 타점(10선 지지) 미도달 시 종일 매매 쉰다.", color=DARK["text_secondary"], fontsize=11.0, ha="center", va="center")
+        ax_panel.text(0.50, 0.056, "2. 손절선(-1.5%) 터치 시 망설임 없이 기계적 칼손절!", color=DARK["gold"], fontsize=11.0, fontweight="bold", ha="center", va="center")
 
         # VisualQAGuard 6대 하드 페일 게이트 검증
         qa_meta = VisualQAGuard.assert_zero_visual_defects(fig, "10MA_Pullback_Chart")

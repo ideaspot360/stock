@@ -448,8 +448,25 @@ class Strat01InfographicsGenerator:
         ax_left.text(0.065, 0.832, "포착 목표: 주도주 1차 눌림목", color=DARK["gold"], fontsize=12.0, ha="left")
         ax_left.text(0.905, 0.832, "결합 룰: A and B and C and D", color=DARK["target_green"], fontsize=12.5, fontweight="bold", ha="right")
 
-        # 2. 4대 조건 필터 카드 (Equal Spacing 균등 배치: y=0.190 ~ 0.795)
-        # card_h = 0.130, gap = 0.020 -> 4 * 0.130 + 3 * 0.020 = 0.580
+        # =========================================================================
+        # [수학적 균등 그리드 엔진 (Mathematical Grid Layout Engine)]
+        # 상단 배너 바닥(Y_top)과 하단 배너 상단(Y_bottom) 사이의 가용 높이를 기준으로
+        # 모든 간격(gap)을 100% 동일하게 고정하고, N개 카드의 높이(h)를 기계적으로 역산 배치
+        # =========================================================================
+        Y_TOP = 0.815       # 상단 배너 바닥선
+        Y_BOTTOM = 0.180    # 하단 배너 상단선 (y=0.040 + h=0.140)
+        UNIFORM_GAP = 0.022 # 상단/중간/하단 모든 간격을 단 1px의 오차 없이 0.022로 완전 통일
+
+        def compute_card_layout(y_top: float, y_bottom: float, n_items: int, gap: float) -> tuple[float, list[float]]:
+            total_h = y_top - y_bottom
+            card_h = (total_h - (n_items + 1) * gap) / n_items
+            card_starts = []
+            for i in range(n_items):
+                b = y_top - (i + 1) * gap - (i + 1) * card_h
+                card_starts.append(b)
+            return card_h, card_starts
+
+        # 2. 4대 조건 필터 카드 (수학적 균등 분할 배치)
         filter_cards = [
             {
                 "id": "[조건 A]",
@@ -497,8 +514,7 @@ class Strat01InfographicsGenerator:
             },
         ]
 
-        card_starts_l = [0.665, 0.515, 0.365, 0.215]
-        card_h_l = 0.130
+        card_h_l, card_starts_l = compute_card_layout(Y_TOP, Y_BOTTOM, len(filter_cards), UNIFORM_GAP)
 
         for idx, item in enumerate(filter_cards):
             c_y = card_starts_l[idx]
@@ -510,22 +526,22 @@ class Strat01InfographicsGenerator:
 
             # 헤더: ID + 타이틀 (좌측) / 배지 요약 (우측)
             title_text = f"{item['id']} {item['title']}"
-            ax_left.text(0.065, c_y + 0.098, title_text, color=item["accent"], fontsize=12.5, fontweight="bold", va="center")
-            ax_left.text(0.920, c_y + 0.098, item["badge"], color=DARK["text_primary"], fontsize=11.5, fontweight="bold", ha="right", va="center")
+            ax_left.text(0.065, c_y + card_h_l * 0.76, title_text, color=item["accent"], fontsize=12.5, fontweight="bold", va="center")
+            ax_left.text(0.920, c_y + card_h_l * 0.76, item["badge"], color=DARK["text_primary"], fontsize=11.5, fontweight="bold", ha="right", va="center")
 
-            # 내부 설명 2줄
-            ax_left.text(0.065, c_y + 0.060, item["lines"][0], color=DARK["text_secondary"], fontsize=11.0, va="center")
-            ax_left.text(0.065, c_y + 0.026, item["lines"][1], color=DARK["text_secondary"], fontsize=11.0, va="center")
+            # 내부 설명 2줄 (높이 비례 균등 배치)
+            ax_left.text(0.065, c_y + card_h_l * 0.47, item["lines"][0], color=DARK["text_secondary"], fontsize=11.0, va="center")
+            ax_left.text(0.065, c_y + card_h_l * 0.20, item["lines"][1], color=DARK["text_secondary"], fontsize=11.0, va="center")
 
-        # 3. 하단 핵심 안내 배너 (슬림형)
+        # 3. 하단 핵심 안내 배너 (슬림형, 상단 y=0.180 고정)
         notice_box_l = FancyBboxPatch(
-            (0.035, 0.040), 0.930, 0.145, boxstyle="round,pad=0.012,rounding_size=0.015",
+            (0.035, 0.040), 0.930, 0.140, boxstyle="round,pad=0.012,rounding_size=0.015",
             facecolor="#121D28", edgecolor=DARK["cyan"], linewidth=1.4
         )
         ax_left.add_patch(notice_box_l)
-        ax_left.text(0.50, 0.145, "[핵심 원칙] 조건검색식은 '자동 매수'가 아닌 '1차 감시용 레이더'", color=DARK["cyan"], fontsize=12.5, fontweight="bold", ha="center")
-        ax_left.text(0.50, 0.105, "조건식에 포착된 종목은 시스템이 자동으로 매수하는 것이 아닙니다.", color=DARK["text_secondary"], fontsize=11.5, ha="center")
-        ax_left.text(0.50, 0.070, "10선 지지양봉 종가 & 호가창(매도잔량 2:1, 체결강도 120%) 확인 후 진입!", color=DARK["gold"], fontsize=11.5, fontweight="bold", ha="center")
+        ax_left.text(0.50, 0.142, "[핵심 원칙] 조건검색식은 '자동 매수'가 아닌 '1차 감시용 레이더'", color=DARK["cyan"], fontsize=12.5, fontweight="bold", ha="center")
+        ax_left.text(0.50, 0.102, "조건식에 포착된 종목은 시스템이 자동으로 매수하는 것이 아닙니다.", color=DARK["text_secondary"], fontsize=11.5, ha="center")
+        ax_left.text(0.50, 0.068, "10선 지지양봉 종가 & 호가창(매도잔량 2:1, 체결강도 120%) 확인 후 진입!", color=DARK["gold"], fontsize=11.5, fontweight="bold", ha="center")
 
         # =========================================================================
         # 우측 패널: ■ 서버 자동감시주문(Stop-Loss) 3대 안전장치
@@ -591,8 +607,7 @@ class Strat01InfographicsGenerator:
             },
         ]
 
-        card_starts_r = [0.620, 0.420, 0.220]
-        card_h_r = 0.175
+        card_h_r, card_starts_r = compute_card_layout(Y_TOP, Y_BOTTOM, len(safety_cards), UNIFORM_GAP)
 
         for idx, item in enumerate(safety_cards):
             c_y = card_starts_r[idx]
@@ -604,23 +619,23 @@ class Strat01InfographicsGenerator:
 
             # 헤더: ID + 타이틀 (좌측) / 배지 요약 (우측)
             title_text = f"{item['id']} {item['title']}"
-            ax_right.text(0.065, c_y + 0.138, title_text, color=item["accent"], fontsize=13.0, fontweight="bold", va="center")
-            ax_right.text(0.920, c_y + 0.138, item["badge"], color=DARK["text_primary"], fontsize=11.5, fontweight="bold", ha="right", va="center")
+            ax_right.text(0.065, c_y + card_h_r * 0.80, title_text, color=item["accent"], fontsize=13.0, fontweight="bold", va="center")
+            ax_right.text(0.920, c_y + card_h_r * 0.80, item["badge"], color=DARK["text_primary"], fontsize=11.5, fontweight="bold", ha="right", va="center")
 
-            # 내부 설명 3줄
-            ax_right.text(0.065, c_y + 0.098, item["lines"][0], color=DARK["text_secondary"], fontsize=11.0, va="center")
-            ax_right.text(0.065, c_y + 0.062, item["lines"][1], color=DARK["text_secondary"], fontsize=11.0, va="center")
-            ax_right.text(0.065, c_y + 0.026, item["lines"][2], color=DARK["text_secondary"], fontsize=11.0, va="center")
+            # 내부 설명 3줄 (높이 비례 균등 배치)
+            ax_right.text(0.065, c_y + card_h_r * 0.56, item["lines"][0], color=DARK["text_secondary"], fontsize=11.0, va="center")
+            ax_right.text(0.065, c_y + card_h_r * 0.35, item["lines"][1], color=DARK["text_secondary"], fontsize=11.0, va="center")
+            ax_right.text(0.065, c_y + card_h_r * 0.14, item["lines"][2], color=DARK["text_secondary"], fontsize=11.0, va="center")
 
-        # 3. 하단 경고 배너 (슬림형)
+        # 3. 하단 경고 배너 (슬림형, 상단 y=0.180 고정)
         alert_box_r = FancyBboxPatch(
-            (0.035, 0.040), 0.930, 0.145, boxstyle="round,pad=0.012,rounding_size=0.015",
+            (0.035, 0.040), 0.930, 0.140, boxstyle="round,pad=0.012,rounding_size=0.015",
             facecolor="#251619", edgecolor=DARK["stop_red"], linewidth=1.4
         )
         ax_right.add_patch(alert_box_r)
-        ax_right.text(0.50, 0.145, "[필독 헌법] 맥락트레이딩 스탑로스 2대 절대 금지 수칙", color=DARK["stop_red"], fontsize=12.5, fontweight="bold", ha="center")
-        ax_right.text(0.50, 0.105, "1. 주가 하락 시 손절선을 아래로 내리거나 취소하는 행위 0% 영구 금지", color=DARK["text_secondary"], fontsize=11.5, ha="center")
-        ax_right.text(0.50, 0.070, "2. 지지선 이탈 시 평단가를 낮추기 위한 물타기(추가 매수) 영구 엄금!", color=DARK["gold"], fontsize=11.5, fontweight="bold", ha="center")
+        ax_right.text(0.50, 0.142, "[필독 헌법] 맥락트레이딩 스탑로스 2대 절대 금지 수칙", color=DARK["stop_red"], fontsize=12.5, fontweight="bold", ha="center")
+        ax_right.text(0.50, 0.102, "1. 주가 하락 시 손절선을 아래로 내리거나 취소하는 행위 0% 영구 금지", color=DARK["text_secondary"], fontsize=11.5, ha="center")
+        ax_right.text(0.50, 0.068, "2. 지지선 이탈 시 평단가를 낮추기 위한 물타기(추가 매수) 영구 엄금!", color=DARK["gold"], fontsize=11.5, fontweight="bold", ha="center")
 
         # VisualQAGuard 6대 게이트 검증
         qa_meta = VisualQAGuard.assert_zero_visual_defects(fig, "STRAT01_Condition_StopLoss_Guide")

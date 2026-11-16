@@ -79,11 +79,11 @@
       "GATE_6_SHIELDED_PRICE_LINES"
     ],
     "qa_status": "PASS",
-    "verified_at": "2026-11-16T02:57:28.744576+00:00"
+    "verified_at": "2026-11-16T03:07:24.179043+00:00"
   },
   "chart_strat01_condition_stoploss_guide.png": {
     "file_name": "chart_strat01_condition_stoploss_guide.png",
-    "sha256": "f25d441bcb06a59f5e909f1943a63ac877f9216cfb2ee3dc890c4fefa622c578",
+    "sha256": "7a2c09b731391658be975d809eb4e0e1d900bf44e6ef4a49d0743fb115c0e6df",
     "resolution": [
       1920,
       1080
@@ -102,6 +102,6 @@
       "GATE_6_SHIELDED_PRICE_LINES"
     ],
     "qa_status": "PASS",
-    "verified_at": "2026-11-16T02:57:29.321689+00:00"
+    "verified_at": "2026-11-16T03:07:24.687201+00:00"
   }
 }

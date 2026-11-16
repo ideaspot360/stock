@@ -171,12 +171,16 @@ class VisualQAGuard:
                         t_bb = t.get_window_extent(renderer)
                         t_cx = (t_bb.x0 + t_bb.x1) / 2
                         t_cy = (t_bb.y0 + t_bb.y1) / 2
-                        # 텍스트의 x 중심이 박스 안에 있고, y 중심이 박스 내부 및 하단 인근에 걸쳐 있는 경우 (컨테이너 소속 판별)
-                        if p_bb.x0 <= t_cx <= p_bb.x1 and (p_bb.y0 - 40.0) <= t_cy <= (p_bb.y1 - 10.0):
-                            # 박스 하단 테두리 밖 탈출 하드 검증
+                        # 텍스트의 중심점(t_cx, t_cy)이 박스 내부에 위치하는 경우 (컨테이너 소속 엄격 판별)
+                        if (p_bb.x0 <= t_cx <= p_bb.x1) and (p_bb.y0 <= t_cy <= p_bb.y1):
+                            # 박스 하단/상단 테두리 밖 탈출 하드 검증
                             if t_bb.y0 < p_bb.y0:
                                 raise AssertionError(
                                     f"[{name}] Gate 5 박스 하단 탈출: '{t.get_text()[:15]}' y0={t_bb.y0:.1f}px (< 박스하단 {p_bb.y0:.1f}px)"
+                                )
+                            if t_bb.y1 > p_bb.y1:
+                                raise AssertionError(
+                                    f"[{name}] Gate 5 박스 상단 탈출: '{t.get_text()[:15]}' y1={t_bb.y1:.1f}px (> 박스상단 {p_bb.y1:.1f}px)"
                                 )
 
                             pad_left = t_bb.x0 - p_bb.x0

@@ -79,20 +79,20 @@
       "GATE_6_SHIELDED_PRICE_LINES"
     ],
     "qa_status": "PASS",
-    "verified_at": "2026-11-16T00:33:02.771809+00:00"
+    "verified_at": "2026-11-16T02:29:39.042238+00:00"
   },
   "chart_strat01_condition_stoploss_guide.png": {
     "file_name": "chart_strat01_condition_stoploss_guide.png",
-    "sha256": "54ce1c3f9ad60ee8e7541c07953269a81470381a3bcc39a666ef18cb601ac1fa",
+    "sha256": "80894bf426b5cece98b4025d9c4745b4eb3e9ef4315d714e4d01fecf940e5022",
     "resolution": [
       1920,
       1080
     ],
     "aspect_ratio": 1.7778,
-    "canvas_margin_min_px": 43.8,
-    "box_padding_min_px": 46.4,
+    "canvas_margin_min_px": 40.6,
+    "box_padding_min_px": 34.3,
     "badge_ratios": [],
-    "text_count": 44,
+    "text_count": 51,
     "passed_gates": [
       "GATE_1_CANVAS_BOUNDS",
       "GATE_2_ZERO_COLLISIONS",
@@ -102,6 +102,6 @@
       "GATE_6_SHIELDED_PRICE_LINES"
     ],
     "qa_status": "PASS",
-    "verified_at": "2026-11-16T00:33:03.271769+00:00"
+    "verified_at": "2026-11-16T02:29:39.618847+00:00"
   }
 }

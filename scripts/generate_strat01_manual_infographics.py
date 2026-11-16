@@ -389,31 +389,32 @@ class Strat01InfographicsGenerator:
     def generate_condition_stoploss_diagram(self) -> Path:
         """
         도안 2: 범용 HTS 조건검색식 세팅 룰 & 서버 자동감시주문(-1.5% 칼손절)
-        - 좌측(50%): 범용 HTS 조건검색식 4대 필터 룰 (키움/미래/삼성/한투/토스 공통 로직)
-        - 우측(50%): 서버 자동감시주문(Stop-Loss) 3대 안전장치 & 손익비 구조도
+        - 좌측(50%): 범용 HTS 조건검색식 4대 필터 룰 (독립 4대 서브 카드 균등 배치)
+        - 우측(50%): 서버 자동감시주문(Stop-Loss) 3대 안전장치 (독립 3대 서브 카드 균등 배치)
+        - 상단 메타 그리드 및 하단 슬림 경고 배너로 휑한 공백(Dead Space) 100% 해소
         - VisualQAGuard 6대 게이트 검증 및 layout_audit.json 기록
         """
         fig = plt.figure(figsize=(16, 9), dpi=120, facecolor=DARK["bg"])
 
-        # 좌/우 패널 분할
+        # 좌/우 패널 분할 (대칭 여백 확보)
         gs = fig.add_gridspec(
             nrows=1, ncols=2,
-            top=0.88, bottom=0.06, left=0.045, right=0.955,
-            wspace=0.07
+            top=0.885, bottom=0.045, left=0.040, right=0.960,
+            wspace=0.060
         )
         ax_left = fig.add_subplot(gs[0])
         ax_right = fig.add_subplot(gs[1])
 
-        # 헤더 타이틀 바
+        # 헤더 타이틀 바 (캔버스 안전 여백 준수)
         fig.text(
-            0.045, 0.945,
+            0.040, 0.948,
             "맥락트레이딩 실전매뉴얼 #01  |  조건검색식 세팅 룰 & -1.5% 자동감시주문",
             color=DARK["text_primary"], fontsize=17.0, fontweight="bold", va="center", ha="left"
         )
         fig.text(
-            0.955, 0.945,
+            0.960, 0.948,
             "★ 전 증권사 공통 표준 가이드",
-            color=DARK["gold"], fontsize=15.5, fontweight="bold", va="center", ha="right"
+            color=DARK["gold"], fontsize=15.0, fontweight="bold", va="center", ha="right"
         )
 
         for ax in (ax_left, ax_right):
@@ -428,128 +429,212 @@ class Strat01InfographicsGenerator:
         # 좌측 패널: ■ 범용 HTS 조건검색식 4대 필터 룰
         # =========================================================================
         ax_left.text(
-            0.5, 0.952, "■ 범용 HTS 조건검색식 4대 필터 룰",
-            color=DARK["gold"], fontsize=18, fontweight="bold", ha="center"
+            0.5, 0.960, "■ 범용 HTS 조건검색식 4대 필터 룰",
+            color=DARK["gold"], fontsize=17.5, fontweight="bold", ha="center"
         )
         ax_left.text(
-            0.5, 0.912, "키움·미래에셋·삼성·한국투자·토스 공통 조건식 구조",
-            color=DARK["cyan"], fontsize=13.0, ha="center"
+            0.5, 0.925, "키움·미래에셋·삼성·한국투자·토스 공통 조건식 아키텍처",
+            color=DARK["cyan"], fontsize=12.5, ha="center"
         )
 
-        # 상단 요약 박스
+        # 1. 상단 요약 배너 (Summary Box)
         summary_l = FancyBboxPatch(
-            (0.04, 0.755), 0.92, 0.115, boxstyle="round,pad=0.015",
-            facecolor="#16222F", edgecolor=DARK["cyan"], linewidth=1.5
+            (0.035, 0.815), 0.930, 0.088, boxstyle="round,pad=0.012,rounding_size=0.015",
+            facecolor="#13202E", edgecolor=DARK["cyan"], linewidth=1.3
         )
         ax_left.add_patch(summary_l)
-        ax_left.text(0.08, 0.830, "검색 주기: 3분봉 / 5분봉", color=DARK["cyan"], fontsize=14.0, fontweight="bold", ha="left")
-        ax_left.text(0.92, 0.830, "대상: 코스피·코스닥 보통주", color=DARK["text_primary"], fontsize=13.5, fontweight="bold", ha="right")
-        ax_left.text(0.08, 0.785, "포착 목표: 주도주 1차 눌림목", color=DARK["gold"], fontsize=13.0, ha="left")
-        ax_left.text(0.92, 0.785, "결합 룰: A and B and C and D", color=DARK["target_green"], fontsize=13.0, fontweight="bold", ha="right")
+        ax_left.text(0.065, 0.865, "검색 주기: 3분봉 / 5분봉", color=DARK["cyan"], fontsize=13.0, fontweight="bold", ha="left")
+        ax_left.text(0.905, 0.865, "검색 대상: 코스피·코스닥 보통주", color=DARK["text_primary"], fontsize=12.5, fontweight="bold", ha="right")
+        ax_left.text(0.065, 0.832, "포착 목표: 주도주 1차 눌림목", color=DARK["gold"], fontsize=12.0, ha="left")
+        ax_left.text(0.905, 0.832, "결합 룰: A and B and C and D", color=DARK["target_green"], fontsize=12.5, fontweight="bold", ha="right")
 
-        # 4대 조건 필터 카드
-        filters = [
-            ("[조건 A] 당일 거래대금 최상위 필터", DARK["bull_red"], [
-                "• 당일 거래대금 상위 1~10위 이내 또는 300억 이상",
-                "• 호가 공백과 잡주 슬리피지(체결 밀림) 원천 배제",
-            ]),
-            ("[조건 B] 1차 급등 모멘텀 필터", DARK["orange"], [
-                "• 09:00 개장 후 당일 주가등락률 +7% 이상 돌파",
-                "• 전일 대비 거래량 폭증 동반 장대양봉 발생 종목",
-            ]),
-            ("[조건 C] 10지수이평선(10 EMA) 이격도 필터", DARK["gold"], [
-                "• 현재가(종가)와 10이평선 이격도 98% ~ 102% 근접",
-                "• 1차 상승 후 10이평선에 첫 번째로 접촉한 시점",
-            ]),
-            ("[조건 D] 거래량 급감(Volume Dry-Up) 필터", DARK["cyan"], [
-                "• 현재 3분봉 거래량 < 1차 급등봉 대비 35% 이하",
-                "• 매도세가 완전히 마른 '건전한 숨고르기' 검증",
-            ]),
+        # 2. 4대 조건 필터 카드 (Equal Spacing 균등 배치: y=0.190 ~ 0.795)
+        # card_h = 0.130, gap = 0.020 -> 4 * 0.130 + 3 * 0.020 = 0.580
+        filter_cards = [
+            {
+                "id": "[조건 A]",
+                "title": "당일 거래대금 최상위 필터",
+                "badge": "상위 1~10위 or 300억↑",
+                "accent": DARK["cyan"],
+                "bg": "#151F2A",
+                "lines": [
+                    "• 당일 거래대금 상위 1~10위 이내 또는 장중 300억 이상 유입 종목",
+                    "• 호가 공백과 잡주 슬리피지(체결 밀림 현상)를 원천적으로 배제"
+                ]
+            },
+            {
+                "id": "[조건 B]",
+                "title": "1차 급등 모멘텀 필터",
+                "badge": "주가등락률 +7% 이상 돌파",
+                "accent": DARK["orange"],
+                "bg": "#221C18",
+                "lines": [
+                    "• 09:00 개장 후 당일 주가등락률 +7% 이상 강력 돌파 확인",
+                    "• 전일 대비 거래량 폭증을 동반한 장대양봉 발생 종목으로 압축"
+                ]
+            },
+            {
+                "id": "[조건 C]",
+                "title": "10지수이평선(10 EMA) 이격도 필터",
+                "badge": "이격도 98% ~ 102% 근접",
+                "accent": DARK["gold"],
+                "bg": "#232014",
+                "lines": [
+                    "• 현재가(종가)와 10 EMA 이격도 98% ~ 102% 이내 완만 수렴",
+                    "• 1차 상승 파동 후 10이평선에 첫 번째로 접근(접촉)한 타점 포착"
+                ]
+            },
+            {
+                "id": "[조건 D]",
+                "title": "거래량 급감(Volume Dry-Up) 필터",
+                "badge": "거래량 1차 급등봉 대비 35%↓",
+                "accent": DARK["target_green"],
+                "bg": "#14221A",
+                "lines": [
+                    "• 현재 3분봉 거래량 < 1차 급등봉 최대 거래량 대비 35% 이하로 마름",
+                    "• 매도세가 완전히 고갈된 '건전한 숨고르기' 여부를 시스템 검증"
+                ]
+            },
         ]
 
-        card_y = 0.655
-        for title, col, lines in filters:
-            ax_left.text(0.06, card_y, title, color=col, fontsize=14.0, fontweight="bold")
-            card_y -= 0.026
-            for raw_line in lines:
-                wrapped = textwrap.wrap(raw_line, width=44)
-                for w_l in wrapped:
-                    ax_left.text(0.10, card_y, w_l, color=DARK["text_secondary"], fontsize=12.0)
-                    card_y -= 0.022
-            card_y -= 0.016
+        card_starts_l = [0.665, 0.515, 0.365, 0.215]
+        card_h_l = 0.130
 
-        # 하단 안내 박스
+        for idx, item in enumerate(filter_cards):
+            c_y = card_starts_l[idx]
+            card_patch = FancyBboxPatch(
+                (0.035, c_y), 0.930, card_h_l, boxstyle="round,pad=0.010,rounding_size=0.012",
+                facecolor=item["bg"], edgecolor=item["accent"], linewidth=1.2
+            )
+            ax_left.add_patch(card_patch)
+
+            # 헤더: ID + 타이틀 (좌측) / 배지 요약 (우측)
+            title_text = f"{item['id']} {item['title']}"
+            ax_left.text(0.065, c_y + 0.098, title_text, color=item["accent"], fontsize=12.5, fontweight="bold", va="center")
+            ax_left.text(0.920, c_y + 0.098, item["badge"], color=DARK["text_primary"], fontsize=11.5, fontweight="bold", ha="right", va="center")
+
+            # 내부 설명 2줄
+            ax_left.text(0.065, c_y + 0.060, item["lines"][0], color=DARK["text_secondary"], fontsize=11.0, va="center")
+            ax_left.text(0.065, c_y + 0.026, item["lines"][1], color=DARK["text_secondary"], fontsize=11.0, va="center")
+
+        # 3. 하단 핵심 안내 배너 (슬림형)
         notice_box_l = FancyBboxPatch(
-            (0.04, 0.035), 0.92, 0.135, boxstyle="round,pad=0.015",
-            facecolor="#182026", edgecolor=DARK["cyan"], linewidth=1.5
+            (0.035, 0.040), 0.930, 0.145, boxstyle="round,pad=0.012,rounding_size=0.015",
+            facecolor="#121D28", edgecolor=DARK["cyan"], linewidth=1.4
         )
         ax_left.add_patch(notice_box_l)
-        ax_left.text(0.50, 0.135, "[핵심] 조건검색식은 '자동 매수'가 아닌 '1차 감시용'", color=DARK["cyan"], fontsize=13.0, fontweight="bold", ha="center")
-        ax_left.text(0.50, 0.098, "조건식에 포착된 종목은 반드시 10선 지지 양봉 종가와", color=DARK["text_secondary"], fontsize=11.5, ha="center")
-        ax_left.text(0.50, 0.065, "호가창 매도잔량 2:1 및 체결강도 120%를 육안 확인 후 진입합니다.", color=DARK["gold"], fontsize=11.5, fontweight="bold", ha="center")
+        ax_left.text(0.50, 0.145, "[핵심 원칙] 조건검색식은 '자동 매수'가 아닌 '1차 감시용 레이더'", color=DARK["cyan"], fontsize=12.5, fontweight="bold", ha="center")
+        ax_left.text(0.50, 0.105, "조건식에 포착된 종목은 시스템이 자동으로 매수하는 것이 아닙니다.", color=DARK["text_secondary"], fontsize=11.5, ha="center")
+        ax_left.text(0.50, 0.070, "10선 지지양봉 종가 & 호가창(매도잔량 2:1, 체결강도 120%) 확인 후 진입!", color=DARK["gold"], fontsize=11.5, fontweight="bold", ha="center")
 
         # =========================================================================
         # 우측 패널: ■ 서버 자동감시주문(Stop-Loss) 3대 안전장치
         # =========================================================================
         ax_right.text(
-            0.5, 0.952, "■ 서버 자동감시주문(Stop-Loss) 3대 안전장치",
-            color=DARK["target_green"], fontsize=18, fontweight="bold", ha="center"
+            0.5, 0.960, "■ 서버 자동감시주문(Stop-Loss) 3대 안전장치",
+            color=DARK["target_green"], fontsize=17.5, fontweight="bold", ha="center"
         )
         ax_right.text(
-            0.5, 0.912, "뇌동매매와 손절 망설임을 100% 차단하는 기계적 시스템",
-            color=DARK["text_secondary"], fontsize=13.0, ha="center"
+            0.5, 0.925, "뇌동매매와 손절 망설임을 100% 차단하는 기계적 클라우드 시스템",
+            color=DARK["text_secondary"], fontsize=12.5, ha="center"
         )
 
-        # 상단 요약 박스
+        # 1. 상단 요약 배너 (Summary Box)
         summary_r = FancyBboxPatch(
-            (0.04, 0.755), 0.92, 0.115, boxstyle="round,pad=0.015",
-            facecolor="#1A241F", edgecolor=DARK["target_green"], linewidth=1.5
+            (0.035, 0.815), 0.930, 0.088, boxstyle="round,pad=0.012,rounding_size=0.015",
+            facecolor="#15241C", edgecolor=DARK["target_green"], linewidth=1.3
         )
         ax_right.add_patch(summary_r)
-        ax_right.text(0.08, 0.830, "감시 주체: 클라우드 서버", color=DARK["target_green"], fontsize=14.0, fontweight="bold", ha="left")
-        ax_right.text(0.92, 0.830, "환경: 종료 후에도 100% 실행", color=DARK["gold"], fontsize=13.5, fontweight="bold", ha="right")
-        ax_right.text(0.08, 0.785, "주문 방식: 조건 만족 시 시장가", color=DARK["bull_red"], fontsize=13.0, fontweight="bold", ha="left")
-        ax_right.text(0.92, 0.785, "체결 지연: 0초 (감정 배제)", color=DARK["cyan"], fontsize=13.0, ha="right")
+        ax_right.text(0.065, 0.865, "감시 주체: 클라우드 서버", color=DARK["target_green"], fontsize=13.0, fontweight="bold", ha="left")
+        ax_right.text(0.905, 0.865, "환경: HTS 종료 후에도 100% 실행", color=DARK["gold"], fontsize=12.5, fontweight="bold", ha="right")
+        ax_right.text(0.065, 0.832, "주문 방식: 조건 만족 시 시장가", color=DARK["stop_red"], fontsize=12.0, fontweight="bold", ha="left")
+        ax_right.text(0.905, 0.832, "체결 지연: 0초 (감정 배제 실시간)", color=DARK["cyan"], fontsize=12.5, ha="right")
 
-        # 3대 안전장치 카드
-        safeties = [
-            ("1. [손실 제한] -1.5% 기계적 칼손절 (계좌 생존 헌법)", DARK["stop_red"], [
-                "• 설정: 진입 평단가 대비 -1.5% 터치 시 즉시 발동",
-                "• 주문: 서버 감시 기반 '시장가 매도'로 전량 청산",
-                "• 의의: 손실 비대칭성(Loss Asymmetry)과 계좌 파멸 방어",
-            ]),
-            ("2. [수익 락인] +3.5% 1차 분할 익절", DARK["target_green"], [
-                "• 설정: 진입 평단가 대비 +3.5% 도달 시 50% 매도",
-                "• 효과: 확정 수익 락인으로 잔여 물량 심리적 안정 확보",
-                "• 손익비: 리스크 1.5% vs 1차 리워드 3.5% (1:2.3 달성)",
-            ]),
-            ("3. [추세 추종] 잔여 50% 10이평선 트레일링 스탑", DARK["gold"], [
-                "• 설정: 3분봉/5분봉 10이평선을 종가 이탈 시 전량 매도",
-                "• 효과: 당일 주도주의 2차 신고가 랠리(+7~10%↑) 완주",
-                "• 본전 보존: 1차 익절 완료 후 손절선을 매수가로 상향",
-            ]),
+        # 2. 3대 안전장치 와이드 카드 (Equal Spacing 균등 배치: y=0.215 ~ 0.795)
+        # card_h = 0.175, gap = 0.025 -> 3 * 0.175 + 2 * 0.025 = 0.575
+        safety_cards = [
+            {
+                "id": "1. [손실 제한]",
+                "title": "-1.5% 기계적 칼손절",
+                "badge": "[계좌 생존 헌법]",
+                "accent": DARK["stop_red"],
+                "bg": "#251619",
+                "lines": [
+                    "• 설정 조건: 진입 평단가 대비 -1.5% 터치 시 0.1초 망설임 없이 즉시 발동",
+                    "• 주문 방식: 서버 감시 기반 '시장가 매도'로 보유 수량 전량 즉시 청산",
+                    "• 핵심 의의: 손실 비대칭성(Loss Asymmetry) 차단 및 단 1번의 뇌동 파멸 방어"
+                ]
+            },
+            {
+                "id": "2. [수익 락인]",
+                "title": "+3.5% 1차 분할 익절",
+                "badge": "[손익비 1:2.3 달성]",
+                "accent": DARK["target_green"],
+                "bg": "#14251B",
+                "lines": [
+                    "• 설정 조건: 진입 평단가 대비 +3.5% 도달 시 보유 물량의 50% 즉시 매도",
+                    "• 심리 효과: 확정 수익 락인(Lock-in)으로 잔여 물량 홀딩 심리적 안정 확보",
+                    "• 손익비 룰: 1회 손실 리스크 1.5% vs 1차 리워드 3.5% (기대값 양수 구조)"
+                ]
+            },
+            {
+                "id": "3. [추세 추종]",
+                "title": "잔여 50% 10이평선 트레일링 스탑",
+                "badge": "[신고가 랠리 완주]",
+                "accent": DARK["gold"],
+                "bg": "#231F14",
+                "lines": [
+                    "• 설정 조건: 3분봉/5분봉 10이평선을 종가상 하향 이탈하기 전까지 끝까지 홀딩",
+                    "• 추세 효과: 당일 주도주의 2차 파동 및 신고가 랠리(+7%~+10%↑) 수익 극대화",
+                    "• 본전 보존: 1차 익절 완료 즉시 스탑로스 기준을 매수가(본전)로 자동 상향"
+                ]
+            },
         ]
 
-        card_y = 0.655
-        for title, col, lines in safeties:
-            ax_right.text(0.06, card_y, title, color=col, fontsize=14.0, fontweight="bold")
-            card_y -= 0.026
-            for raw_line in lines:
-                wrapped = textwrap.wrap(raw_line, width=44)
-                for w_l in wrapped:
-                    ax_right.text(0.10, card_y, w_l, color=DARK["text_secondary"], fontsize=12.0)
-                    card_y -= 0.022
-            card_y -= 0.020
+        card_starts_r = [0.620, 0.420, 0.220]
+        card_h_r = 0.175
 
-        # 하단 경고 박스
+        for idx, item in enumerate(safety_cards):
+            c_y = card_starts_r[idx]
+            card_patch = FancyBboxPatch(
+                (0.035, c_y), 0.930, card_h_r, boxstyle="round,pad=0.010,rounding_size=0.012",
+                facecolor=item["bg"], edgecolor=item["accent"], linewidth=1.2
+            )
+            ax_right.add_patch(card_patch)
+
+            # 헤더: ID + 타이틀 (좌측) / 배지 요약 (우측)
+            title_text = f"{item['id']} {item['title']}"
+            ax_right.text(0.065, c_y + 0.138, title_text, color=item["accent"], fontsize=13.0, fontweight="bold", va="center")
+            ax_right.text(0.920, c_y + 0.138, item["badge"], color=DARK["text_primary"], fontsize=11.5, fontweight="bold", ha="right", va="center")
+
+            # 내부 설명 3줄
+            ax_right.text(0.065, c_y + 0.098, item["lines"][0], color=DARK["text_secondary"], fontsize=11.0, va="center")
+            ax_right.text(0.065, c_y + 0.062, item["lines"][1], color=DARK["text_secondary"], fontsize=11.0, va="center")
+            ax_right.text(0.065, c_y + 0.026, item["lines"][2], color=DARK["text_secondary"], fontsize=11.0, va="center")
+
+        # 3. 하단 경고 배너 (슬림형)
         alert_box_r = FancyBboxPatch(
-            (0.04, 0.035), 0.92, 0.135, boxstyle="round,pad=0.015",
-            facecolor="#2A1B1D", edgecolor=DARK["stop_red"], linewidth=1.5
+            (0.035, 0.040), 0.930, 0.145, boxstyle="round,pad=0.012,rounding_size=0.015",
+            facecolor="#251619", edgecolor=DARK["stop_red"], linewidth=1.4
         )
         ax_right.add_patch(alert_box_r)
-        ax_right.text(0.50, 0.135, "[필독] 맥락트레이딩 스탑로스 2대 절대 금지 수칙", color=DARK["stop_red"], fontsize=13.0, fontweight="bold", ha="center")
-        ax_right.text(0.50, 0.098, "1. 주가가 하락할 때 손절선을 아래로 내리거나 취소하는 행위 0% 금지", color=DARK["text_secondary"], fontsize=11.5, ha="center")
-        ax_right.text(0.50, 0.065, "2. 지지선 이탈 시 평단가를 낮추려는 물타기(추가 매수) 영구 엄금!", color=DARK["gold"], fontsize=11.5, fontweight="bold", ha="center")
+        ax_right.text(0.50, 0.145, "[필독 헌법] 맥락트레이딩 스탑로스 2대 절대 금지 수칙", color=DARK["stop_red"], fontsize=12.5, fontweight="bold", ha="center")
+        ax_right.text(0.50, 0.105, "1. 주가 하락 시 손절선을 아래로 내리거나 취소하는 행위 0% 영구 금지", color=DARK["text_secondary"], fontsize=11.5, ha="center")
+        ax_right.text(0.50, 0.070, "2. 지지선 이탈 시 평단가를 낮추기 위한 물타기(추가 매수) 영구 엄금!", color=DARK["gold"], fontsize=11.5, fontweight="bold", ha="center")
+
+        # VisualQAGuard 6대 게이트 검증
+        qa_meta = VisualQAGuard.assert_zero_visual_defects(fig, "STRAT01_Condition_StopLoss_Guide")
+
+        out_path = self.output_dir / "chart_strat01_condition_stoploss_guide.png"
+        plt.savefig(out_path, dpi=120, facecolor=DARK["bg"], edgecolor="none")
+        plt.close(fig)
+
+        # 루트 에셋 디렉터리 미러링
+        shutil.copyfile(out_path, self.root_img_dir / "chart_strat01_condition_stoploss_guide.png")
+
+        # SHA-256 감사 매니페스트 기록
+        self.manifest.record_asset(out_path, qa_meta)
+        return out_path
 
         # VisualQAGuard 6대 게이트 검증
         qa_meta = VisualQAGuard.assert_zero_visual_defects(fig, "STRAT01_Condition_StopLoss_Guide")

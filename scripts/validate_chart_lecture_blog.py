@@ -74,9 +74,10 @@ class ChartLectureValidator:
     THEMATIC_BREAK_REGEX = re.compile(r"^\s*(\-{3,}|\*{3,}|_{3,})\s*$")
     TABLE_SEPARATOR_REGEX = re.compile(r"^\s*\|?(\s*:?-+:?\s*\|)+\s*$")
 
-    def __init__(self, blog_root: Path, assets_dir: Optional[Path] = None):
+    def __init__(self, blog_root: Path, assets_dir: Optional[Path] = None, target_category: str = "auto"):
         self.blog_root = blog_root
         self.assets_dir = assets_dir or (blog_root / "assets" / "img")
+        self.target_category = target_category
 
     def parse_front_matter(self, text: str) -> Tuple[Optional[Dict[str, Any]], str, Optional[str]]:
         """Extract YAML front matter and body text."""
@@ -152,21 +153,43 @@ class ChartLectureValidator:
             if not date_val:
                 r1_errors.append("date is missing or empty")
 
-            # category / categories check (단일 카테고리 '차트강의' 엄격 격리 가드)
+            # category / categories check (단일 카테고리 엄격 격리 가드)
             cat = str(front_matter.get("category", "")).strip()
             cats = front_matter.get("categories", [])
             if isinstance(cats, str):
                 cats = [cats]
             all_cats = [c.strip() for c in ([cat] + [str(x) for x in cats]) if c.strip()]
-            if not any("차트강의" in c or "chart" in c.lower() for c in all_cats):
-                r1_errors.append("category or categories must contain '차트강의' or 'chart'")
 
-            # 타 카테고리 중복 지정(교차 오염) 엄격 차단 가드
-            forbidden_cats = ["실전 매매기법", "실전매매기법", "매매기법", "strategy", "커버드콜", "coveredcall"]
-            for c in all_cats:
-                for f in forbidden_cats:
-                    if f in c.lower() or f in c:
-                        r1_errors.append(f"Cross-category contamination detected: '{c}' contains '{f}'. Chart lecture posts must strictly belong to '차트강의' only.")
+            # Determine mode: chart vs strategy
+            mode = self.target_category
+            if mode == "auto":
+                if any("매매기법" in c or "strategy" in c.lower() for c in all_cats):
+                    mode = "strategy"
+                elif any("차트강의" in c or "chart" in c.lower() for c in all_cats):
+                    mode = "chart"
+                else:
+                    post_name = post_path.name.lower()
+                    if "strat0" in post_name or "manual" in post_name:
+                        mode = "strategy"
+                    else:
+                        mode = "chart"
+
+            if mode == "strategy":
+                if not any(k in c or k in c.lower() for c in all_cats for k in ["실전 매매기법", "실전매매기법", "매매기법", "strategy"]):
+                    r1_errors.append("category or categories must contain '실전 매매기법' or 'strategy'")
+                forbidden_cats = ["차트강의", "chart", "커버드콜", "coveredcall"]
+                for c in all_cats:
+                    for f in forbidden_cats:
+                        if f in c.lower() or f in c:
+                            r1_errors.append(f"Cross-category contamination detected: '{c}' contains '{f}'. Strategy posts must strictly belong to '실전 매매기법' only.")
+            else:
+                if not any("차트강의" in c or "chart" in c.lower() for c in all_cats):
+                    r1_errors.append("category or categories must contain '차트강의' or 'chart'")
+                forbidden_cats = ["실전 매매기법", "실전매매기법", "매매기법", "strategy", "커버드콜", "coveredcall"]
+                for c in all_cats:
+                    for f in forbidden_cats:
+                        if f in c.lower() or f in c:
+                            r1_errors.append(f"Cross-category contamination detected: '{c}' contains '{f}'. Chart lecture posts must strictly belong to '차트강의' only.")
 
             # tags check
             tags = front_matter.get("tags", [])

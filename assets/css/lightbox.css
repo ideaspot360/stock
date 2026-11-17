@@ -1,0 +1,169 @@
+/**
+ * Pan & Zoom Interactive Lightbox Stylesheet (Master Shared Asset)
+ *
+ * Provides styling for the panzoom modal, HUD floating toolbar,
+ * scale badge, interactive viewport, and target article image cursors.
+ */
+
+/* 1. Target Post Body Images with Zoom-in Cursor */
+.entry-content img,
+article.post-content img,
+.post-content img,
+.post-body img,
+.markdown-body img {
+  cursor: zoom-in;
+  transition: opacity 0.2s ease, filter 0.2s ease;
+}
+
+/* 2. Modal Overlay Container (Dark Glassmorphism Backdrop) */
+.panzoom-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 999999;
+  background-color: rgba(10, 15, 29, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  overflow: hidden;
+}
+
+.panzoom-modal.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* 3. Floating HUD Toolbar */
+.panzoom-toolbar {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(17, 24, 39, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 28px;
+  padding: 6px 14px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  z-index: 10;
+}
+
+/* 4. Monospace Scale Percentage Badge */
+.panzoom-scale-badge {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #38bdf8;
+  padding: 0 8px;
+  min-width: 48px;
+  text-align: center;
+}
+
+/* 5. Circular HUD Toolbar Action Buttons */
+.panzoom-btn {
+  background: transparent;
+  border: none;
+  color: #f3f4f6;
+  font-size: 1.15rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  transition: background 0.15s ease, transform 0.1s ease, color 0.15s ease;
+}
+
+.panzoom-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  transform: scale(1.1);
+}
+
+.panzoom-btn:active {
+  transform: scale(0.95);
+}
+
+/* 6. Interactive Image Viewport */
+.panzoom-viewport {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  cursor: grab;
+}
+
+/* Both grabbing and dragging class support */
+.panzoom-viewport.grabbing,
+.panzoom-viewport.dragging {
+  cursor: grabbing;
+}
+
+/* 7. Centered Image Transform Target */
+.panzoom-image {
+  max-width: 90vw;
+  max-height: 85vh;
+  object-fit: contain;
+  transform-origin: center center;
+  will-change: transform;
+  pointer-events: auto;
+  border-radius: 4px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+}
+
+/* 8. Bottom Helper Navigation Hint */
+.panzoom-hint {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(17, 24, 39, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #94a3b8;
+  font-size: 0.82rem;
+  padding: 6px 18px;
+  border-radius: 20px;
+  pointer-events: none;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+
+@media (max-width: 640px) {
+  .panzoom-toolbar {
+    top: 12px;
+    right: 12px;
+    gap: 4px;
+    padding: 4px 10px;
+  }
+
+  .panzoom-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 1rem;
+  }
+
+  .panzoom-hint {
+    bottom: 12px;
+    font-size: 0.72rem;
+    padding: 4px 12px;
+  }
+}

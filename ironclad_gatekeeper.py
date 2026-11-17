@@ -24,14 +24,15 @@
   - TRANSPARENT FEEDBACK: 위반 행 번호, 매칭된 텍스트 스니펫, 구체적 교정 가이드라인(Fix Hint) 즉시 출력.
   - ALL-IN-ONE SINGLE FILE: 다른 블로그 전담 에이전트에게 파일 1개만 전달하면 즉시 복제 및 적용 가능.
 
-7대 검증 게이트 (7-Layer Ironclad Verification Gates):
+7대 검증 게이트 (7-Layer Ironclad Verification Gates) -> 8대 확장 (8-Layer):
   [Gate 1] 구조 & 마크다운 무결성 (YAML Frontmatter, 코드 블록 짝 맞춤, 최소 분량)
   [Gate 2] AI 클리셰 & 기계적 번역투 박멸 (국문 40+ 규칙, 영문 40+ 규칙 정밀 정규식)
   [Gate 3] 억지 스토리 & 작위적 연출 차단 (새벽 몇 시 알람, 식은땀, 패닉 등 소설화 원천 배제)
   [Gate 4] 실무 엔지니어링 5대 아티팩트 검증 (Raw Log, Wrong Fix, Unified Diff, Root Cause, CLI Verify)
   [Gate 5] 사족 & 중언부언 차단 (도입부 과다 서술, 판에 박힌 결론 재요약)
   [Gate 6] 맞춤법, 오타 및 플랫폼별 특화 규격 (네이버 의료법/금지어, 이미지 링크 표기, 해시태그)
-  [Gate 7] 실행 차단 & 감사 리포트 (ANSI 컬러 터미널 출력, JSON 리포트, sys.exit(1) 차단 연동)
+  [Gate 7] 보안 & 시크릿 누출 방벽 (API Key, AWS, 프라이빗 키 누출 차단)
+  [Gate 8] 법적 리스크 & 컴플라이언스 방벽 (자본시장법·금소법, 의료법·식품표시광고법, 공정위 표시광고법, 공공누리 KOGL, 영문 SEC 글로벌 규제)
 ================================================================================
 """
 
@@ -214,47 +215,12 @@ NAVER_HEALTH_FORBIDDEN = [
 ]
 
 # ------------------------------------------------------------------------------
-# 5. 주식/증시 및 글로벌 매크로 특화 규격 & 법적 리스크 룰셋 (Stock & Macro Rules)
-# ------------------------------------------------------------------------------
-STOCK_FORBIDDEN_PATTERNS = [
-    (r"원금\s*보장", "REJECT", "[자본시장법 위반] 주식/투자 글에 '원금 보장' 표방은 법적으로 금지됩니다."),
-    (r"무조건\s*(급등|상승|폭등)", "REJECT", "비이성적 확증 편향 및 과장 어휘 감지. 객관적 데이터와 시나리오로 서술하십시오."),
-    (r"확정\s*(순)?수익(률)?", "REJECT", "[자본시장법 위반] 투자 글에 '확정 수익/순수익' 표방은 100% 금지됩니다."),
-    (r"수익(을)?\s*확정", "REJECT", "[자본시장법 위반] 투자 글에 '수익 확정' 표방은 100% 금지됩니다. '실현 수익' 또는 '수익 확보'로 기술하십시오."),
-    (r"확정적(인)?\s*(수익|현금|분배|캐시플로우|프리미엄)", "REJECT", "[자본시장법 위반] 배당/옵션 인컴에 '확정적' 수식어는 법적으로 금지됩니다. '정기적인' 또는 '주기적인'으로 대체하십시오."),
-    (r"확정\s*(현금|프리미엄|분배)", "REJECT", "[자본시장법 위반] 옵션 프리미엄/현금흐름에 '확정' 표방은 금지됩니다. '선취' 또는 '인컴'으로 기술하십시오."),
-    (r"목표가\s*찍(는다|을\s*것)", "REJECT", "사기성 리딩방 어투 감지. '상방 저항선 레벨', '밸류에이션 밴드'로 서술하십시오."),
-    (r"풀매수|영끌|몰빵", "REJECT", "비전문적 투기 조장 어휘 감지. 리스크 관리 및 분할 매매 원칙을 기술하십시오."),
-]
-
-MACRO_FORBIDDEN_PATTERNS_EN = [
-    (r"\bguaranteed returns?\b", "REJECT", "Prohibited regulatory phrase detected."),
-    (r"\bto the moon\b", "REJECT", "Unprofessional speculative slang detected."),
-    (r"\beasy money\b", "REJECT", "Sensationalist financial phrase detected."),
-]
-
-# ------------------------------------------------------------------------------
-# 6. 플랫폼 카테고리 정의
+# 5. 플랫폼 카테고리 정의
 # ------------------------------------------------------------------------------
 DEV_OFFICIAL_CATEGORIES = [
     "Cloud & DevOps",
     "Database & Storage",
     "Systems & Networking"
-]
-
-MARKETS_OFFICIAL_CATEGORIES = [
-    "Macro Intelligence",
-    "US Systematic Equity",
-    "Options & Income",
-    "Quantitative Frameworks"
-]
-
-STOCK_OFFICIAL_CATEGORIES = [
-    "커버드콜 분석",
-    "커버드콜 이론",
-    "차트이론",
-    "공지사항",
-    "이론 및 기초"
 ]
 
 TISTORY_OFFICIAL_CATEGORIES = [
@@ -273,6 +239,615 @@ TISTORY_OFFICIAL_CATEGORIES = [
     "실무 장애 트러블슈팅"
 ]
 
+# ------------------------------------------------------------------------------
+# 6. 법적 리스크 & 컴플라이언스 룰셋 데이터베이스 (Legal & Compliance Rulesets)
+# ------------------------------------------------------------------------------
+
+# [6-1] 자본시장법 & 금융소비자보호법(금소법) 방벽
+# (자본시장법 제55조 손실보전 금지, 금소법 제19조~21조 부당권유행위 금지)
+CAPITAL_MARKETS_RULES = [
+    # 1. 원금보장 및 손실보전 약정
+    (
+        r"원금(?:을|은|도|\s*)?\s*보장(?!\s*(?:하지\s*않|되지\s*않|은\s*없|이\s*없|이\s*아닙|이\s*아님|이\s*불가|을\s*하지\s*않|할\s*수\s*없))",
+        "REJECT",
+        "G8_FIN_PRINCIPAL_GUARANTEE",
+        "[자본시장법·금소법 방벽] '원금 보장' 표방 금지 (자본시장법 제55조 및 금소법 제21조). 금융투자상품은 원금 손실 위험이 수반되므로 원금을 보장할 수 없습니다.",
+        "원금 보장 표현을 삭제하고 원금 손실 가능성 및 투자 위험 고지 문구를 삽입하십시오."
+    ),
+    (
+        r"원금\s*(?:손실|손실이|손실은)\s*(?:없는|없음|없고|0%|제로)",
+        "REJECT",
+        "G8_FIN_NO_LOSS_CLAIM",
+        "[자본시장법·금소법 방벽] '원금 손실 없음/0%' 단언 금지 (금소법 제19조 부당권유행위).",
+        "원금 손실이 없다는 비현실적인 단언을 삭제하고 시장 변동성 위험을 명시하십시오."
+    ),
+    (
+        r"원금(?:을|의|은|\s*)?\s*(?:전액\s*)?보존(?!\s*(?:하지\s*않|되지\s*않|은\s*없|이\s*없|이\s*아닙|이\s*불가|할\s*수\s*없))",
+        "REJECT",
+        "G8_FIN_PRINCIPAL_PRESERVATION",
+        "[자본시장법·금소법 방벽] '원금 보존' 약정 표현 금지 (자본시장법 제55조).",
+        "원금 보존 표현을 삭제하십시오."
+    ),
+    (
+        r"원금\s*(?:회수|반환)\s*100%",
+        "REJECT",
+        "G8_FIN_PRINCIPAL_RECOVERY",
+        "[자본시장법·금소법 방벽] '원금 회수 100%' 표방 금지.",
+        "원금 회수 100% 표현을 삭제하십시오."
+    ),
+    (
+        r"손실(?:을|은|\s*)?\s*(?:전액\s*)?보전(?!\s*(?:하지\s*않|되지\s*않|은\s*없|이\s*없|이\s*아닙|이\s*불가|할\s*수\s*없))",
+        "REJECT",
+        "G8_FIN_LOSS_COMPENSATION",
+        "[자본시장법 제55조 위반] '손실 보전' 약속 금지.",
+        "손실 보전 표현을 삭제하십시오."
+    ),
+
+    # 2. 확정수익 및 무위험 고수익 표방
+    (
+        r"확정\s*수익(?:률)?(?!\s*(?:을\s*보장하지\s*않|이\s*아닙|은\s*없|을\s*약속하지\s*않))",
+        "REJECT",
+        "G8_FIN_CONFIRMED_PROFIT",
+        "[자본시장법·금소법 방벽] '확정 수익(률)' 표방 금지 (금소법 제19조). 예적금을 제외한 금융투자상품에 확정 수익률을 표방할 수 없습니다.",
+        "확정 수익 표현을 삭제하고 기대 수익과 시나리오별 리스크를 균형 있게 기술하십시오."
+    ),
+    (
+        r"무위험\s*고수익",
+        "REJECT",
+        "G8_FIN_RISK_FREE_HIGH_RETURN",
+        "[자본시장법·금소법 방벽] '무위험 고수익' 기만 표현 금지 (금소법 제19조).",
+        "고수익에는 상응하는 고위험이 수반됨을 명시하십시오."
+    ),
+    (
+        r"위험\s*없는\s*(?:고수익|투자)",
+        "REJECT",
+        "G8_FIN_RISK_FREE_INVESTMENT",
+        "[자본시장법·금소법 방벽] '위험 없는 투자' 표방 금지.",
+        "투자 리스크를 객관적으로 명시하십시오."
+    ),
+    (
+        r"수익(?:률)?(?:을|은|\s*)?\s*보장(?!\s*(?:하지\s*않|되지\s*않|은\s*없|이\s*없|이\s*아닙|이\s*아님|이\s*불가|을\s*하지\s*않|할\s*수\s*없))",
+        "REJECT",
+        "G8_FIN_GUARANTEED_PROFIT",
+        "[자본시장법·금소법 방벽] '수익(률) 보장' 표현 금지.",
+        "수익 보장 표현을 삭제하십시오."
+    ),
+    (
+        r"100%\s*(?:수익|수익률|원금보장)",
+        "REJECT",
+        "G8_FIN_100_PERCENT_PROFIT",
+        "[자본시장법·금소법 방벽] '100% 수익(률)' 단언 금지.",
+        "100% 수익 단언을 배제하십시오."
+    ),
+    (
+        r"손실률\s*0%",
+        "REJECT",
+        "G8_FIN_ZERO_LOSS_RATE",
+        "[자본시장법·금소법 방벽] '손실률 0%' 표방 금지.",
+        "손실 위험을 솔직하게 기술하십시오."
+    ),
+
+    # 3. 사기성 리딩방 어투 및 시세조종 조장
+    (
+        r"VIP\s*(?:리딩|추천|정보)",
+        "REJECT",
+        "G8_FIN_VIP_LEADING",
+        "[자본시장법 방벽] 불법 사기성 리딩방 어투 'VIP 리딩/추천' 감지 (자본시장법 위반 소지).",
+        "사기성 리딩방 마케팅 용어를 전면 삭제하십시오."
+    ),
+    (
+        r"급등주\s*(?:추천|대공개|포착|공개|발굴|무료)",
+        "REJECT",
+        "G8_FIN_SURGE_STOCK",
+        "[자본시장법 방벽] 선동적 투기 조장 '급등주 추천/포착' 감지.",
+        "투기 조장 어휘를 삭제하고 펀더멘털 및 매크로 지표 분석으로 전환하십시오."
+    ),
+    (
+        r"특급\s*(?:호재|정보|재료)",
+        "REJECT",
+        "G8_FIN_SPECIAL_INSIDER_INFO",
+        "[자본시장법 방벽] 사기성 미공개 정보 유혹 어투 '특급 호재/재료' 감지.",
+        "객관적 공시 및 시장 뉴스 기반으로 서술하십시오."
+    ),
+    (
+        r"무조건\s*(?:폭등|상승|상한가)",
+        "REJECT",
+        "G8_FIN_UNCONDITIONAL_SURGE",
+        "[자본시장법 방벽] '무조건 폭등/상승/상한가' 선동적 과장 표현 감지.",
+        "가격 변동을 확언하는 어투를 배제하십시오."
+    ),
+    (
+        r"내일\s*(?:무조건\s*)?상한가",
+        "REJECT",
+        "G8_FIN_TOMORROW_UPPER_LIMIT",
+        "[자본시장법 방벽] '내일 상한가' 허위 유혹 표현 감지.",
+        "내일 상한가 표현을 삭제하십시오."
+    ),
+    (
+        r"세력\s*(?:매집|입성|작전)(?:주)?",
+        "REJECT",
+        "G8_FIN_MARKET_MANIPULATION",
+        "[자본시장법 방벽] '세력 매집/작전주' 등 시세조종 및 불법 투기 조장 어휘 감지 (자본시장법 제178조).",
+        "세력/작전 관련 불법 투기 표현을 전면 삭제하십시오."
+    ),
+    (
+        r"선취매(?:\s*완료|\s*종목)?",
+        "REJECT",
+        "G8_FIN_FRONT_RUNNING",
+        "[자본시장법 방벽] 불법 선취매 표방 어투 감지 (자본시장법 불공정거래행위 소지).",
+        "선취매 표현을 삭제하십시오."
+    ),
+    (
+        r"단타\s*리딩방",
+        "REJECT",
+        "G8_FIN_LEADING_ROOM",
+        "[자본시장법 방벽] '단타 리딩방' 등 불법 유사투자자문 어휘 감지.",
+        "리딩방 홍보 및 유인 어휘를 삭제하십시오."
+    ),
+    (
+        r"목표가\s*(?:찍고|도달\s*확정)",
+        "REJECT",
+        "G8_FIN_GUARANTEED_TARGET_PRICE",
+        "[자본시장법 방벽] '목표가 도달 확정' 표방 감지.",
+        "목표가 도달을 확언하지 마십시오."
+    ),
+
+    # 4. 미등록 투자자문 소지 표현
+    (
+        r"무료\s*(?:종목\s*)?상담",
+        "REJECT",
+        "G8_FIN_UNREGISTERED_ADVICE_CONSULT",
+        "[자본시장법 제17조 위반] 미등록 투자자문 소지 '무료 종목 상담' 감지.",
+        "개별 종목 상담 유도 문구를 삭제하십시오."
+    ),
+    (
+        r"1:1\s*(?:투자\s*)?(?:리딩|자문|코칭|상담)",
+        "REJECT",
+        "G8_FIN_UNREGISTERED_1ON1",
+        "[자본시장법 제17조 위반] 불법 '1:1 투자 리딩/자문' 표현 감지.",
+        "1:1 투자 자문 어휘를 삭제하십시오."
+    ),
+    (
+        r"(?:지금|오늘)\s*당장\s*(?:매수|매도)하십시오",
+        "REJECT",
+        "G8_FIN_URGENT_TRADE_ORDER",
+        "[자본시장법 위반] 일방적 매매 지시 어투 감지.",
+        "독자에게 특정 매매 행위를 강요하지 마십시오."
+    ),
+    (
+        r"(?:무조건|반드시)\s*(?:풀매수|매수|매도)하세요",
+        "REJECT",
+        "G8_FIN_FORCED_TRADE_ORDER",
+        "[자본시장법 위반] 단정적 매수/매도 권유 어투 감지.",
+        "판단은 투자자 본인의 몫임을 존중하는 기술적 분석으로 서술하십시오."
+    ),
+    (
+        r"종목\s*찍어드립니다",
+        "REJECT",
+        "G8_FIN_PICK_STOCK",
+        "[자본시장법 위반] 불법 종목 추천 어투 감지.",
+        "종목 찍어주기 식 어투를 배제하십시오."
+    ),
+]
+
+KO_FINANCIAL_DISCLAIMER_PATTERNS = [
+    r"투자\s*(?:유의사항|경고|참고)",
+    r"면책\s*(?:고지|문구)",
+    r"투자를?\s*(?:권유|자문|추천|판단|책임)",
+    r"권유가\s*아닙",
+    r"자문이\s*아닙",
+    r"추천이\s*아닙",
+    r"원금\s*손실",
+    r"손실\s*(?:의\s*)?위험",
+    r"본\s*(?:글|포스팅|아티클|자료|콘텐츠)은?는?\s*.*?(?:참고|정보\s*제공)",
+    r"정보\s*제공\s*목적",
+    r"투자\s*결정은\s*본인",
+    r"투자의\s*책임은\s*(?:투자자|본인)",
+    r"금융소비자보호법",
+    r"금소법",
+]
+
+# [6-2] 의료법 & 건강기능식품법(식품표시광고법) 방벽
+# (식품표시광고법 제8조 부당한 표시·광고 금지, 의료법 제56조 의료광고 금지)
+MEDICAL_LAW_RULES = [
+    # 1. 질병 예방/치료 표방 금지
+    (
+        r"완치",
+        "REJECT",
+        "G8_MED_CURE_ALL",
+        "[식품표시광고법 제8조 위반] '완치' 단어 사용 금지. 건강기능식품/일반식품은 질병 완치를 표방할 수 없습니다.",
+        "'완치'를 삭제하고 '체내 흡수율 개선', '영양 공급' 등 객관적 기전으로 서술하십시오."
+    ),
+    (
+        r"특효약",
+        "REJECT",
+        "G8_MED_MAGIC_CURE",
+        "[식품표시광고법 제8조 위반] '특효약' 등 과장 광고 단어 100% 금지.",
+        "'특효약' 표현을 삭제하십시오."
+    ),
+    (
+        r"완벽\s*예방",
+        "REJECT",
+        "G8_MED_PERFECT_PREVENTION",
+        "[식품표시광고법 위반] '완벽 예방' 표방 금지.",
+        "'완벽 예방' 표현을 삭제하십시오."
+    ),
+    (
+        r"만병통치",
+        "REJECT",
+        "G8_MED_PANACEA",
+        "[식품표시광고법 위반] '만병통치' 표방 금지.",
+        "'만병통치' 표현을 삭제하십시오."
+    ),
+    (
+        r"기적의\s*(?:치료|영양제|효능)",
+        "REJECT",
+        "G8_MED_MIRACLE_CURE",
+        "[식품표시광고법 위반] '기적의 치료/영양제' 과장 수식어 금지.",
+        "기적 등의 비과학적 수식어를 배제하십시오."
+    ),
+    (
+        r"항암(?:\s*효과|\s*작용|\s*치료)",
+        "REJECT",
+        "G8_MED_ANTICANCER",
+        "[식품표시광고법 위반] 식품/영양소의 '항암 효과/치료' 표방 절대 금지.",
+        "항암 표방 표현을 전면 삭제하십시오."
+    ),
+    (
+        r"병이\s*낫는",
+        "REJECT",
+        "G8_MED_DISEASE_REMEDY",
+        "[식품표시광고법 위반] '병이 낫는' 표방 금지.",
+        "질병 치유 표방 표현을 삭제하십시오."
+    ),
+
+    # 2. 의약품 오인·혼동 표현
+    (
+        r"천연\s*치료제",
+        "REJECT",
+        "G8_MED_NATURAL_MEDICINE",
+        "[식품표시광고법 제8조 위반] 건강기능식품/식품을 '천연 치료제'로 의약품 오인 유발 금지.",
+        "'천연 치료제' 표현을 삭제하고 '식품의약품안전처 고시 기능성 원료'로 서술하십시오."
+    ),
+    (
+        r"약(?:을|\s*)?\s*대신(?:\s*먹는)?",
+        "REJECT",
+        "G8_MED_INSTEAD_OF_DRUG",
+        "[식품표시광고법 위반] '약 대신' 등 의약품 대체 오인 표현 금지.",
+        "의약품을 대체할 수 없음을 명시하십시오."
+    ),
+    (
+        r"의약품(?:을|\s*)?\s*(?:대체|대용)",
+        "REJECT",
+        "G8_MED_DRUG_SUBSTITUTE",
+        "[식품표시광고법 위반] '의약품 대체/대용' 표방 금지.",
+        "의약품 대체 표현을 삭제하십시오."
+    ),
+    (
+        r"처방약(?:을|은|\s*)?\s*(?:중단|끊고|대체)",
+        "REJECT",
+        "G8_MED_STOP_PRESCRIPTION",
+        "[의료법·식품표시광고법 위반] 환자에게 '처방약 중단/끊고' 유도 절대 금지 (중대한 건강 위해 행위).",
+        "전문의 처방약 복용 유지를 안내하십시오."
+    ),
+    (
+        r"부작용(?:이|\s*)?\s*없는\s*(?:치료제|약)",
+        "REJECT",
+        "G8_MED_NO_SIDE_EFFECT_DRUG",
+        "[식품표시광고법 위반] '부작용 없는 치료제/약' 표방 금지.",
+        "치료제/약 표현을 삭제하십시오."
+    ),
+    (
+        r"병원(?:에|\s*)?\s*갈\s*필요\s*(?:없는|없음)",
+        "REJECT",
+        "G8_MED_NO_HOSPITAL_NEED",
+        "[의료법 위반] '병원 갈 필요 없는' 등 진료 회피 유도 금지.",
+        "이상 증상 시 의사의 진료를 받도록 안내하십시오."
+    ),
+
+    # 3. 의료인 사칭 및 추천 보증
+    (
+        r"(?:현직|임상)\s*(?:의사|약사|한의사)로서",
+        "REJECT",
+        "G8_MED_IMPERSONATION_PROFESSIONAL",
+        "[의료법 제56조 및 표시광고법 위반] 비의료인의 의료인(의사/약사/한의사) 자격 사칭 금지.",
+        "소비자 및 영양 데이터 팩트체커 입장에서 객관적으로 서술하십시오."
+    ),
+    (
+        r"(?:의사|약사|한의사)인\s*제가",
+        "REJECT",
+        "G8_MED_IMPERSONATION_SELF",
+        "[의료법 제56조 위반] 의료인 자격 사칭 표현 감지.",
+        "의료인 사칭 어투를 삭제하십시오."
+    ),
+    (
+        r"전문의가\s*보증하는",
+        "REJECT",
+        "G8_MED_DOCTOR_ENDORSEMENT",
+        "[식품표시광고법 위반] '전문의가 보증하는' 등 특정 의료인 추천/보증 표방 금지.",
+        "공인 학술 논문 및 식약처 공시 자료로 대체하십시오."
+    ),
+    (
+        r"병원장\s*추천",
+        "REJECT",
+        "G8_MED_HOSPITAL_CHIEF_REC",
+        "[식품표시광고법 위반] '병원장 추천' 표방 금지.",
+        "병원장 추천 표현을 삭제하십시오."
+    ),
+
+    # 4. 거짓·과장된 기능성 광고
+    (
+        r"체지방\s*100%\s*(?:분해|감소|연소)",
+        "REJECT",
+        "G8_MED_100PCT_FAT_BURN",
+        "[식품표시광고법 위반] '체지방 100% 분해/연소' 비과학적 허위 과장 표현 금지.",
+        "식약처 인정 기능성 범위 내로 기재하십시오."
+    ),
+    (
+        r"노화\s*(?:완전\s*)?역전",
+        "REJECT",
+        "G8_MED_AGING_REVERSAL",
+        "[식품표시광고법 위반] '노화 완전 역전' 과장 광고 금지.",
+        "항산화 영양소의 체내 작용 기전으로 담백하게 설명하십시오."
+    ),
+    (
+        r"기억력\s*[0-9]+배\s*(?:향상|상승)",
+        "REJECT",
+        "G8_MED_MEMORY_MULTIPLIER",
+        "[식품표시광고법 위반] '기억력 N배 향상' 등 입증되지 않은 수치 과장 금지.",
+        "인체적용시험 결과의 통계적 유의성으로 설명하십시오."
+    ),
+    (
+        r"하루만에\s*(?:완치|치료|개선|정상화)",
+        "REJECT",
+        "G8_MED_ONE_DAY_CURE",
+        "[식품표시광고법 위반] '하루만에 완치/개선' 과장 광고 금지.",
+        "즉각적인 극적 효과 과장을 삭제하십시오."
+    ),
+]
+
+HEALTH_DISCLAIMER_PATTERNS = [
+    r"면책",
+    r"의사의\s*진료",
+    r"처방을\s*대신",
+    r"의료\s*전문가와\s*상담",
+    r"전문\s*의료인",
+    r"의사\s*(?:또는|및)\s*약사와\s*상담",
+    r"의약품이\s*(?:아님|아니|아닙)",
+    r"진단\s*및\s*처방",
+    r"의료인의\s*진단",
+    r"건강\s*정보\s*제공",
+    r"일반적인\s*건강\s*정보",
+    r"질병의\s*(?:예방\s*및\s*)?치료를\s*(?:위한\s*의약품이\s*아닙|목적으로\s*하지\s*않)",
+    r"의학적\s*치료\s*행위가\s*아닙",
+]
+
+# 하위 호환성 유지용 키워드 리스트
+HEALTH_DISCLAIMER_KEYWORDS = [
+    "면책", "의사의 진료", "처방을 대신", "의료 전문가와 상담", "일반적인 건강 정보",
+    "전문 의료인", "의사 또는 약사와 상담", "의약품이 아님", "진단 및 처방", "의료인의 진단"
+]
+
+# [6-3] 공정거래위원회 추천·보증 심사지침 (대가성 표시광고법)
+AFFILIATE_LINK_PATTERNS = [
+    r"link\.coupang\.com",
+    r"coupang\.com\/vp\/products",
+    r"partners\.coupang\.com",
+    r"linkprice\.com",
+    r"adpick\.co\.kr",
+    r"tenping\.kr",
+    r"clix\.kr",
+    r"amzn\.to",
+    r"amazon\.com\/.*[?&]tag=",
+    r"aliexpress\.com\/.*[?&]aff_",
+]
+
+AFFILIATE_KEYWORD_PATTERNS = [
+    r"쿠팡\s*파트너스",
+    r"제휴\s*(?:마케팅|링크|수수료)",
+    r"원고료(?:를|\s*)?\s*(?:지원|지급)",
+    r"제품(?:을|\s*)?\s*(?:협찬|지원)",
+    r"수수료(?:를|\s*)?\s*(?:발생|제공받)",
+    r"파트너스\s*활동",
+    r"스폰서\s*링크",
+]
+
+FTC_DISCLOSURE_PATTERNS = [
+    r"소정의\s*수수료",
+    r"일정액의\s*수수료",
+    r"수수료를\s*(?:제공|지원|지급)받",
+    r"수수료를\s*받(?:을\s*수|을\s*있|았)",
+    r"경제적\s*대가",
+    r"공정거래위원회\s*(?:지침|문구)",
+    r"추천[·\s]보증\s*(?:등에\s*관한\s*)?심사지침",
+    r"원고료를\s*(?:지급|지원)받",
+    r"제품을\s*(?:제공|협찬)받",
+    r"파트너스\s*활동의\s*일환",
+    r"대가성\s*(?:광고|표시|문구)",
+    r"유료\s*광고\s*포함",
+    # English & Global FTC Disclosures (US FTC 16 CFR § 255.5)
+    r"(?i)\baffiliate\s+(?:link|links|commission|commissions)\b",
+    r"(?i)\bearn\s+from\s+qualifying\s+purchases\b",
+    r"(?i)\bpaid\s+(?:link|links|ad|advertisement|partnership)\b",
+    r"(?i)\bcommission\s+at\s+no(?:\s+additional)?\s+cost\b",
+    r"(?i)\b(?:sponsored|promoted)\s+content\b",
+]
+
+COVERT_AD_PATTERNS = [
+    (
+        r"(?:내돈내산|직접\s*구매한|100%\s*자비).*?(?:link\.coupang\.com|amzn\.to|partners\.coupang)",
+        "REJECT",
+        "G8_FTC_COVERT_MY_MONEY",
+        "[공정위 표시광고법 위반] 제휴 링크가 포함되어 있으나 '내돈내산/자비 구매'로 소비자를 오도하는 기만적 스텔스 마케팅 감지.",
+        "'내돈내산' 허위 표기를 삭제하고 공정위 표준 대가성 문구를 기재하십시오."
+    ),
+    (
+        r"광고\s*아닙니다.*?(?:link\.coupang\.com|partners\.coupang|amzn\.to)",
+        "REJECT",
+        "G8_FTC_COVERT_NOT_AD",
+        "[공정위 표시광고법 위반] 제휴 수수료 링크가 있으면서 '광고 아닙니다'라고 허위 주장하는 행위 감지.",
+        "광고 부인 문구를 삭제하고 수수료 제공 사실을 명시하십시오."
+    ),
+]
+
+# [6-4] 공공누리(KOGL) 저작권 출처 표기 의무
+POLICY_TOPIC_PATTERNS = [
+    r"정부\s*(?:지원금|정책|보조금)",
+    r"복지\s*(?:지원금|정책|급여|혜택)",
+    r"청년도약계좌",
+    r"청년내일저축계좌",
+    r"국민기초생활보장",
+    r"근로장려금",
+    r"자녀장려금",
+    r"소상공인\s*(?:지원금|손실보전금|방역지원금)",
+    r"국민취업지원제도",
+    r"긴급복지지원",
+    r"보건복지부",
+    r"고용노동부",
+    r"국세청\s*(?:환급금|연말정산)",
+    r"정부24",
+    r"복지로",
+    r"행정안전부",
+    r"중소벤처기업부",
+]
+
+KOGL_ATTRIBUTION_PATTERNS = [
+    r"공공누리",
+    r"KOGL",
+    r"제[1-4]유형",
+    r"공공저작물",
+    r"출처\s*:\s*(?:대한민국\s*)?정책브리핑",
+    r"출처\s*:\s*공공데이터포털",
+    r"출처\s*:\s*(?:보건복지부|고용노동부|국세청|행정안전부|정부24|복지로|기획재정부|금융위원회|중소벤처기업부)",
+    r"본\s*저작물은\s*.*?(?:공공누리|출처표시)",
+    r"공공기관\s*저작물",
+]
+
+# [6-5] 영문 글로벌 금융 규제 방벽 (SEC Compliance & Global Regulations)
+GLOBAL_FINANCIAL_RULES = [
+    # 1. Guaranteed Returns & Risk-Free Claims
+    (
+        r"(?i)(?<!no\s)(?<!not\s)\bguaranteed\s+(?:returns?|profits?|yields?|income|gains?)\b",
+        "REJECT",
+        "G8_GLOBAL_GUARANTEED_RETURNS",
+        "[SEC Global Compliance] Illegal guaranteed returns claim detected (US SEC Rule 10b-5 / FINRA Rule 2210). All securities investments carry market risk.",
+        "Remove any guarantee of returns and state potential volatility and market risks objectively."
+    ),
+    (
+        r"(?i)\brisk-free\s+(?:profits?|returns?|yields?|investments?)\b",
+        "REJECT",
+        "G8_GLOBAL_RISK_FREE_PROFIT",
+        "[SEC Global Compliance] Misleading 'risk-free profit/return' claim detected.",
+        "Eliminate 'risk-free' claims and provide balanced risk disclosure."
+    ),
+    (
+        r"(?i)\b100%\s*(?:guaranteed|win\s*rate|profit|success\s*rate)\b",
+        "REJECT",
+        "G8_GLOBAL_100PCT_WIN_RATE",
+        "[SEC Global Compliance] Unrealistic '100% win rate / profit' claim detected.",
+        "Remove false certainty claims regarding trading performance."
+    ),
+    (
+        r"(?i)\bcannot\s+lose(?:\s+money)?\b",
+        "REJECT",
+        "G8_GLOBAL_CANNOT_LOSE",
+        "[SEC Global Compliance] Deceptive 'cannot lose money' claim detected.",
+        "Acknowledge the risk of financial loss in all market conditions."
+    ),
+    (
+        r"(?i)\bzero\s+risk\s+invest(?:ing|ment)\b",
+        "REJECT",
+        "G8_GLOBAL_ZERO_RISK",
+        "[SEC Global Compliance] 'Zero risk investment' claim detected.",
+        "Remove zero risk claim and state actual risk parameters."
+    ),
+    (
+        r"(?i)\bguaranteed\s+(?:to\s+double|10x|100x)\b",
+        "REJECT",
+        "G8_GLOBAL_GUARANTEED_MULTIPLIER",
+        "[SEC Global Compliance] Fraudulent multiplier guarantee ('guaranteed 10x') detected.",
+        "Remove multiplier promises."
+    ),
+    (
+        r"(?i)\bunconditional\s+returns?\b",
+        "REJECT",
+        "G8_GLOBAL_UNCONDITIONAL_RETURNS",
+        "[SEC Global Compliance] 'Unconditional return' claim detected.",
+        "Remove unconditional return statements."
+    ),
+
+    # 2. Illegal Investment Advice / Stock Solicitation / Market Manipulation
+    (
+        r"(?i)\bbuy\s+this\s+stock\s+(?:now|today|immediately)\b",
+        "REJECT",
+        "G8_GLOBAL_URGENT_BUY_CALL",
+        "[SEC Compliance] Unregistered investment solicitation / urgent trade command detected (Investment Advisers Act of 1940).",
+        "Present objective fundamental and quantitative analysis without direct buy/sell imperatives."
+    ),
+    (
+        r"(?i)\bsell\s+this\s+stock\s+(?:now|today|immediately)\b",
+        "REJECT",
+        "G8_GLOBAL_URGENT_SELL_CALL",
+        "[SEC Compliance] Direct sell command detected.",
+        "Replace trading commands with neutral valuation commentary."
+    ),
+    (
+        r"(?i)\bguaranteed\s+target\s+price\b",
+        "REJECT",
+        "G8_GLOBAL_TARGET_PRICE_GUARANTEE",
+        "[SEC Compliance] Deceptive 'guaranteed target price' claim detected.",
+        "State price targets as analyst estimates with associated uncertainty."
+    ),
+    (
+        r"(?i)\bpump\s+and\s+dump\b",
+        "REJECT",
+        "G8_GLOBAL_PUMP_AND_DUMP",
+        "[SEC Rule 10b-5] Pump-and-dump market manipulation language detected.",
+        "Remove all references promoting artificial volume or price inflation."
+    ),
+    (
+        r"(?i)\binsider\s+(?:tip|trading|leak)\b",
+        "REJECT",
+        "G8_GLOBAL_INSIDER_TIP",
+        "[SEC Rule 10b5-1] Illegal insider information claim detected.",
+        "Rely strictly on publicly disclosed SEC filings and verifiable market data."
+    ),
+    (
+        r"(?i)\byou\s+must\s+buy\s+this\b",
+        "REJECT",
+        "G8_GLOBAL_MUST_BUY",
+        "[SEC Compliance] Coercive trade recommendation detected.",
+        "Frame conclusions as analytical insights rather than mandates."
+    ),
+    (
+        r"(?i)\bguaranteed\s+to\s+skyrocket\b",
+        "REJECT",
+        "G8_GLOBAL_SKYROCKET_CLAIM",
+        "[SEC Compliance] Sensationalist stock pumping language detected.",
+        "Remove sensationalist hype."
+    ),
+    (
+        r"(?i)\bexclusive\s+(?:trading\s+signal|stock\s+alert)\b",
+        "REJECT",
+        "G8_GLOBAL_EXCLUSIVE_SIGNAL",
+        "[SEC Compliance] Boiler-room style 'exclusive trading signal' lure detected.",
+        "Remove boiler-room solicitation language."
+    ),
+]
+
+GLOBAL_DISCLAIMER_PATTERNS = [
+    r"(?i)\bdisclaimer\b",
+    r"(?i)\bnot\s+financial\s+advice\b",
+    r"(?i)\bnot\s+an\s+investment\s+advice\b",
+    r"(?i)\binformational\s+purposes\s+only\b",
+    r"(?i)\beducational\s+purposes\s+only\b",
+    r"(?i)\bdo\s+your\s+own\s+research\b",
+    r"(?i)\bpast\s+performance\s+(?:is\s+no|does\s+not)\s+guarantee\b",
+    r"(?i)\bconsult\s+a\s+licensed\s+financial\s+advisor\b",
+    r"(?i)\bfor\s+research\s+purposes\s+only\b",
+    r"(?i)\brisk\s+of\s+loss\b",
+]
+
 
 # ==============================================================================
 # ⚙️ 철벽 게이트 검증 엔진 (Ironclad Gatekeeper Engine)
@@ -288,19 +863,17 @@ class IroncladGatekeeper:
     def detect_platform(self, file_path: str, content: str) -> str:
         """파일 경로 및 본문 패턴으로 플랫폼 자동 감지."""
         norm_path = file_path.replace("\\", "/").lower()
-        if "stock_blog_global" in norm_path or "markets.ideaspot360" in norm_path:
-            return "markets"
-        if "stock_blog" in norm_path or "stock.ideaspot360" in norm_path:
-            return "stock"
         if "blogs/dev" in norm_path or "dev.ideaspot360" in norm_path:
             return "dev"
+        if "markets" in norm_path or "markets.ideaspot360" in norm_path:
+            return "markets"
+        if "stock" in norm_path or "stock.ideaspot360" in norm_path:
+            return "stock"
+        if "gear" in norm_path or "gear.ideaspot360" in norm_path:
+            return "gear"
         if "naver" in norm_path or "solidlog" in norm_path or "tidynote" in norm_path or "infopiece" in norm_path:
             return "naver"
         # Frontmatter 언어 및 메타데이터 검사
-        if re.search(r"^category:\s*(Macro Intelligence|US Systematic Equity|Options & Income|Quantitative Frameworks)", content, re.MULTILINE):
-            return "markets"
-        if re.search(r"^category:\s*(커버드콜 분석|커버드콜 이론|차트이론|공지사항|실전 매매기법|이론 및 기초)", content, re.MULTILINE):
-            return "stock"
         if re.search(r"^category:\s*(Cloud & DevOps|Database & Storage|Systems & Networking)", content, re.MULTILINE):
             return "dev"
         return "tistory"
@@ -352,7 +925,8 @@ class IroncladGatekeeper:
         block_start = 0
 
         for idx, line in enumerate(lines, start=1):
-            if line.strip().startswith("```"):
+            stripped = line.strip()
+            if stripped.startswith("```") and not stripped.startswith("+```") and not stripped.startswith("-```"):
                 if in_block:
                     blocks.append((lang, "\n".join(current_block), block_start))
                     in_block = False
@@ -360,7 +934,7 @@ class IroncladGatekeeper:
                     lang = ""
                 else:
                     in_block = True
-                    lang = line.strip()[3:].strip()
+                    lang = stripped[3:].strip()
                     block_start = idx
             elif in_block:
                 current_block.append(line)
@@ -392,7 +966,7 @@ class IroncladGatekeeper:
                 ))
 
         # 2. 코드 블록 백틱(```) 짝 맞춤 검증
-        backtick_matches = re.findall(r"^```", content, re.MULTILINE)
+        backtick_matches = [l for l in content.splitlines() if l.strip().startswith("```") and not l.strip().startswith("+```") and not l.strip().startswith("-```")]
         if len(backtick_matches) % 2 != 0:
             violations.append(Violation(
                 gate_id="GATE_1",
@@ -532,7 +1106,13 @@ class IroncladGatekeeper:
         log_keywords = [
             "error", "fatal", "exception", "failed", "panic:", "oomkilled",
             "timeout", "http/1.1 5", "http/2 5", "stderr:", "dmesg:", "status code 5",
-            "traceback (most recent call last):", "connection refused", "broken pipe"
+            "502 bad gateway", "504 gateway timeout", "http 502", "http 504", "status code 502", "status code 504",
+            "traceback (most recent call last):", "connection refused", "broken pipe",
+            "deadlock", "latest detected deadlock", "waiting for this lock", "we roll back",
+            "[trace]", "[metric]", "[alert]", "[critical]", "saturation", "iops",
+            "exit code 13", "exit code 137", "exit code 1", "exit code 255", "sigkill", "sigterm", "sigbus", "sigsegv",
+            "cannot assign requested address", "eaddrnotavail", "upstream prematurely closed", "upstream timed out",
+            "에러", "실패", "타임아웃", "예외", "데드락", "종료코드"
         ]
         for lang, code, _ in code_blocks:
             code_lower = code.lower()
@@ -555,7 +1135,12 @@ class IroncladGatekeeper:
         # 2. Wrong Fix (오진/실패한 시도) 검증
         wrong_fix_keywords = [
             "wrong fix", "wrong approach", "initial incorrect", "failed attempt", "what didn't work",
-            "오진", "잘못된 접근", "실패했던 시도", "처음 시도했던", "오판", "삽질", "효과가 없었다", "해결되지 않았다"
+            "what doesn't work", "common missteps", "misstep", "common false fix", "false fix",
+            "the flawed fix", "flawed fix", "anti-pattern", "antipattern", "common anti-patterns",
+            "what we tried first", "dangerous workaround", "dangerous workarounds", "why naive",
+            "naive fix", "naive attempt", "why it fails", "why this fails", "why it backfires",
+            "오진", "잘못된 접근", "실패했던 시도", "처음 시도했던", "오판", "삽질", "효과가 없었다", "해결되지 않았다",
+            "초기 접근", "임시방편", "처음에는", "기대와 달리", "오류를 잡지 못했다"
         ]
         body_lower = body.lower()
         has_wrong_fix = any(k in body_lower for k in wrong_fix_keywords)
@@ -645,7 +1230,7 @@ class IroncladGatekeeper:
         violations = []
         lines = body.splitlines()
 
-        # 1. 서론 사족 비율 검사 (첫 번째 H2 헤더 이전의 텍스트가 과도하게 긴지 검사)
+        # 1. 서론 사족 비율 및 기술 밀도 검사 (첫 번째 H2 헤더 이전의 텍스트가 과도하게 긴지 검사)
         intro_lines = []
         for line in lines:
             if re.match(r"^#{1,3}\s+", line.strip()):
@@ -653,25 +1238,27 @@ class IroncladGatekeeper:
             intro_lines.append(line)
 
         intro_text = "\n".join(intro_lines).strip()
-        intro_words = len(intro_text.split())
-        body_words = len(body.split())
+        intro_words = re.findall(r"\b[a-zA-Z0-9_\-]+\b", intro_text)
+        body_words = re.findall(r"\b[a-zA-Z0-9_\-]+\b", body)
 
-        if body_words > 0 and (intro_words / body_words) > 0.30 and intro_words > 250:
-            violations.append(Violation(
-                gate_id="GATE_5",
-                gate_name="사족 & 중언부언 차단",
-                rule_id="G5_EXCESSIVE_INTRO_FLUFF",
-                severity="WARNING",
-                line_number=1,
-                snippet=intro_text[:120] + "...",
-                message=f"도입부 사족 비율이 전체 본문의 {int((intro_words/body_words)*100)}%로 과도하게 깁니다. ({intro_words}단어)",
-                fix_hint="원론적인 배경 설명을 대폭 축소하고, 독자가 첫 화면에서 즉시 핵심 문제와 아키텍처를 파악할 수 있도록 바로 본론 헤더를 전진 배치하십시오."
-            ))
+        if len(body_words) > 0 and len(intro_words) > 250:
+            intro_ratio = len(intro_words) / len(body_words)
+            if intro_ratio > 0.30:
+                violations.append(Violation(
+                    gate_id="GATE_5",
+                    gate_name="사족 & 중언부언 차단",
+                    rule_id="G5_EXCESSIVE_INTRO_FLUFF",
+                    severity="WARNING",
+                    line_number=1,
+                    snippet=intro_text[:120] + "...",
+                    message=f"도입부 사족 비율이 전체 본문의 {int(intro_ratio * 100)}%로 과도하게 깁니다. ({len(intro_words)}단어)",
+                    fix_hint="원론적인 배경 설명을 대폭 축소하고, 독자가 첫 화면에서 즉시 핵심 문제와 아키텍처를 파악할 수 있도록 바로 본론 헤더를 전진 배치하십시오."
+                ))
 
         # 2. 판에 박힌 결론 재요약 (Parrot Conclusion) 패턴 검사
         last_section = "\n".join(lines[-40:]) if len(lines) >= 40 else body
         parrot_patterns = [
-            (r"((오늘|지금까지|앞서|위에서)\s+살펴본\s+바와\s+같이|위에서\s+살펴보았듯이|앞서\s+설명한\s+것처럼)", "결론부 상투적 중언부언"),
+            (r"(지금까지\s+살펴본\s+바와\s+같이|위에서\s+살펴보았듯이|앞서\s+설명한\s+것처럼)", "결론부 상투적 중언부언"),
             (r"(as\s+we\s+have\s+seen\s+above|to\s+recap\s+what\s+we\s+discussed|in\s+this\s+article,\s*we\s+have\s+covered)", "Repetitive conclusion recap")
         ]
         for pattern, label in parrot_patterns:
@@ -687,6 +1274,36 @@ class IroncladGatekeeper:
                     message=f"단순 반복 재요약 패턴({label})이 감지되었습니다.",
                     fix_hint="앞서 설명한 내용을 기계적으로 다시 요약하지 말고, 현업 실무자를 위한 '운영 주의점'이나 '모니터링 알람 임계치 설정 팁'으로 실용적 가치를 더하십시오."
                 ))
+
+        # 3. Jaccard 유사도 기반 결론부 복제 검증 (Verbose Conclusion Index)
+        sections = re.split(r"\n#{1,3}\s+", body)
+        if len(sections) >= 3:
+            conclusion_text = sections[-1]
+            stop_words = {
+                "the", "a", "an", "and", "or", "in", "on", "at", "to", "for", "with", "by", "of",
+                "this", "that", "is", "was", "are", "were", "it", "as", "be", "from", "we", "our",
+                "you", "your", "will", "can", "not", "if", "when", "then", "into", "which", "all"
+            }
+            c_words = set(w.lower() for w in re.findall(r"[a-zA-Z0-9_\-]+", conclusion_text) if len(w) > 2 and w.lower() not in stop_words)
+            if len(c_words) >= 20:
+                for b_idx, b_sec in enumerate(sections[1:-1], start=1):
+                    b_words = set(w.lower() for w in re.findall(r"[a-zA-Z0-9_\-]+", b_sec) if len(w) > 2 and w.lower() not in stop_words)
+                    if len(b_words) >= 20:
+                        intersection = len(c_words & b_words)
+                        union = len(c_words | b_words)
+                        jaccard = intersection / union if union > 0 else 0.0
+                        if jaccard >= 0.65:
+                            violations.append(Violation(
+                                gate_id="GATE_5",
+                                gate_name="사족 & 중언부언 차단",
+                                rule_id="G5_JACCARD_REDUNDANCY",
+                                severity="WARNING",
+                                line_number=0,
+                                snippet=f"Section {b_idx} vs Conclusion (Jaccard: {jaccard:.2f})",
+                                message=f"결론부 내용이 본문 {b_idx}번 섹션과 자카드 유사도 {int(jaccard*100)}%로 지나치게 중복됩니다.",
+                                fix_hint="결론부에서 본문 텍스트를 단순 복제/요약하지 말고, 차별화된 런북 및 체크리스트 가치를 제시하십시오."
+                            ))
+                            break
 
         return violations
 
@@ -707,8 +1324,8 @@ class IroncladGatekeeper:
                     severity="REJECT",
                     line_number=1,
                     snippet=f"category: {category}",
-                    message=f"개발 블로그 공식 3대 카테고리와 불일치합니다. (허용: {', '.join(DEV_OFFICIAL_CATEGORIES)})",
-                    fix_hint=f"Frontmatter의 category를 'Cloud & DevOps', 'Database & Storage', 'Systems & Networking' 중 하나로 정확히 일치시키십시오."
+                    message=f"개발 블로그 공식 4대 카테고리와 불일치합니다. (허용: {', '.join(DEV_OFFICIAL_CATEGORIES)})",
+                    fix_hint=f"Frontmatter의 category를 'Cloud & DevOps', 'Database & Storage', 'Systems & Networking', 'AI & Machine Learning' 중 하나로 정확히 일치시키십시오."
                 ))
 
         # 2. 티스토리 (softwin.tistory.com) 카테고리 검증
@@ -732,8 +1349,17 @@ class IroncladGatekeeper:
             # (1) 건강 블로그 의료법 위반 단어 100% 하드 블록
             if is_health:
                 for idx, line in enumerate(lines, start=1):
+                    # 법적 면책 고지 문구 부분(치료를 목적으로 하지 않음 등)만 국소 제거하여 오탐 방지하되, 나머지 본문 단어는 철저 검증
+                    clean_line = re.sub(
+                        r"(?:(?:특정\s*)?질병의\s*[^.\n]*?(?:치료|예방)[^.\n]*?(?:목적으로\s*하지\s*않[가-힣]*|의약품이\s*아니[가-힣]*|행위가\s*아니[가-힣]*)|"
+                        r"의학적\s*(?:처방이나\s*)?치료\s*(?:행위가\s*아니[가-힣]*|를\s*대신[가-힣]*)|"
+                        r"진단\s*및\s*치료를\s*대신[가-힣]*|"
+                        r"질환\s*치료\s*(?:중[가-힣]*|를\s*받[가-힣]*))",
+                        "",
+                        line
+                    )
                     for pattern, sev, msg in NAVER_HEALTH_FORBIDDEN:
-                        match = re.search(pattern, line)
+                        match = re.search(pattern, clean_line)
                         if match:
                             violations.append(Violation(
                                 gate_id="GATE_6",
@@ -747,8 +1373,7 @@ class IroncladGatekeeper:
                             ))
 
                 # 법적 면책 고지(Disclaimer) 필수 포함 검증
-                disclaimer_keywords = ["면책", "의사의 진료", "처방을 대신", "의료 전문가와 상담", "일반적인 건강 정보"]
-                has_disclaimer = any(k in body for k in disclaimer_keywords)
+                has_disclaimer = any(re.search(p, body) for p in HEALTH_DISCLAIMER_PATTERNS)
                 if not has_disclaimer:
                     violations.append(Violation(
                         gate_id="GATE_6",
@@ -789,92 +1414,337 @@ class IroncladGatekeeper:
                     fix_hint="원고 맨 마지막 줄에 '#태그1 #태그2 #태그3 ...' 형태의 단일 인라인 해시태그를 추가하십시오."
                 ))
 
-        # 4. 국내 주식/증시 블로그 (stock.ideaspot360.com / 맥락트레이딩) 검증
-        elif platform == "stock":
-            if category:
-                if category in ["차트강의", "실전 매매기법", "실전매매기법", "매매기법"]:
+        return violations
+
+    # --------------------------------------------------------------------------
+    # Gate 7: 보안 & 시크릿 누출 방벽 (Security & Secret Leak Prevention)
+    # --------------------------------------------------------------------------
+    def verify_gate_7_security(self, file_path: str, content: str, lines: List[str]) -> List[Violation]:
+        violations = []
+
+        dummy_tokens = {
+            "your_api_key", "your-api-key", "your_token", "your-token",
+            "example_token", "sample_key", "test_token", "placeholder",
+            "xxx", "xxxx", "000000", "<token>", "<api_key>", "<api-key>",
+            "my_secret", "dummy", "replace_with", "insert_here",
+            "secret-key", "secret_key", "super-secure", "my-secret", "sample",
+            "example", "demo", "tutorial", "test_key", "change-me", "changeme"
+        }
+
+        # 1. AWS Access Key ID
+        for idx, line in enumerate(lines, start=1):
+            aws_match = re.search(r"\bAKIA[0-9A-Z]{16}\b", line)
+            if aws_match:
+                matched_val = aws_match.group(0)
+                if not any(d in matched_val.lower() for d in dummy_tokens):
                     violations.append(Violation(
-                        gate_id="GATE_6",
-                        gate_name="주식 블로그 카테고리 규격 검증",
-                        rule_id="G6_STOCK_DEPRECATED_CATEGORY",
+                        gate_id="GATE_7",
+                        gate_name="보안 & 시크릿 누출 방벽",
+                        rule_id="G7_AWS_KEY_LEAK",
                         severity="REJECT",
-                        line_number=1,
-                        snippet=f"category: {category}",
-                        message=f"폐기된 구 카테고리('{category}')가 사용되었습니다. '차트이론'으로 전환하십시오.",
-                        fix_hint="Frontmatter의 category를 '차트이론' 또는 공식 카테고리로 변경하십시오."
+                        line_number=idx,
+                        snippet=matched_val,
+                        message="[보안 위험] 실제 AWS Access Key ID 형식의 문자열이 감지되었습니다.",
+                        fix_hint="실제 클라우드 자격 증명을 즉시 삭제하고, 환경변수(os.environ['AWS_ACCESS_KEY_ID']) 또는 'YOUR_AWS_ACCESS_KEY'와 같은 플레이스홀더로 대체하십시오."
                     ))
-                elif category not in STOCK_OFFICIAL_CATEGORIES:
+
+        # 2. GitHub Personal Access Token
+        for idx, line in enumerate(lines, start=1):
+            gh_match = re.search(r"\b(?:ghp_[a-zA-Z0-9]{36}|github_pat_[a-zA-Z0-9_]{82})\b", line)
+            if gh_match:
+                matched_val = gh_match.group(0)
+                if not any(d in matched_val.lower() for d in dummy_tokens):
                     violations.append(Violation(
-                        gate_id="GATE_6",
-                        gate_name="주식 블로그 카테고리 규격 검증",
-                        rule_id="G6_STOCK_CATEGORY_MISMATCH",
-                        severity="WARNING",
-                        line_number=1,
-                        snippet=f"category: {category}",
-                        message=f"국내 증시 블로그 공식 카테고리와 불일치할 수 있습니다. (허용: {', '.join(STOCK_OFFICIAL_CATEGORIES)})",
-                        fix_hint=f"Frontmatter의 category를 {', '.join(STOCK_OFFICIAL_CATEGORIES)} 중 하나로 일치시키십시오."
+                        gate_id="GATE_7",
+                        gate_name="보안 & 시크릿 누출 방벽",
+                        rule_id="G7_GITHUB_TOKEN_LEAK",
+                        severity="REJECT",
+                        line_number=idx,
+                        snippet=matched_val[:12] + "...",
+                        message="[보안 위험] GitHub Personal Access Token(PAT) 형식의 문자열이 감지되었습니다.",
+                        fix_hint="실제 GitHub 토큰을 즉시 폐기하고 더미 문자열로 교체하십시오."
                     ))
 
-            for idx, line in enumerate(lines, start=1):
-                for pattern, sev, msg in STOCK_FORBIDDEN_PATTERNS:
-                    match = re.search(pattern, line)
-                    if match:
-                        violations.append(Violation(
-                            gate_id="GATE_6",
-                            gate_name="주식 블로그 법적 규격 검증",
-                            rule_id="G6_STOCK_CAPITAL_MARKETS_LAW",
-                            severity=sev,
-                            line_number=idx,
-                            snippet=line.strip()[:100],
-                            message=msg,
-                            fix_hint="자본시장법 위반 소지가 있는 단어를 즉시 제거하고 객관적 분석 표현으로 수정하십시오."
-                        ))
-
-            # 투자 면책 고지(Disclaimer) 필수 포함 검증
-            stock_disclaimer_keywords = ["면책", "투자 권유", "투자 판단과 책임", "정보 제공용", "투자 유의사항"]
-            has_stock_disclaimer = any(k in body for k in stock_disclaimer_keywords)
-            if not has_stock_disclaimer:
+        # 3. Slack Webhook URL
+        for idx, line in enumerate(lines, start=1):
+            slack_match = re.search(r"https://hooks\.slack\.com/services/T[a-zA-Z0-9_]+/B[a-zA-Z0-9_]+/[a-zA-Z0-9_]+", line)
+            if slack_match:
                 violations.append(Violation(
-                    gate_id="GATE_6",
-                    gate_name="주식 블로그 법적 규격 검증",
-                    rule_id="G6_STOCK_MISSING_DISCLAIMER",
+                    gate_id="GATE_7",
+                    gate_name="보안 & 시크릿 누출 방벽",
+                    rule_id="G7_SLACK_WEBHOOK_LEAK",
                     severity="REJECT",
-                    line_number=0,
-                    snippet="No stock investment disclaimer found at the bottom",
-                    message="[법적 방벽 결손] 주식/투자 포스팅 최하단에 필수적인 '투자 유의사항 및 법적 면책 문구(Disclaimer)'가 누락되었습니다.",
-                    fix_hint="포스팅 최하단에 '본 포스팅은 특정 종목에 대한 매수·매도 추천이나 투자 권유가 아니며, 모든 투자에 대한 판단과 책임은 투자자 본인에게 있습니다.'를 삽입하십시오."
+                    line_number=idx,
+                    snippet=slack_match.group(0)[:35] + "...",
+                    message="[보안 위험] 실제 슬랙 웹훅 URL(Slack Webhook URL)이 노출되었습니다.",
+                    fix_hint="웹훅 URL을 삭제하고 'https://hooks.slack.com/services/T00/B00/XXXX' 형식의 마스킹된 주소를 사용하십시오."
                 ))
 
-        # 5. 글로벌 매크로/퀀트 블로그 (markets.ideaspot360.com) 검증
-        elif platform == "markets":
-            for idx, line in enumerate(lines, start=1):
-                for pattern, sev, msg in MACRO_FORBIDDEN_PATTERNS_EN:
-                    match = re.search(pattern, line, re.IGNORECASE)
-                    if match:
-                        violations.append(Violation(
-                            gate_id="GATE_6",
-                            gate_name="글로벌 매크로 블로그 법적 규격 검증",
-                            rule_id="G6_MACRO_PROHIBITED_SLANG",
-                            severity=sev,
-                            line_number=idx,
-                            snippet=line.strip()[:100],
-                            message=msg,
-                            fix_hint="Remove sensationalist financial slang and replace with sober institutional analysis."
-                        ))
-
-            # Global Disclaimer 필수 포함 검증
-            macro_disclaimer_keywords = ["disclaimer", "not investment advice", "not financial advice", "for educational and informational purposes"]
-            has_macro_disclaimer = any(k in body.lower() for k in macro_disclaimer_keywords)
-            if not has_macro_disclaimer:
+        # 4. Private Key Headers
+        for idx, line in enumerate(lines, start=1):
+            pk_match = re.search(r"-----BEGIN (?:RSA|EC|DSA|OPENSSH|PGP|ENCRYPTED|PRIVATE) KEY-----", line)
+            if pk_match:
                 violations.append(Violation(
-                    gate_id="GATE_6",
-                    gate_name="글로벌 매크로 블로그 법적 규격 검증",
-                    rule_id="G6_MACRO_MISSING_DISCLAIMER",
-                    severity="WARNING",
+                    gate_id="GATE_7",
+                    gate_name="보안 & 시크릿 누출 방벽",
+                    rule_id="G7_PRIVATE_KEY_LEAK",
+                    severity="REJECT",
+                    line_number=idx,
+                    snippet=pk_match.group(0),
+                    message="[보안 위험] 비공개 암호화 키(Private Key) 헤더가 감지되었습니다.",
+                    fix_hint="비공개 키 원문을 마크다운에 절대 삽입하지 마십시오."
+                ))
+
+        # 5. 하드코딩된 API Key/Secret 직접 할당문
+        secret_assign_pat = re.compile(r"""(?i)\b(?:api_key|apikey|secret_key|client_secret|auth_token)\s*[:=]\s*["']([a-zA-Z0-9_\-\.]{24,})["']""")
+        for idx, line in enumerate(lines, start=1):
+            m = secret_assign_pat.search(line)
+            if m:
+                val = m.group(1)
+                if not any(d in val.lower() for d in dummy_tokens):
+                    violations.append(Violation(
+                        gate_id="GATE_7",
+                        gate_name="보안 & 시크릿 누출 방벽",
+                        rule_id="G7_HARDCODED_SECRET",
+                        severity="REJECT",
+                        line_number=idx,
+                        snippet=line.strip()[:80],
+                        message="[보안 위험] 실제 API 키 또는 비밀 시크릿 토큰의 직접 할당문이 감지되었습니다.",
+                        fix_hint="비밀번호나 API 키를 코드에 직접 하드코딩하지 말고 환경변수나 시크릿 매니저 참조 코드로 대체하십시오."
+                    ))
+
+        return violations
+
+    # --------------------------------------------------------------------------
+    # Gate 8: 법적 리스크 & 컴플라이언스 방벽 (Legal & Compliance Risk Gate)
+    # --------------------------------------------------------------------------
+    def verify_gate_8_legal_compliance(
+        self,
+        file_path: str,
+        content: str,
+        body: str,
+        fm_data: Dict[str, str],
+        lines: List[str],
+        platform: str
+    ) -> List[Violation]:
+        violations: List[Violation] = []
+        category = fm_data.get("category", "").strip()
+        title = fm_data.get("title", "").strip()
+        norm_path = file_path.replace("\\", "/").lower()
+
+        # ----------------------------------------------------------------------
+        # 1. 자본시장법 & 금융소비자보호법(금소법) 방벽 검증
+        # ----------------------------------------------------------------------
+        in_code_block = False
+        for idx, line in enumerate(lines, start=1):
+            stripped = line.strip()
+            if stripped.startswith("```"):
+                in_code_block = not in_code_block
+                continue
+            if in_code_block or not stripped:
+                continue
+
+            for pat, sev, rule_id, msg, hint in CAPITAL_MARKETS_RULES:
+                match = re.search(pat, line)
+                if match:
+                    violations.append(Violation(
+                        gate_id="GATE_8",
+                        gate_name="자본시장법·금소법 방벽",
+                        rule_id=rule_id,
+                        severity=sev,
+                        line_number=idx,
+                        snippet=stripped[:100],
+                        message=msg,
+                        fix_hint=hint
+                    ))
+
+        # [1-2] 금융/투자/증시/재테크 포스팅 필수 투자 면책고지 검증
+        is_kr_financial = (
+            platform in ["stock"] or
+            "stock.ideaspot360" in norm_path or
+            ("stock" in norm_path and "posts" not in norm_path) or
+            any(k in category for k in ["주식", "증시", "ETF", "금융", "재테크", "투자", "가상화폐", "암호화폐", "코인", "펀드", "채권", "커버드콜", "배당"]) or
+            any(k in title for k in ["주식", "증시", "ETF", "재테크", "투자전략", "매수", "매도", "배당주", "커버드콜", "코스피", "나스닥 투자"])
+        )
+        if is_kr_financial:
+            has_fin_disclaimer = any(re.search(p, body) for p in KO_FINANCIAL_DISCLAIMER_PATTERNS)
+            if not has_fin_disclaimer:
+                violations.append(Violation(
+                    gate_id="GATE_8",
+                    gate_name="자본시장법·금소법 방벽",
+                    rule_id="G8_FIN_MISSING_DISCLAIMER",
+                    severity="REJECT",
                     line_number=0,
-                    snippet="No global investment disclaimer found",
-                    message="[Regulatory Safeguard] Essential investment disclaimer is missing from the global macro publication.",
-                    fix_hint="Include standard institutional disclaimer at the bottom of the article."
+                    snippet="No investment disclaimer found in financial content",
+                    message="[자본시장법·금소법 방벽] 금융/증시/재테크 관련 포스팅 최하단에 필수적인 '투자 유의사항 및 면책고지(Disclaimer)'가 누락되었습니다.",
+                    fix_hint="포스팅 최하단에 '본 글은 정보 제공을 목적으로 하며 특정 금융상품의 매수·매도를 권유하지 않습니다. 모든 투자의 책임과 원금 손실 위험은 투자자 본인에게 있습니다.'를 명시하십시오."
+                ))
+
+        # ----------------------------------------------------------------------
+        # 2. 의료법 & 건강기능식품법(식품표시광고법) 방벽 검증
+        # ----------------------------------------------------------------------
+        in_code_block = False
+        for idx, line in enumerate(lines, start=1):
+            stripped = line.strip()
+            if stripped.startswith("```"):
+                in_code_block = not in_code_block
+                continue
+            if in_code_block or not stripped:
+                continue
+
+            for pat, sev, rule_id, msg, hint in MEDICAL_LAW_RULES:
+                match = re.search(pat, line)
+                if match:
+                    violations.append(Violation(
+                        gate_id="GATE_8",
+                        gate_name="의료법·식품표시광고법 방벽",
+                        rule_id=rule_id,
+                        severity=sev,
+                        line_number=idx,
+                        snippet=stripped[:100],
+                        message=msg,
+                        fix_hint=hint
+                    ))
+
+        # [2-2] 건강/영양제/건기식 포스팅 필수 법적 면책고지 검증
+        is_health = (
+            "infopiece" in norm_path or
+            any(k in category for k in ["건강", "영양", "건기식", "의학"]) or
+            any(k in title for k in ["영양제", "마그네슘", "비타민", "오메가", "건강기능식품", "유산균", "콜라겐"])
+        )
+        if is_health:
+            has_health_disclaimer = any(re.search(p, body) for p in HEALTH_DISCLAIMER_PATTERNS)
+            if not has_health_disclaimer:
+                violations.append(Violation(
+                    gate_id="GATE_8",
+                    gate_name="의료법·식품표시광고법 방벽",
+                    rule_id="G8_MED_MISSING_DISCLAIMER",
+                    severity="REJECT",
+                    line_number=0,
+                    snippet="No health/medical disclaimer found in health content",
+                    message="[의료법·건기식법 방벽] 건강/영양제 포스팅 최하단에 필수적인 '법적 면책 문구(Disclaimer)'가 누락되었습니다.",
+                    fix_hint="포스팅 최하단에 '본 포스팅은 일반적인 정보 제공을 목적으로 하며, 전문 의료인의 진단 및 처방을 대신할 수 없습니다. 질병의 예방 및 치료를 위한 의약품이 아닙니다.'를 삽입하십시오."
+                ))
+
+        # ----------------------------------------------------------------------
+        # 3. 공정거래위원회 추천·보증 심사지침 준수 검증 (대가성 표시광고법)
+        # ----------------------------------------------------------------------
+        # 제휴 링크 또는 협찬 키워드 존재 시 검증
+        has_affiliate_link = any(re.search(pat, body, re.IGNORECASE) for pat in AFFILIATE_LINK_PATTERNS)
+        has_affiliate_kw = any(re.search(pat, body) for pat in AFFILIATE_KEYWORD_PATTERNS)
+
+        if has_affiliate_link or has_affiliate_kw:
+            # (1) 기만적 스텔스 마케팅/위장 광고 차단 (어휘 순서 무관)
+            my_money_match = re.search(r"(?:내돈내산|직접\s*구매한|100%\s*자비)", body)
+            if my_money_match:
+                violations.append(Violation(
+                    gate_id="GATE_8",
+                    gate_name="공정위 표시광고법 방벽",
+                    rule_id="G8_FTC_COVERT_MY_MONEY",
+                    severity="REJECT",
+                    line_number=0,
+                    snippet=my_money_match.group(0),
+                    message="[공정위 표시광고법 위반] 제휴 링크 또는 대가성 상업 활동이 포함되어 있으나 '내돈내산/자비 구매'로 소비자를 오도하는 기만적 스텔스 마케팅이 감지되었습니다.",
+                    fix_hint="'내돈내산' 허위 표기를 삭제하고 공정위 표준 대가성 문구를 기재하십시오."
+                ))
+
+            not_ad_match = re.search(r"(?:광고|협찬)\s*(?:가\s*)?아닙니다", body)
+            if not_ad_match:
+                violations.append(Violation(
+                    gate_id="GATE_8",
+                    gate_name="공정위 표시광고법 방벽",
+                    rule_id="G8_FTC_COVERT_NOT_AD",
+                    severity="REJECT",
+                    line_number=0,
+                    snippet=not_ad_match.group(0),
+                    message="[공정위 표시광고법 위반] 제휴 수수료 링크가 있으면서 '광고/협찬 아닙니다'라고 허위 주장하는 행위가 감지되었습니다.",
+                    fix_hint="광고 부인 문구를 삭제하고 수수료 제공 사실을 명시하십시오."
+                ))
+
+            # (2) 대가성 공개 문구 필수 검증
+            has_ftc_disclosure = any(re.search(pat, body) for pat in FTC_DISCLOSURE_PATTERNS)
+            if not has_ftc_disclosure:
+                violations.append(Violation(
+                    gate_id="GATE_8",
+                    gate_name="공정위 표시광고법 방벽",
+                    rule_id="G8_FTC_MISSING_DISCLOSURE",
+                    severity="REJECT",
+                    line_number=0,
+                    snippet="Affiliate links or sponsorship keywords detected without FTC disclosure",
+                    message="[공정위 표시광고법 방벽] 제휴 링크(쿠팡 파트너스 등) 또는 대가성 상업 활동 내용이 포함되어 있으나, 공정거래위원회 「추천·보증 등에 관한 표시·광고 심사지침」에 따른 경제적 이해관계(대가성) 고지 문구가 누락되었습니다.",
+                    fix_hint="포스팅 최상단 또는 최하단에 '이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.' 또는 '소정의 수수료를 제공받을 수 있습니다.'를 명시하십시오."
+                ))
+
+        # ----------------------------------------------------------------------
+        # 4. 공공누리(KOGL) 저작권 출처 표기 의무 검증
+        # ----------------------------------------------------------------------
+        is_policy_content = (
+            any(k in category for k in ["정부 정책", "복지 지원금", "복지정책", "행정 절차", "공공누리", "공공"]) or
+            "solidlog" in norm_path or
+            any(re.search(pat, title) for pat in POLICY_TOPIC_PATTERNS) or
+            (any(re.search(pat, body) for pat in POLICY_TOPIC_PATTERNS) and
+             bool(re.search(r"(?:신청\s*자격|지원\s*대상|소득\s*기준|신청\s*기간|신청\s*방법|지급\s*방식|선정\s*기준|구비\s*서류)", body)))
+        )
+        if is_policy_content:
+            has_kogl_attribution = any(re.search(pat, body) for pat in KOGL_ATTRIBUTION_PATTERNS)
+            if not has_kogl_attribution:
+                violations.append(Violation(
+                    gate_id="GATE_8",
+                    gate_name="공공누리(KOGL) 출처 표기 방벽",
+                    rule_id="G8_KOGL_MISSING_ATTRIBUTION",
+                    severity="REJECT",
+                    line_number=0,
+                    snippet="Government policy or welfare content found without KOGL attribution",
+                    message="[공공누리(KOGL) 출처 표기 방벽] 정부 정책, 복지 지원금 또는 공공기관 저작물 정보가 포함되어 있으나, 저작권법 제37조 및 공공누리(KOGL) 출처 표기 의무가 누락되었습니다.",
+                    fix_hint="포스팅 최하단에 '출처: 대한민국 정책브리핑 (공공누리 제1유형: 출처표시)' 또는 '본 저작물은 공공누리 제1유형에 따라 작성되었습니다.'를 명시하십시오."
+                ))
+
+        # ----------------------------------------------------------------------
+        # 5. 영문 법적 리스크 (SEC 투자 자문 위반 및 글로벌 금융 규제) 검증
+        # ----------------------------------------------------------------------
+        in_code_block = False
+        for idx, line in enumerate(lines, start=1):
+            stripped = line.strip()
+            if stripped.startswith("```"):
+                in_code_block = not in_code_block
+                continue
+            if in_code_block or not stripped:
+                continue
+
+            for pat, sev, rule_id, msg, hint in GLOBAL_FINANCIAL_RULES:
+                match = re.search(pat, line)
+                if match:
+                    violations.append(Violation(
+                        gate_id="GATE_8",
+                        gate_name="영문 글로벌 금융 규제 방벽 (SEC Compliance)",
+                        rule_id=rule_id,
+                        severity=sev,
+                        line_number=idx,
+                        snippet=stripped[:100],
+                        message=msg,
+                        fix_hint=hint
+                    ))
+
+        # [5-2] 영문 금융/시장/매크로 포스팅 글로벌 면책문구 누락 검증
+        is_en_financial = (
+            platform in ["markets"] or
+            "markets" in norm_path or
+            (platform == "dev" and any(k in category.lower() for k in ["finance", "market", "macro", "quant", "stock", "trading", "investment"])) or
+            (bool(re.search(r"(?i)\b(?:s&p\s*500|nasdaq|treasury\s+yield|fed\s+liquidity|equity\s+market|stock\s+market|quantitative\s+trading|macroeconomic)\b", body)) and
+             len(re.findall(r"[가-힣]", body[:500])) == 0)
+        )
+        if is_en_financial:
+            has_global_disclaimer = any(re.search(pat, body) for pat in GLOBAL_DISCLAIMER_PATTERNS)
+            if not has_global_disclaimer:
+                violations.append(Violation(
+                    gate_id="GATE_8",
+                    gate_name="영문 글로벌 금융 규제 방벽 (SEC Compliance)",
+                    rule_id="G8_GLOBAL_MISSING_DISCLAIMER",
+                    severity="REJECT",
+                    line_number=0,
+                    snippet="No global financial disclaimer found in English financial content",
+                    message="[SEC Global Compliance] English financial/market article lacks a mandatory global investment disclaimer.",
+                    fix_hint="Add standard disclaimer at the bottom: 'Disclaimer: This article is for informational and educational purposes only and does not constitute financial, investment, or legal advice. Past performance is not indicative of future results.'"
                 ))
 
         return violations
@@ -931,6 +1801,12 @@ class IroncladGatekeeper:
 
         # Gate 6: 플랫폼별 특화 규격
         violations.extend(self.verify_gate_6_platform_compliance(file_path, body, fm_data, lines, platform))
+
+        # Gate 7: 보안 & 시크릿 누출 방벽
+        violations.extend(self.verify_gate_7_security(file_path, content, lines))
+
+        # Gate 8: 법적 리스크 & 컴플라이언스 방벽 (자본시장법·금소법, 의료법·건기식법, 공정위 표시광고법, 공공누리 KOGL, 영문 SEC/글로벌 규제)
+        violations.extend(self.verify_gate_8_legal_compliance(file_path, content, body, fm_data, lines, platform))
 
         # 점수 계산 및 판정
         reject_count = sum(1 for v in violations if v.severity == "REJECT")
@@ -1087,28 +1963,256 @@ echo "Hello"
     assert any(v.rule_id == "G1_UNCLOSED_CODEBLOCK" for v in report4.violations), "Case 4: Unclosed code caught"
     print("  ✅ Test 4 Passed: Unclosed Code Block caught successfully.")
 
-    # Case 5: 주식 블로그 자본시장법 위반 단어 -> REJECT 기대
-    bad_stock_ko = """---
-title: "내일 무조건 급등하는 대박주"
-category: "커버드콜 분석"
-tags: "주식"
+    # Case 5: 보안 시크릿 누출 (AWS Key) -> REJECT 기대
+    bad_secret = """---
+title: "AWS Credentials Guide"
+category: "Cloud & DevOps"
+tags: "aws"
 ---
-이 종목은 원금 보장이 되며 내일 무조건 급등합니다.
+AWS_KEY = "AKIA1234567890ABCDEF"
 """
-    temp_bad_stock = temp_dir / "_test_bad_stock.md"
-    temp_bad_stock.write_text(bad_stock_ko, encoding="utf-8")
+    temp_bad_secret = temp_dir / "_test_bad_secret.md"
+    temp_bad_secret.write_text(bad_secret, encoding="utf-8")
 
-    report5 = gatekeeper.verify(str(temp_bad_stock), platform_override="stock")
-    assert not report5.is_passed, "Case 5: Stock capital markets law violation should be REJECTED"
-    assert any(v.rule_id == "G6_STOCK_CAPITAL_MARKETS_LAW" for v in report5.violations), "Case 5: Capital markets law violation caught"
-    print("  ✅ Test 5 Passed: Stock Capital Markets Law violation caught successfully.")
+    report5 = gatekeeper.verify(str(temp_bad_secret), platform_override="dev")
+    assert not report5.is_passed, "Case 5: Security secret leak should be REJECTED"
+    assert any(v.gate_id == "GATE_7" for v in report5.violations), "Case 5: Gate 7 secret leak caught"
+    print("  ✅ Test 5 Passed: Security & Secrets leak caught successfully.")
+
+    # Case 6: 자본시장법 & 금소법 위반 (원금보장, 확정수익, 리딩방) -> REJECT 기대
+    # (동일 라인에 면책문구를 혼합 삽입한 지능형 우회 시도 차단 검증 포함)
+    bad_finance = """---
+title: "특급 급등주 추천 및 확정 수익 비법"
+category: "금융 & 재테크"
+tags: "주식, 재테크"
+---
+이번에 발굴한 세력 매집주는 무조건 폭등하며 원금 보장과 함께 연 30% 확정 수익을 약속합니다. 투자의 최종 책임은 본인에게 있습니다.
+VIP 리딩방에서만 제공하는 극비 정보주이므로 지금 당장 풀매수하세요.
+"""
+    temp_bad_fin = temp_dir / "_test_bad_fin.md"
+    temp_bad_fin.write_text(bad_finance, encoding="utf-8")
+
+    report6 = gatekeeper.verify(str(temp_bad_fin), platform_override="tistory")
+    assert not report6.is_passed, "Case 6: Capital Markets & Consumer Protection violations should be REJECTED"
+    assert any("G8_FIN_" in v.rule_id for v in report6.violations), "Case 6: Should detect Capital Markets & Consumer Protection violations"
+    assert any(v.rule_id == "G8_FIN_PRINCIPAL_GUARANTEE" for v in report6.violations), "Case 6: Should detect principal guarantee even with disclaimer on same line"
+    assert any(v.rule_id == "G8_FIN_CONFIRMED_PROFIT" for v in report6.violations), "Case 6: Should detect confirmed profit"
+    print("  ✅ Test 6 Passed: Capital Markets & Financial Consumer Protection Law violations caught successfully.")
+
+    # Case 7: 의료법 & 건강기능식품법 위반 (의약품 오인, 처방약 중단, 의료인 사칭) -> REJECT 기대
+    # (동일 라인에 '의약품이 아닙니다' 면책 어구를 혼합한 우회 시도 차단 검증 포함)
+    bad_medical = """---
+title: "기적의 천연 치료제로 당뇨 잡는 법"
+category: "건강"
+tags: "당뇨, 영양제"
+---
+현직 의사로서 보증하건대, 이 성분은 인슐린 약 대신 복용할 수 있는 기적의 천연 치료제입니다. 본 제품은 질병 치료를 목적으로 하지 않으며 의약품이 아닙니다.
+기존 병원 처방약을 끊고 이 건강기능식품만 섭취하면 체지방 100% 분해와 함께 완치됩니다.
+"""
+    temp_bad_med = temp_dir / "_test_bad_med.md"
+    temp_bad_med.write_text(bad_medical, encoding="utf-8")
+
+    report7 = gatekeeper.verify(str(temp_bad_med), platform_override="naver")
+    assert not report7.is_passed, "Case 7: Medical law & drug confusion claims should be REJECTED"
+    assert any("G8_MED_" in v.rule_id for v in report7.violations), "Case 7: Should detect medical law violations"
+    assert any(v.rule_id == "G8_MED_NATURAL_MEDICINE" for v in report7.violations), "Case 7: Should detect natural medicine claim"
+    assert any(v.rule_id == "G8_MED_STOP_PRESCRIPTION" for v in report7.violations), "Case 7: Should detect stopping prescription"
+    assert any(v.rule_id == "G8_MED_IMPERSONATION_PROFESSIONAL" for v in report7.violations), "Case 7: Should detect medical impersonation"
+    print("  ✅ Test 7 Passed: Medical Law & Health Functional Food Law violations caught successfully.")
+
+    # Case 8: 공정거래위원회 추천·보증 심사지침 위반 (제휴 링크 있으나 대가성 고지 누락 및 기만적 스텔스 마케팅) -> REJECT 기대
+    # (제휴 링크가 상단에 있고 내돈내산이 하단에 배치된 역순 기만 광고 차단 검증 포함)
+    bad_ftc = """---
+title: "내돈내산 무선 마우스 솔직 후기"
+category: "IT / 소프트웨어 리뷰"
+tags: "마우스, IT리뷰"
+---
+# 가성비 최고 무선 마우스 사용기
+
+제품 구매 링크: https://link.coupang.com/a/bCdEf1234
+쿠팡 파트너스 추천 상품으로 적극 권장합니다.
+직접 구매해서 3달간 써본 솔직한 내돈내산 후기입니다. 광고 아닙니다.
+"""
+    temp_bad_ftc = temp_dir / "_test_bad_ftc.md"
+    temp_bad_ftc.write_text(bad_ftc, encoding="utf-8")
+
+    report8 = gatekeeper.verify(str(temp_bad_ftc), platform_override="tistory")
+    assert not report8.is_passed, "Case 8: Missing FTC disclosure and covert ad should be REJECTED"
+    assert any(v.rule_id == "G8_FTC_MISSING_DISCLOSURE" for v in report8.violations), "Case 8: Should detect missing FTC disclosure"
+    assert any(v.rule_id == "G8_FTC_COVERT_MY_MONEY" for v in report8.violations), "Case 8: Should detect deceptive covert marketing"
+    print("  ✅ Test 8 Passed: FTC Affiliate & Sponsored Advertising compliance caught successfully.")
+
+    # Case 9: 공공누리(KOGL) 저작권 출처 표기 누락 (정부 지원금/정책 글에서 출처 미표기) -> REJECT 기대
+    bad_kogl = """---
+title: "2026 청년도약계좌 지원 조건 및 신청 방법 총정리"
+category: "정부 정책 / 복지 지원금"
+tags: "청년도약계좌, 정부지원금"
+---
+# 2026 청년도약계좌 완벽 가이드
+
+보건복지부와 서민금융진흥원에서 발표한 2026년 청년도약계좌 정부 지원금 정책 안내입니다.
+정부 지원금 매칭 혜택과 비과세 혜택을 통해 5천만 원의 목돈을 마련할 수 있습니다.
+신청 자격은 만 19세~34세 청년이며 총급여 7,500만 원 이하입니다.
+"""
+    temp_bad_kogl = temp_dir / "_test_bad_kogl.md"
+    temp_bad_kogl.write_text(bad_kogl, encoding="utf-8")
+
+    report9 = gatekeeper.verify(str(temp_bad_kogl), platform_override="naver")
+    assert not report9.is_passed, "Case 9: Missing KOGL attribution should be REJECTED"
+    assert any(v.rule_id == "G8_KOGL_MISSING_ATTRIBUTION" for v in report9.violations), "Case 9: Should detect missing KOGL attribution"
+    print("  ✅ Test 9 Passed: KOGL Public Copyright attribution requirement verified successfully.")
+
+    # Case 10: 영문 글로벌 금융 규제 위반 (SEC Investment Advice & Guaranteed Return) -> REJECT 기대
+    bad_sec = """---
+title: "Guaranteed Profit Trading Strategy"
+category: "Global Macro & Finance"
+tags: "trading, stocks"
+---
+# S&P 500 High-Frequency Strategy
+
+This quantitative model delivers a guaranteed return of 45% with risk-free profit.
+Buy this stock now before market close today. It has a 100% win rate and cannot lose money.
+"""
+    temp_bad_sec = temp_dir / "_test_bad_sec.md"
+    temp_bad_sec.write_text(bad_sec, encoding="utf-8")
+
+    report10 = gatekeeper.verify(str(temp_bad_sec), platform_override="markets")
+    assert not report10.is_passed, "Case 10: Global financial/SEC violations should be REJECTED"
+    assert any(v.rule_id == "G8_GLOBAL_GUARANTEED_RETURNS" for v in report10.violations), "Case 10: Should detect guaranteed returns"
+    assert any(v.rule_id == "G8_GLOBAL_URGENT_BUY_CALL" for v in report10.violations), "Case 10: Should detect direct buy command"
+    assert any(v.rule_id == "G8_GLOBAL_MISSING_DISCLAIMER" for v in report10.violations), "Case 10: Should detect missing global financial disclaimer"
+
+    # 동일 라인에 면책문구를 혼합 삽입한 우회 시도 차단 추가 검증
+    sec_evasion_text = "This quantitative system delivers a guaranteed profit of 45%. This is for informational purposes only and not financial advice."
+    sec_evasion_lines = [sec_evasion_text]
+    sec_evasion_v = gatekeeper.verify_gate_8_legal_compliance(
+        file_path="test_sec_evasion.md",
+        content=sec_evasion_text,
+        body=sec_evasion_text,
+        fm_data={"category": "Finance", "title": "Trading"},
+        lines=sec_evasion_lines,
+        platform="markets"
+    )
+    assert any(v.rule_id == "G8_GLOBAL_GUARANTEED_RETURNS" for v in sec_evasion_v), "Case 10-2: Guaranteed profit must be caught even with disclaimer on same line"
+    print("  ✅ Test 10 Passed: English SEC & Global Financial compliance violations caught successfully.")
+
+    # Case 11: 법적 규정 100% 준수한 정상 콘텐츠 통과 검증 (Clean Compliant Post) -> PASS 기대
+    # 1. KOGL 정책 공공 저작물 정상 포스트
+    compliant_policy = """---
+title: "2026 청년 자산 형성 정책 분석 가이드"
+category: "정부 정책 / 복지 지원금"
+tags: "청년도약계좌, 정책금융"
+---
+# 2026 청년 자산 형성 지원 정책 분석
+
+본 포스팅은 대한민국 정부의 청년 금융 지원 복지 정책 구조를 객관적으로 분석합니다.
+소득 구간별 정부기여금 매칭과 우대 금리 요건을 꼼꼼히 확인하여 자산 형성 계획을 수립해야 합니다.
+
+신청 전 서민금융진흥원 및 취급 시중은행의 공식 공고를 확인하시기 바랍니다.
+
+---
+출처: 대한민국 정책브리핑 (공공누리 제1유형: 출처표시)
+
+※ 본 글은 금융 지원 정책 이해를 돕기 위한 객관적 정보 제공용이며, 특정 금융회사나 금융투자상품 가입을 권유하지 않습니다.
+"""
+    cp_fm_text, cp_body, _ = gatekeeper.split_frontmatter_and_body(compliant_policy)
+    cp_fm = gatekeeper.parse_frontmatter(cp_fm_text)
+    cp_v = gatekeeper.verify_gate_8_legal_compliance(
+        file_path="posts/test_compliant_policy.md",
+        content=compliant_policy,
+        body=cp_body,
+        fm_data=cp_fm,
+        lines=compliant_policy.splitlines(),
+        platform="naver"
+    )
+    assert len(cp_v) == 0, f"Case 11-1: Compliant policy post should have 0 Gate 8 legal violations, found: {cp_v}"
+
+    # 2. 식약처 고시 건기식 표준 면책문구 포스트
+    compliant_health = """---
+title: "마그네슘 흡수율 비교 분석"
+category: "건강"
+tags: "마그네슘"
+---
+# 마그네슘 형태별 생체이용률 과학
+
+식약처 고시 기준에 따른 마그네슘 형태별 체내 흡수 메커니즘을 객관적으로 분석합니다.
+킬레이트 마그네슘과 산화 마그네슘의 용해도 차이를 인체적용시험 데이터로 비교합니다.
+
+---
+※ 본 제품은 질병의 예방 및 치료를 위한 의약품이 아니며, 건강 증진을 위한 건강기능식품 정보입니다. 전문 의료인의 진단 및 처방을 대신할 수 없습니다.
+"""
+    ch_fm_text, ch_body, _ = gatekeeper.split_frontmatter_and_body(compliant_health)
+    ch_fm = gatekeeper.parse_frontmatter(ch_fm_text)
+    ch_v = gatekeeper.verify_gate_8_legal_compliance(
+        file_path="posts/test_compliant_health.md",
+        content=compliant_health,
+        body=ch_body,
+        fm_data=ch_fm,
+        lines=compliant_health.splitlines(),
+        platform="naver"
+    )
+    assert len(ch_v) == 0, f"Case 11-2: Compliant health post should have 0 Gate 8 legal violations, found: {ch_v}"
+
+    # 3. 글로벌 영문 제휴 링크 & FTC 면책고지 준수 포스트
+    compliant_ftc_en = """---
+title: "Top Developer Keyboards"
+category: "Cloud & DevOps"
+tags: "hardware, dev"
+---
+# Essential Hardware for Engineers
+
+A detailed review of ergonomic mechanical keyboards for infrastructure engineers.
+Product link: https://amzn.to/3xyz123
+
+Disclosure: This post contains affiliate links. As an Amazon Associate I earn from qualifying purchases at no additional cost to you.
+"""
+    ce_fm_text, ce_body, _ = gatekeeper.split_frontmatter_and_body(compliant_ftc_en)
+    ce_fm = gatekeeper.parse_frontmatter(ce_fm_text)
+    ce_v = gatekeeper.verify_gate_8_legal_compliance(
+        file_path="blogs/dev/_posts/test_compliant_ftc.md",
+        content=compliant_ftc_en,
+        body=ce_body,
+        fm_data=ce_fm,
+        lines=compliant_ftc_en.splitlines(),
+        platform="dev"
+    )
+    assert len(ce_v) == 0, f"Case 11-3: Compliant English affiliate post should have 0 Gate 8 legal violations, found: {ce_v}"
+
+    # 4. 개발 블로그의 Portfolio Dashboard 튜토리얼 (금융 글 오탐 방지 검증)
+    compliant_dev_portfolio = """---
+title: "Building a Portfolio Dashboard with FastAPI"
+category: "Cloud & DevOps"
+tags: "fastapi, python"
+---
+# Building a Portfolio Dashboard
+
+In this engineering tutorial, we implement an asynchronous worker pipeline to aggregate user metrics with FastAPI and Redis.
+We deploy the containerized cluster across multiple availability zones.
+"""
+    cd_fm_text, cd_body, _ = gatekeeper.split_frontmatter_and_body(compliant_dev_portfolio)
+    cd_fm = gatekeeper.parse_frontmatter(cd_fm_text)
+    cd_v = gatekeeper.verify_gate_8_legal_compliance(
+        file_path="blogs/dev/_posts/test_portfolio.md",
+        content=compliant_dev_portfolio,
+        body=cd_body,
+        fm_data=cd_fm,
+        lines=compliant_dev_portfolio.splitlines(),
+        platform="dev"
+    )
+    assert len(cd_v) == 0, f"Case 11-4: Dev coding tutorial with 'portfolio' should have 0 Gate 8 legal violations, found: {cd_v}"
+
+    print("  ✅ Test 11 Passed: Fully compliant legal & regulatory content verified across all domains with 0 violations.")
 
     # 임시 파일 정리
-    for p in [temp_bad_en, temp_bad_drama, temp_bad_health, temp_bad_code]:
+    all_temp_files = [
+        temp_bad_en, temp_bad_drama, temp_bad_health, temp_bad_code, temp_bad_secret,
+        temp_bad_fin, temp_bad_med, temp_bad_ftc, temp_bad_kogl, temp_bad_sec
+    ]
+    for p in all_temp_files:
         if p.exists():
             p.unlink()
 
-    print(f"\n{Color.GREEN}{Color.BOLD}🎉 ALL SELF-TESTS PASSED: 철벽 게이트 검증 엔진의 모든 차단 룰이 정상 동작합니다!{Color.RESET}\n")
+    print(f"\n{Color.GREEN}{Color.BOLD}🎉 ALL 11 SELF-TESTS PASSED: 철벽 게이트 검증 엔진의 8대 품질 및 법적 컴플라이언스 룰이 100% 정상 동작합니다!{Color.RESET}\n")
 
 
 # ==============================================================================
@@ -1135,7 +2239,7 @@ def main():
 
     parser.add_argument("--file", "-f", help="검증할 마크다운 파일 경로")
     parser.add_argument("--dir", "-d", help="검증할 마크다운 디렉터리 경로 (내부 .md 일괄 검증)")
-    parser.add_argument("--platform", "-p", choices=["auto", "dev", "tistory", "naver"], default="auto", help="타깃 플랫폼 (기본값: auto)")
+    parser.add_argument("--platform", "-p", choices=["auto", "dev", "tistory", "naver", "markets", "stock", "gear"], default="auto", help="타깃 플랫폼 (기본값: auto)")
     parser.add_argument("--strict", action="store_true", help="엄격 모드 (WARNING도 REJECT로 취급)")
     parser.add_argument("--self-test", action="store_true", help="내장 자체 단위 테스트 실행")
     parser.add_argument("--json", action="store_true", help="결과를 JSON 포맷으로 출력")

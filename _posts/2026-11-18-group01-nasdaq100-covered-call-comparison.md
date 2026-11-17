@@ -1,7 +1,7 @@
 ---
 layout: post
 title: '[2026년 11월] 나스닥 100 커버드콜 4대장 실측 비교: TIGER 타겟 15% vs KODEX 1% OTM vs RISE vs TIGER 합성'
-date: 2026-11-18 09:00:00 +0900
+date: 2026-11-18 07:30:00 +0900
 category: '커버드콜 분석'
 categories: ['커버드콜 분석']
 tags: [커버드콜, 나스닥100, TIGER미국나스닥100타겟데일리, KODEX미국나스닥100데일리OTM, RISE미국테크100데일리고정, TIGER미국나스닥100커버드콜, 월배당, 백테스팅, 배당투자, 맥락트레이딩]

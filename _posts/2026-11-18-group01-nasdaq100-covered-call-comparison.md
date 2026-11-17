@@ -34,7 +34,7 @@ excerpt: '국내 상장 나스닥 100 초고배당 커버드콜 4종의 1년 및
 
 ## 2. 성과 그래프
 
-![나스닥 100 커버드콜 4대장 1년 실측 성과 비교 차트](/assets/img/posts/group01_nasdaq100_covered_call_comparison.png)
+![나스닥 100 커버드콜 4대장 1년 실측 성과 비교 차트](/assets/img/posts/group01_nasdaq100_covered_call_comparison_v2.png)
 
 > 💡 **차트 확인 포인트**: 상단 그래프의 실선들은 순수 주가에 실제로 계좌로 입금된 현금 분배금을 모두 합산한 '총자산(Hold Total Return)' 추이입니다. 나스닥 본주가 연간 -0.54%로 횡보한 진폭 장세에서 옵션 구조별로 최종 수익률이 어떻게 엇갈렸는지 확인할 수 있습니다.
 

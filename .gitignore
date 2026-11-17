@@ -1,5 +1,13 @@
-__pycache__/
+# Python artifacts
+*.py
 *.pyc
+__pycache__/
+.pytest_cache/
+
+# Internal audits and data
+*.json
+
+# Jekyll & OS artifacts
 .DS_Store
 Thumbs.db
 .sass-cache/

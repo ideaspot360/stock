@@ -105,3 +105,11 @@ excerpt: "유튜브 쇼츠의 초단기 시황 한계를 넘어, 실전 차트·
 유튜브 채널 구독과 블로그 북마크로 함께해 주시기 바랍니다. 감사합니다!
 
 **맥락트레이딩 리서치팀 드림**
+
+---
+
+<div class="post-disclaimer">
+  ※ 본 포스팅은 특정 종목에 대한 매수·매도 추천이나 투자 권유가 아니며, 맥락트레이딩의 리서치 생태계 및 블로그 운영 방향을 안내하는 정보 제공용 콘텐츠입니다. 모든 투자에 대한 판단과 책임은 투자자 본인에게 있습니다.
+</div>
+
+<div class="post-tags"><span class="tag-item">#맥락트레이딩</span> <span class="tag-item">#AlphaContext</span> <span class="tag-item">#3Pillar플라이휠</span> <span class="tag-item">#차트강의</span> <span class="tag-item">#실전매매기법</span> <span class="tag-item">#커버드콜</span> <span class="tag-item">#백테스팅</span></div>

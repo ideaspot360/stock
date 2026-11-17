@@ -3,9 +3,9 @@ layout: post
 title: "『맥락트레이딩』 공식 출범: 3-Pillar 플라이휠로 여는 데이터 기반 주식·ETF 리서치 생태계"
 date: 2026-11-12 09:00:00 +0900
 category: "공지사항"
-tags: [맥락트레이딩, AlphaContext, 3Pillar플라이휠, 차트강의, 실전매매기법, 커버드콜, 백테스팅, 데이트레이딩]
+tags: [맥락트레이딩, AlphaContext, 3Pillar플라이휠, 차트이론, 기술적분석, 커버드콜, 백테스팅]
 author: "맥락트레이딩 리서치팀"
-excerpt: "유튜브 쇼츠의 초단기 시황 한계를 넘어, 실전 차트·호가창 매매기법 강의와 월배당 커버드콜 ETF 실측 백테스팅을 아우르는 3-Pillar 자산 순환 플라이휠 공식 출범을 선언합니다."
+excerpt: "유튜브 쇼츠의 초단기 시황 한계를 넘어, 정통 기술적 분석·차트이론과 월배당 커버드콜 ETF 실측 백테스팅을 아우르는 3-Pillar 자산 순환 플라이휠 공식 출범을 선언합니다."
 ---
 
 안녕하세요, **『맥락트레이딩』(Alpha Context, [@Alpha_Context](https://www.youtube.com/@Alpha_Context))**입니다.
@@ -40,7 +40,7 @@ excerpt: "유튜브 쇼츠의 초단기 시황 한계를 넘어, 실전 차트·
                                    │
                                    ▼
         ┌─────────────────────────────────────────────────────┐
-        │  ⚔️ Pillar 2. 실전 차트·매매기법 (스나이퍼 / 알파)     │
+        │  📐 Pillar 2. 정통 차트이론 (스나이퍼 / 알파)         │
         │  • 3분봉/5분봉 10이평선 눌림목 타점                   │
         │  • 호가창 체결강도 & 기계적 칼손절(-1.5%) 원칙        │
         └──────────────────────────┬──────────────────────────┘
@@ -62,7 +62,7 @@ excerpt: "유튜브 쇼츠의 초단기 시황 한계를 넘어, 실전 차트·
 * **발행 주기**: 평일 07:00(모닝), 15:40(마감) 정규 발행 (쇼츠 & 블로그 요약)
 * **핵심 가치**: 단순 지수 등락 나열을 100% 배제하고, 당일 시장을 가른 2~3대 핵심 사건(매크로, 외국인/기관 수급, 산업 이슈)을 중립적 관찰자 시각에서 명쾌하게 짚어드립니다.
 
-### 2. ⚔️ Pillar 2 (알파 / 메인 롱폼 1): 실전 차트·호가창 매매기법 강의
+### 2. 📐 Pillar 2 (알파 / 메인 롱폼 1): 정통 기술적 분석 및 차트이론 강의
 * **발행 주기**: **매주 화요일 19:00 정규 발행** (8~15분 심층 영상 및 상세 블로그 교안)
 * **핵심 커리큘럼**:
   - 캔들의 꼬리와 몸통이 말해주는 매수·매도 주체의 실시간 심리
@@ -80,17 +80,15 @@ excerpt: "유튜브 쇼츠의 초단기 시황 한계를 넘어, 실전 차트·
 
 ---
 
-## 📂 블로그 4대 핵심 카테고리 체계
+## 📂 블로그 3대 핵심 카테고리 체계
 
-본 블로그는 독자 여러분이 필요한 인사이트를 손쉽게 탐색하고 복습할 수 있도록 4대 전문 카테고리로 체계화되었습니다. 상단 내비게이션 메뉴를 통해 언제든지 바로 접근하실 수 있습니다:
+본 블로그는 독자 여러분이 필요한 인사이트를 손쉽게 탐색하고 복습할 수 있도록 3대 전문 카테고리로 체계화되었습니다. 상단 내비게이션 메뉴를 통해 언제든지 바로 접근하실 수 있습니다:
 
-1. [📊 차트강의 (/category/chart/)](/category/chart/)  
-   캔들, 이동평균선, 거래량, 호가창 체결강도 등 기술적 분석 이론 아카데미
-2. [⚔️ 실전 매매기법 (/category/strategy/)](/category/strategy/)  
-   3분봉 눌림목 타점, 시초가 갭, 종가베팅, 기계적 칼손절 원칙
-3. [🔬 커버드콜 개념 및 이론 (/category/coveredcall-theory/)](/category/coveredcall-theory/)  
+1. [📐 차트이론 (/category/chart-theory/)](/category/chart-theory/)  
+   다우 이론, 캔들 형태학, 추세·지지저항, 정통 패턴, 이동평균선과 그랜빌 법칙 등 정통 기술적 분석 아카데미
+2. [🔬 커버드콜 개념 및 이론 (/category/coveredcall-theory/)](/category/coveredcall-theory/)  
    콜옵션 매도 원리, 상방 제한·하방 노출 구조, 원금 잠식 해부, 절세(ISA) 전략
-4. [📈 커버드콜 ETF 성과 분석 (/category/coveredcall-analysis/)](/category/coveredcall-analysis/)  
+3. [📈 커버드콜 ETF 성과 분석 (/category/coveredcall-analysis/)](/category/coveredcall-analysis/)  
    국내외 커버드콜 ETF 전수 실측, 본주 대비 토탈리턴(TR) 백테스팅, MDD 검증
 
 ---
@@ -112,4 +110,4 @@ excerpt: "유튜브 쇼츠의 초단기 시황 한계를 넘어, 실전 차트·
   ※ 본 포스팅은 특정 종목에 대한 매수·매도 추천이나 투자 권유가 아니며, 맥락트레이딩의 리서치 생태계 및 블로그 운영 방향을 안내하는 정보 제공용 콘텐츠입니다. 모든 투자에 대한 판단과 책임은 투자자 본인에게 있습니다.
 </div>
 
-<div class="post-tags"><span class="tag-item">#맥락트레이딩</span> <span class="tag-item">#AlphaContext</span> <span class="tag-item">#3Pillar플라이휠</span> <span class="tag-item">#차트강의</span> <span class="tag-item">#실전매매기법</span> <span class="tag-item">#커버드콜</span> <span class="tag-item">#백테스팅</span></div>
+<div class="post-tags"><span class="tag-item">#맥락트레이딩</span> <span class="tag-item">#AlphaContext</span> <span class="tag-item">#3Pillar플라이휠</span> <span class="tag-item">#차트이론</span> <span class="tag-item">#기술적분석</span> <span class="tag-item">#커버드콜</span> <span class="tag-item">#백테스팅</span></div>

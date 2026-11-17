@@ -36,10 +36,10 @@ permalink: /about.html
     </div>
 
     <div style="padding: 18px 20px; border: 1px solid var(--border-color); background: var(--card-bg); border-radius: 8px;">
-      <h3 style="font-size: 1.1rem; margin-bottom: 6px; color: var(--accent-color);">⚔️ Pillar 2. 실전 차트·호가창 매매기법 강의 (알파 / 메인 롱폼 1)</h3>
+      <h3 style="font-size: 1.1rem; margin-bottom: 6px; color: var(--accent-color);">📐 Pillar 2. 정통 기술적 분석 및 차트이론 마스터 (알파 / 메인 롱폼 1)</h3>
       <p style="margin-bottom: 4px; font-size: 0.95rem;"><strong>운영 주기</strong>: 매주 화요일 19:00 정규 발행 (8~15분 심층 롱폼 영상 및 블로그 교안)</p>
       <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0;">
-        3분봉/5분봉 10이평선 눌림목 타점, 호가창 체결강도 및 허매수 벽 판독, 기계적 칼손절(-1.5%) 원칙 등 당일 주도주의 생생한 데이터로 강의를 진행합니다.
+        다우 이론, 캔들 형태학, 추세·지지저항, 정통 패턴, 이동평균선과 그랜빌 법칙 등 금융 역사 100년이 검증한 교과서적 기술적 분석 이론 체계를 교육합니다.
       </p>
     </div>
 
@@ -54,10 +54,9 @@ permalink: /about.html
 
   <hr style="margin: 32px 0; border: none; border-top: 1px solid var(--border-color);">
 
-  <h2>📂 블로그 4대 핵심 카테고리</h2>
+  <h2>📂 블로그 3대 핵심 카테고리</h2>
   <ul>
-    <li><a href="{{ '/category/chart/' | relative_url }}"><strong>📊 차트강의</strong></a>: 캔들 심리, 이동평균선 배열, 거래량 법칙, 호가창 체결강도 등 기술적 분석 이론 아카데미</li>
-    <li><a href="{{ '/category/strategy/' | relative_url }}"><strong>⚔️ 실전 매매기법</strong></a>: 3분봉 눌림목 타점, 시초가 갭, 종가베팅, 기계적 칼손절 원칙</li>
+    <li><a href="{{ '/category/chart-theory/' | relative_url }}"><strong>📐 차트이론</strong></a>: 다우 이론, 캔들 형태학, 추세·지지저항, 정통 패턴, 이동평균선/그랜빌 등 정통 기술적 분석 아카데미</li>
     <li><a href="{{ '/category/coveredcall-theory/' | relative_url }}"><strong>🔬 커버드콜 개념 및 이론</strong></a>: 옵션 프리미엄 원리, 원금 잠식 구조 해부, 절세(ISA·연금저축) 전략</li>
     <li><a href="{{ '/category/coveredcall-analysis/' | relative_url }}"><strong>📈 커버드콜 ETF 성과 분석</strong></a>: 국내외 커버드콜 전수 실측, 본주 대비 토탈리턴 백테스팅</li>
   </ul>

@@ -251,7 +251,9 @@ MARKETS_OFFICIAL_CATEGORIES = [
 
 STOCK_OFFICIAL_CATEGORIES = [
     "커버드콜 분석",
-    "실전 매매기법",
+    "커버드콜 이론",
+    "차트이론",
+    "공지사항",
     "이론 및 기초"
 ]
 
@@ -297,7 +299,7 @@ class IroncladGatekeeper:
         # Frontmatter 언어 및 메타데이터 검사
         if re.search(r"^category:\s*(Macro Intelligence|US Systematic Equity|Options & Income|Quantitative Frameworks)", content, re.MULTILINE):
             return "markets"
-        if re.search(r"^category:\s*(커버드콜 분석|실전 매매기법|이론 및 기초)", content, re.MULTILINE):
+        if re.search(r"^category:\s*(커버드콜 분석|커버드콜 이론|차트이론|공지사항|실전 매매기법|이론 및 기초)", content, re.MULTILINE):
             return "stock"
         if re.search(r"^category:\s*(Cloud & DevOps|Database & Storage|Systems & Networking)", content, re.MULTILINE):
             return "dev"
@@ -789,6 +791,30 @@ class IroncladGatekeeper:
 
         # 4. 국내 주식/증시 블로그 (stock.ideaspot360.com / 맥락트레이딩) 검증
         elif platform == "stock":
+            if category:
+                if category in ["차트강의", "실전 매매기법", "실전매매기법", "매매기법"]:
+                    violations.append(Violation(
+                        gate_id="GATE_6",
+                        gate_name="주식 블로그 카테고리 규격 검증",
+                        rule_id="G6_STOCK_DEPRECATED_CATEGORY",
+                        severity="REJECT",
+                        line_number=1,
+                        snippet=f"category: {category}",
+                        message=f"폐기된 구 카테고리('{category}')가 사용되었습니다. '차트이론'으로 전환하십시오.",
+                        fix_hint="Frontmatter의 category를 '차트이론' 또는 공식 카테고리로 변경하십시오."
+                    ))
+                elif category not in STOCK_OFFICIAL_CATEGORIES:
+                    violations.append(Violation(
+                        gate_id="GATE_6",
+                        gate_name="주식 블로그 카테고리 규격 검증",
+                        rule_id="G6_STOCK_CATEGORY_MISMATCH",
+                        severity="WARNING",
+                        line_number=1,
+                        snippet=f"category: {category}",
+                        message=f"국내 증시 블로그 공식 카테고리와 불일치할 수 있습니다. (허용: {', '.join(STOCK_OFFICIAL_CATEGORIES)})",
+                        fix_hint=f"Frontmatter의 category를 {', '.join(STOCK_OFFICIAL_CATEGORIES)} 중 하나로 일치시키십시오."
+                    ))
+
             for idx, line in enumerate(lines, start=1):
                 for pattern, sev, msg in STOCK_FORBIDDEN_PATTERNS:
                     match = re.search(pattern, line)

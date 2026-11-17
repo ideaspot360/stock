@@ -160,36 +160,23 @@ class ChartLectureValidator:
                 cats = [cats]
             all_cats = [c.strip() for c in ([cat] + [str(x) for x in cats]) if c.strip()]
 
-            # Determine mode: chart vs strategy
-            mode = self.target_category
-            if mode == "auto":
-                if any("매매기법" in c or "strategy" in c.lower() for c in all_cats):
-                    mode = "strategy"
-                elif any("차트강의" in c or "chart" in c.lower() for c in all_cats):
-                    mode = "chart"
-                else:
-                    post_name = post_path.name.lower()
-                    if "strat0" in post_name or "manual" in post_name:
-                        mode = "strategy"
-                    else:
-                        mode = "chart"
+            # Category validation: Must belong to '차트이론' (Chart Theory)
+            valid_chart_theory = any(k in c or k in c.lower() for c in all_cats for k in ["차트이론", "chart-theory", "chart theory"])
+            if not valid_chart_theory:
+                r1_errors.append("category or categories must be '차트이론' (or 'chart-theory')")
 
-            if mode == "strategy":
-                if not any(k in c or k in c.lower() for c in all_cats for k in ["실전 매매기법", "실전매매기법", "매매기법", "strategy"]):
-                    r1_errors.append("category or categories must contain '실전 매매기법' or 'strategy'")
-                forbidden_cats = ["차트강의", "chart", "커버드콜", "coveredcall"]
-                for c in all_cats:
-                    for f in forbidden_cats:
-                        if f in c.lower() or f in c:
-                            r1_errors.append(f"Cross-category contamination detected: '{c}' contains '{f}'. Strategy posts must strictly belong to '실전 매매기법' only.")
-            else:
-                if not any("차트강의" in c or "chart" in c.lower() for c in all_cats):
-                    r1_errors.append("category or categories must contain '차트강의' or 'chart'")
-                forbidden_cats = ["실전 매매기법", "실전매매기법", "매매기법", "strategy", "커버드콜", "coveredcall"]
-                for c in all_cats:
-                    for f in forbidden_cats:
-                        if f in c.lower() or f in c:
-                            r1_errors.append(f"Cross-category contamination detected: '{c}' contains '{f}'. Chart lecture posts must strictly belong to '차트강의' only.")
+            # Deprecated & Forbidden Categories check
+            deprecated_cats = ["차트강의", "실전 매매기법", "실전매매기법", "매매기법", "strategy"]
+            for c in all_cats:
+                for d in deprecated_cats:
+                    if d in c.lower() or d in c:
+                        r1_errors.append(f"Deprecated category detected: '{c}' contains '{d}'. Legacy categories are abolished; use '차트이론' only.")
+
+            forbidden_cats = ["커버드콜", "coveredcall"]
+            for c in all_cats:
+                for f in forbidden_cats:
+                    if f in c.lower() or f in c:
+                        r1_errors.append(f"Cross-category contamination detected: '{c}' contains '{f}'. Chart theory posts must strictly belong to '차트이론' only.")
 
             # tags check
             tags = front_matter.get("tags", [])
@@ -430,7 +417,14 @@ def main():
     if args.post_path:
         post_path = Path(args.post_path).resolve()
     else:
-        post_path = blog_root / "_posts" / "2026-11-15-changwon-10ma-pullback-trading-strategy.md"
+        # Scan for chart theory posts
+        posts = list((blog_root / "_posts").glob("*chart*.md"))
+        if posts:
+            post_path = posts[0]
+        else:
+            print("[INFO] No active chart theory posts found in _posts. Validation skipped.")
+            print("================================================================================")
+            sys.exit(0)
 
     print("================================================================================")
     print("      ALPHA CONTEXT BLOG VALIDATOR: CHART TRADING LECTURE 1 AUDIT")

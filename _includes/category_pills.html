@@ -1,0 +1,10 @@
+<div class="category-pills-container" aria-label="카테고리 퀵 필터">
+  <div class="category-pills-bar">
+    <a href="{{ '/' | relative_url }}" class="category-pill{% if page.url == '/' %} active{% endif %}">전체 리서치</a>
+    {% for cat in site.data.categories %}
+      <a href="{{ '/category/' | append: cat[0] | append: '/' | relative_url }}" class="category-pill{% if page.url contains cat[0] %} active{% endif %}">
+        <span class="pill-icon">{{ cat[1].icon }}</span> {{ cat[1].name_ko }}
+      </a>
+    {% endfor %}
+  </div>
+</div>

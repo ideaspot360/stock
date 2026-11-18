@@ -1,0 +1,26 @@
+coveredcall-analysis:
+  name_ko: "커버드콜 성과 분석"
+  slug: "coveredcall-analysis"
+  icon: "📈"
+  description: "국내 상장 64개 커버드콜 ETF의 1년 실측 배당재투자(TR) 성과 백테스팅 및 본주 1:1 맞대결 비교 리포트"
+  legacy_names:
+    - "커버드콜 분석"
+    - "커버드콜"
+    - "주식·ETF 실전 분석"
+
+coveredcall-theory:
+  name_ko: "커버드콜 원리 및 이론"
+  slug: "coveredcall-theory"
+  icon: "🔬"
+  description: "옵션 행사가, 프리미엄 메커니즘, 원금 잠식(NAV Decay) 해부 및 ISA/연금저축 절세 계좌 복리 세무 전략"
+  legacy_names:
+    - "커버드콜 이론"
+
+chart-theory:
+  name_ko: "정통 차트이론 대계"
+  slug: "chart-theory"
+  icon: "📐"
+  description: "140년 고전 기술적 분석부터 일목균형표, 현대 SMC/ICT 오더블록 이론까지 아우르는 정통 기술적 분석 총결산"
+  legacy_names:
+    - "차트이론"
+    - "기술적 분석"

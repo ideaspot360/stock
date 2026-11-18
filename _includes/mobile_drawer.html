@@ -1,0 +1,41 @@
+<div id="drawer-backdrop" class="drawer-backdrop" aria-hidden="true"></div>
+<div id="mobile-drawer" class="mobile-drawer" role="dialog" aria-modal="true" aria-label="모바일 내비게이션 메뉴">
+  <div class="drawer-header">
+    <div class="drawer-brand">
+      <span class="brand-title">맥락트레이딩</span>
+      <span class="brand-handle">@Alpha_Context</span>
+    </div>
+    <button type="button" id="drawer-close-btn" class="drawer-close-btn" aria-label="메뉴 닫기">&times;</button>
+  </div>
+  <div class="drawer-body">
+    <nav class="drawer-nav-tree">
+      {% for item in site.data.navigation.main_menu %}
+        {% if item.children %}
+          <div class="drawer-nav-group">
+            <div class="drawer-group-title">
+              <span class="nav-icon">{{ item.icon }}</span>
+              <span class="nav-label">{{ item.title }}</span>
+            </div>
+            <ul class="drawer-group-list">
+              {% for child in item.children %}
+                <li class="drawer-nav-item{% if page.url == child.url %} active{% endif %}">
+                  <a href="{{ child.url | relative_url }}">
+                    <span class="item-name">{{ child.title }}</span>
+                    {% if child.badge %}<span class="item-badge">{{ child.badge }}</span>{% endif %}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% else %}
+          <div class="drawer-single-item{% if page.url == item.url %} active{% endif %}">
+            <a href="{% if item.external %}{{ item.url }}{% else %}{{ item.url | relative_url }}{% endif %}" {% if item.external %}target="_blank" rel="noopener"{% endif %}>
+              <span class="nav-icon">{{ item.icon }}</span>
+              <span class="nav-label">{{ item.title }}</span>
+            </a>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </nav>
+  </div>
+</div>

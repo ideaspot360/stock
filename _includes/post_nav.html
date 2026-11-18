@@ -1,0 +1,21 @@
+<nav class="post-navigation-cards" aria-label="이전 및 다음 리서치">
+  <div class="post-nav-grid">
+    {% if page.previous.url %}
+      <a href="{{ page.previous.url | relative_url }}" class="post-nav-card post-nav-prev" rel="prev">
+        <span class="post-nav-direction">← 이전 리서치</span>
+        <span class="post-nav-title">{{ page.previous.title | truncate: 45 }}</span>
+      </a>
+    {% else %}
+      <div class="post-nav-card post-nav-empty"></div>
+    {% endif %}
+
+    {% if page.next.url %}
+      <a href="{{ page.next.url | relative_url }}" class="post-nav-card post-nav-next" rel="next">
+        <span class="post-nav-direction">다음 리서치 →</span>
+        <span class="post-nav-title">{{ page.next.title | truncate: 45 }}</span>
+      </a>
+    {% else %}
+      <div class="post-nav-card post-nav-empty"></div>
+    {% endif %}
+  </div>
+</nav>

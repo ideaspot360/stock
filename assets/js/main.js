@@ -338,5 +338,120 @@ document.addEventListener("DOMContentLoaded", () => {
       wrapper.appendChild(table);
     }
   });
+
+  // 5. Scrollspy TOC Engine (우측 목차 자동 수집 및 실시간 감지)
+  const headings = Array.from(document.querySelectorAll(".entry-content h2, .entry-content h3, article.post-content h2, article.post-content h3"));
+  const tocNav = document.getElementById("toc-nav");
+  if (headings.length > 0 && tocNav) {
+    const list = document.createElement("ul");
+    list.className = "toc-list";
+
+    headings.forEach((heading, idx) => {
+      if (!heading.id) {
+        heading.id = `heading-sec-${idx + 1}`;
+      }
+      const item = document.createElement("li");
+      item.className = `toc-item toc-${heading.tagName.toLowerCase()}`;
+
+      const link = document.createElement("a");
+      link.href = `#${heading.id}`;
+      link.className = "toc-link";
+      link.textContent = heading.textContent.replace(/^[#\s]+/, "").trim();
+
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const target = document.getElementById(heading.id);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+          history.pushState(null, null, `#${heading.id}`);
+        }
+      });
+
+      item.appendChild(link);
+      list.appendChild(item);
+    });
+
+    tocNav.appendChild(list);
+
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            document.querySelectorAll(".toc-link").forEach((l) => {
+              l.classList.toggle("active", l.getAttribute("href") === `#${id}`);
+            });
+          }
+        });
+      }, {
+        rootMargin: "-80px 0px -60% 0px",
+        threshold: 0
+      });
+
+      headings.forEach((h) => observer.observe(h));
+    }
+  }
+
+  // 6. Back-to-Top Button
+  const backToTopBtn = document.getElementById("back-to-top-btn");
+  if (backToTopBtn) {
+    backToTopBtn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }
+
+  // 7. Off-Canvas Drawer Engine (모바일/태블릿 드로어)
+  const menuToggle = document.getElementById("mobile-menu-toggle");
+  const drawer = document.getElementById("mobile-drawer");
+  const backdrop = document.getElementById("drawer-backdrop");
+  const drawerCloseBtn = document.getElementById("drawer-close-btn");
+
+  function openDrawer() {
+    if (drawer && backdrop) {
+      drawer.classList.add("is-open");
+      backdrop.classList.add("is-visible");
+      document.body.style.overflow = "hidden";
+      if (menuToggle) menuToggle.setAttribute("aria-expanded", "true");
+    }
+  }
+
+  function closeDrawer() {
+    if (drawer && backdrop) {
+      drawer.classList.remove("is-open");
+      backdrop.classList.remove("is-visible");
+      document.body.style.overflow = "";
+      if (menuToggle) menuToggle.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  if (menuToggle) menuToggle.addEventListener("click", openDrawer);
+  if (drawerCloseBtn) drawerCloseBtn.addEventListener("click", closeDrawer);
+  if (backdrop) backdrop.addEventListener("click", closeDrawer);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && drawer && drawer.classList.contains("is-open")) {
+      closeDrawer();
+    }
+  });
+
+  // 8. Sidebar Scroll Position Restoration
+  const sidebar = document.querySelector(".sidebar-desktop");
+  if (sidebar) {
+    const savedPos = sessionStorage.getItem("sidebar_scroll_pos");
+    if (savedPos !== null) {
+      sidebar.scrollTop = parseInt(savedPos, 10);
+    }
+    sidebar.addEventListener("scroll", () => {
+      sessionStorage.setItem("sidebar_scroll_pos", sidebar.scrollTop.toString());
+    }, { passive: true });
+  }
+
+  // 9. Category Pills Horizontal Scroll (Active Pill Center Alignment)
+  const activePill = document.querySelector(".category-pill.active");
+  if (activePill) {
+    setTimeout(() => {
+      activePill.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    }, 150);
+  }
 });
 

@@ -1,6 +1,8 @@
 ---
-layout: default
+layout: with_sidebar
 ---
+
+{% include breadcrumbs.html %}
 
 <article class="post-content">
   <header style="margin-bottom: 28px;">
@@ -35,5 +37,6 @@ layout: default
       <strong>{{ site.author.name }}</strong> &mdash; {{ site.author.bio }} 본 분석 자료는 과거 데이터 백테스팅 및 기술적 분석에 기반한 교육적 목적의 정보이며, 투자 권유나 종목 추천이 아닙니다.
     </p>
   </div>
-</article>
 
+  {% include post_nav.html %}
+</article>

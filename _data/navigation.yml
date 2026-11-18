@@ -1,0 +1,30 @@
+main_menu:
+  - id: home
+    title: "홈 (큐레이션 피드)"
+    icon: "🏠"
+    url: "/"
+  - id: coveredcall_hub
+    title: "커버드콜 랩 (Covered Call)"
+    icon: "📊"
+    children:
+      - title: "📈 커버드콜 성과 분석"
+        slug: "coveredcall-analysis"
+        url: "/category/coveredcall-analysis/"
+        badge: "월간 11편"
+      - title: "🔬 커버드콜 원리 및 이론"
+        slug: "coveredcall-theory"
+        url: "/category/coveredcall-theory/"
+        badge: "정석 가이드"
+  - id: chart_theory_hub
+    title: "정통 차트이론 대계"
+    icon: "📐"
+    children:
+      - title: "📚 13대 마스터 차트이론"
+        slug: "chart-theory"
+        url: "/category/chart-theory/"
+        badge: "교과서"
+  - id: official_channel
+    title: "유튜브 『맥락트레이딩』"
+    icon: "▶️"
+    url: "https://www.youtube.com/@Alpha_Context"
+    external: true

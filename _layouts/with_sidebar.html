@@ -1,0 +1,27 @@
+---
+layout: default
+no_container: true
+---
+<!-- 상단 마켓 티커 바 -->
+{% include market_ticker.html %}
+
+<div class="site-layout-wrapper">
+  <div class="site-layout-grid">
+    <!-- 좌측 고정 카테고리 사이드바 -->
+    {% include sidebar.html %}
+
+    <!-- 중앙 메인 콘텐츠 영역 -->
+    <main class="site-main-column" id="main-content" role="main">
+      {% include category_pills.html %}
+      {{ content }}
+    </main>
+
+    <!-- 우측 Scrollspy TOC -->
+    {% if page.layout == 'post' %}
+      {% include toc.html %}
+    {% else %}
+      <aside class="toc-desktop" id="toc-desktop" style="visibility: hidden;">
+      </aside>
+    {% endif %}
+  </div>
+</div>

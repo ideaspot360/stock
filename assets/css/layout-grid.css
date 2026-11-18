@@ -769,40 +769,46 @@
 .posts-list.compact-mode .post-card > div:first-child {
   display: inline-flex !important;
   align-items: center !important;
-  gap: 10px !important;
+  gap: 12px !important;
   margin: 0 !important;
   padding: 0 !important;
   flex-shrink: 0 !important;
 }
 
-/* 1열: 날짜 (고정폭 105px) */
+/* 1열: 날짜 (한글 '📅 2026년 11월 15일' 수용을 위해 125px 고정) */
 .post-list.compact-mode .post-meta time,
 .posts-list.compact-mode .post-card time {
   font-size: 0.8rem !important;
   color: var(--text-muted) !important;
   font-variant-numeric: tabular-nums !important;
   white-space: nowrap !important;
-  width: 105px !important;
+  width: 125px !important;
+  min-width: 125px !important;
   display: inline-block !important;
   flex-shrink: 0 !important;
 }
 
-/* 2열: 카테고리 뱃지 (고정폭 130px) */
+/* 2열: 카테고리 뱃지 (고정폭 135px, 에메랄드 뱃지 박스) */
 .post-list.compact-mode .category-badge,
 .posts-list.compact-mode .category-badge,
 .post-list.compact-mode .post-meta span:nth-of-type(2) {
   font-size: 0.72rem !important;
-  padding: 2px 8px !important;
+  padding: 3px 8px !important;
   border-radius: 4px !important;
-  background: var(--tag-bg) !important;
-  color: var(--tag-text) !important;
+  background: rgba(16, 185, 129, 0.12) !important;
+  color: #10b981 !important;
+  border: 1px solid rgba(16, 185, 129, 0.25) !important;
   font-weight: 600 !important;
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   text-align: center !important;
-  width: 130px !important;
+  width: 135px !important;
+  min-width: 135px !important;
   display: inline-block !important;
+  box-sizing: border-box !important;
+  flex-shrink: 0 !important;
+}
   box-sizing: border-box !important;
   flex-shrink: 0 !important;
 }

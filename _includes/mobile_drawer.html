@@ -8,6 +8,16 @@
     <button type="button" id="drawer-close-btn" class="drawer-close-btn" aria-label="메뉴 닫기">&times;</button>
   </div>
   <div class="drawer-body">
+    <!-- 모바일 드로어 퀵 검색창 -->
+    <div class="sidebar-search-box" style="margin-bottom: 16px;">
+      <div class="search-input-wrap">
+        <input type="text" id="drawer-search-input" class="sidebar-search-input" placeholder="🔍 리서치 키워드 검색..." aria-label="리서치 검색">
+      </div>
+    </div>
+
+    <div class="sidebar-nav-header">
+      <span class="nav-title">📑 CATEGORIES</span>
+    </div>
     <nav class="drawer-nav-tree">
       {% for item in site.data.navigation.main_menu %}
         {% if item.children %}
@@ -44,5 +54,35 @@
         {% endif %}
       {% endfor %}
     </nav>
+
+    {% if site.data.navigation.special_tracks %}
+    <div class="sidebar-nav-header" style="margin-top: 16px;">
+      <span class="nav-title">🔥 SERIES &amp; TRACKS</span>
+    </div>
+    <div class="special-tracks-list">
+      {% for track in site.data.navigation.special_tracks %}
+        <a href="{{ '/' | relative_url }}#search={{ track.query | url_encode }}" class="track-item" data-track="{{ track.query }}">
+          <span class="track-title">{{ track.title }}</span>
+        </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if site.data.navigation.network %}
+    <div class="sidebar-nav-header" style="margin-top: 16px;">
+      <span class="nav-title">🌐 NETWORK</span>
+    </div>
+    <div class="sidebar-network-links">
+      {% for net in site.data.navigation.network %}
+        <a href="{{ net.url }}" class="network-link{% if net.is_kr %} nav-external-kr{% elsif net.is_us %} nav-external-us{% endif %}" target="_blank" rel="noopener">
+          {% if net.badge %}
+            <span class="edition-pill{% if net.is_us %} edition-pill-us{% endif %}">{{ net.badge }}</span>
+          {% endif %}
+          <span class="network-link-text">{{ net.title }}</span>
+          <span class="external-icon">↗</span>
+        </a>
+      {% endfor %}
+    </div>
+    {% endif %}
   </div>
 </div>

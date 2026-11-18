@@ -1,7 +1,16 @@
 <aside class="sidebar-desktop" id="sidebar-desktop" aria-label="사이드바 내비게이션">
   <div class="sidebar-sticky-inner">
+    <!-- 인-사이드바 퀵 검색창 -->
+    <div class="sidebar-search-box">
+      <div class="search-input-wrap">
+        <input type="text" id="sidebar-search-input" class="sidebar-search-input" placeholder="🔍 종목명, 기법, 티커 검색..." aria-label="리서치 검색">
+        <button type="button" id="sidebar-search-clear" class="search-clear-btn" aria-label="검색어 지우기" style="display: none;">✕</button>
+      </div>
+    </div>
+
+    <!-- 메인 네비게이션 트리 -->
     <div class="sidebar-nav-header">
-      <span class="nav-title">📑 NAVIGATION</span>
+      <span class="nav-title">📑 CATEGORIES</span>
     </div>
     <nav class="sidebar-nav-tree">
       {% for item in site.data.navigation.main_menu %}
@@ -39,5 +48,46 @@
         {% endif %}
       {% endfor %}
     </nav>
+
+    <!-- 스페셜 기획전 트랙 (SERIES & TRACKS) -->
+    {% if site.data.navigation.special_tracks %}
+    <div class="sidebar-nav-header" style="margin-top: 10px;">
+      <span class="nav-title">🔥 SERIES &amp; TRACKS (기획전)</span>
+    </div>
+    <div class="special-tracks-list">
+      {% for track in site.data.navigation.special_tracks %}
+        <a href="{{ '/' | relative_url }}#search={{ track.query | url_encode }}" class="track-item" data-track="{{ track.query }}">
+          <span class="track-title">{{ track.title }}</span>
+        </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- 패밀리 네트워크 (NETWORK) -->
+    {% if site.data.navigation.network %}
+    <div class="sidebar-nav-header" style="margin-top: 14px;">
+      <span class="nav-title">🌐 NETWORK</span>
+    </div>
+    <div class="sidebar-network-links">
+      {% for net in site.data.navigation.network %}
+        <a href="{{ net.url }}" class="network-link{% if net.is_kr %} nav-external-kr{% elsif net.is_us %} nav-external-us{% endif %}" target="_blank" rel="noopener">
+          {% if net.badge %}
+            <span class="edition-pill{% if net.is_us %} edition-pill-us{% endif %}">{{ net.badge }}</span>
+          {% endif %}
+          <span class="network-link-text">{{ net.title }}</span>
+          <span class="external-icon">↗</span>
+        </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- 공식 채널 배너 -->
+    <div class="sidebar-official-box">
+      <div class="official-title">🦁 맥락트레이딩</div>
+      <div class="official-sub">"시황으로 맥락을 읽고 차트로 타점을 잡는다"</div>
+      <a href="https://www.youtube.com/@Alpha_Context" target="_blank" rel="noopener" class="official-btn">
+        <span>▶️ YouTube 구독 바로가기</span>
+      </a>
+    </div>
   </div>
 </aside>

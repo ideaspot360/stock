@@ -25,8 +25,11 @@ permalink: /category/coveredcall-analysis/
 </section>
 
 <section>
-  <h2 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 16px;">📚 커버드콜 성과 분석 포스팅 목록</h2>
-  <div class="post-list">
+  <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 8px;">
+    <h2 style="font-size: 1.2rem; font-weight: 700; margin: 0;">📚 커버드콜 성과 분석 포스팅 목록</h2>
+    {% include view_toolbar.html %}
+  </div>
+  <div class="post-list" id="category-post-list">
     {% assign has_posts = false %}
     {% for post in site.posts %}
       {% if post.category == '커버드콜' or post.category == '커버드콜 분석' or post.category == 'coveredcall-analysis' or post.category == '커버드콜 ETF 성과 분석' or post.category == '커버드콜ETF성과분석' or post.category == '커버드콜 성과 분석' or post.category == '커버드콜분석' or post.categories contains '커버드콜' or post.categories contains '커버드콜 분석' or post.categories contains 'coveredcall-analysis' or post.categories contains '커버드콜 ETF 성과 분석' or post.categories contains '커버드콜ETF성과분석' or post.categories contains '커버드콜 성과 분석' or post.categories contains '커버드콜분석' %}

@@ -33,8 +33,11 @@ permalink: /category/chart-theory/
 </section>
 
 <section>
-  <h2 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 16px;">📚 차트이론 포스팅 목록</h2>
-  <div class="post-list">
+  <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 8px;">
+    <h2 style="font-size: 1.2rem; font-weight: 700; margin: 0;">📚 차트이론 포스팅 목록</h2>
+    {% include view_toolbar.html %}
+  </div>
+  <div class="post-list" id="category-post-list">
     {% assign has_posts = false %}
     {% for post in site.posts %}
       {% if post.category == 'chart-theory' or post.category == '차트이론' or post.category == '차트 이론' or post.categories contains 'chart-theory' or post.categories contains '차트이론' or post.categories contains '차트 이론' %}

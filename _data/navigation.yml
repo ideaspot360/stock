@@ -28,3 +28,25 @@ main_menu:
     icon: "▶️"
     url: "https://www.youtube.com/@Alpha_Context"
     external: true
+
+special_tracks:
+  - title: "🏆 월간 11회 라운드업 전편"
+    query: "라운드업"
+  - title: "📊 분기 배당재투자 TR 실측"
+    query: "재투자"
+  - title: "📐 10선 눌림목 & 분봉 단타"
+    query: "10선"
+  - title: "🔬 원금 잠식(NAV Decay) 해부"
+    query: "원금"
+
+network:
+  - title: "Market Context 360"
+    url: "https://markets.ideaspot360.com"
+    badge: "US"
+    is_us: true
+  - title: "Dev Notes"
+    url: "https://dev.ideaspot360.com"
+  - title: "Gear Studio"
+    url: "https://gear.ideaspot360.com"
+  - title: "Softwin IT"
+    url: "https://softwin.tistory.com"

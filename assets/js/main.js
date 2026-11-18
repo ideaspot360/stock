@@ -464,5 +464,276 @@ document.addEventListener("DOMContentLoaded", () => {
       activePill.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
     }, 150);
   }
+
+  // 10. Dual View Mode & Sort Engine (Cards ↔ Compact List & Sort)
+  const btnCards = document.getElementById("btn-view-cards");
+  const btnCompact = document.getElementById("btn-view-compact");
+  const sortSelect = document.getElementById("sort-select");
+  const postList = document.querySelector(".post-list, .posts-list, #category-post-list");
+
+  if (postList && (btnCards || btnCompact || sortSelect)) {
+    let currentView = "cards";
+    try {
+      currentView = localStorage.getItem("preferred_view_mode") || "cards";
+    } catch (e) {}
+
+    function applyViewMode(mode) {
+      if (mode === "compact") {
+        postList.classList.add("compact-mode");
+        if (btnCompact) btnCompact.classList.add("active");
+        if (btnCards) btnCards.classList.remove("active");
+      } else {
+        postList.classList.remove("compact-mode");
+        if (btnCards) btnCards.classList.add("active");
+        if (btnCompact) btnCompact.classList.remove("active");
+      }
+      try {
+        localStorage.setItem("preferred_view_mode", mode);
+      } catch (e) {}
+    }
+
+    applyViewMode(currentView);
+
+    if (btnCards) btnCards.addEventListener("click", () => applyViewMode("cards"));
+    if (btnCompact) btnCompact.addEventListener("click", () => applyViewMode("compact"));
+
+    if (sortSelect) {
+      sortSelect.addEventListener("change", () => {
+        const val = sortSelect.value;
+        const cards = Array.from(postList.querySelectorAll(".post-card, article.post-card"));
+        if (!cards.length) return;
+
+        cards.sort((a, b) => {
+          if (val === "title") {
+            const titleA = (a.querySelector("h2, h3") || {}).textContent || "";
+            const titleB = (b.querySelector("h2, h3") || {}).textContent || "";
+            return titleA.localeCompare(titleB, "ko");
+          }
+          const timeA = (a.querySelector("time") || {}).getAttribute("datetime") || "";
+          const timeB = (b.querySelector("time") || {}).getAttribute("datetime") || "";
+          if (val === "oldest") {
+            return timeA.localeCompare(timeB);
+          }
+          return timeB.localeCompare(timeA);
+        });
+
+        cards.forEach((card) => postList.appendChild(card));
+        if (typeof window.recalcPagination === "function") {
+          window.recalcPagination();
+        }
+      });
+    }
+
+    // 11. 점진적 슬라이싱 페이지네이션
+    window.recalcPagination = function () {
+      const allCards = Array.from(postList.querySelectorAll(".post-card, article.post-card"));
+      if (allCards.length <= 10) return;
+
+      let existingNav = document.getElementById("post-pagination-nav");
+      if (existingNav) existingNav.remove();
+
+      const pageSize = postList.classList.contains("compact-mode") ? 25 : 12;
+      const totalPages = Math.ceil(allCards.length / pageSize);
+      if (totalPages <= 1) {
+        allCards.forEach((c) => (c.style.display = ""));
+        return;
+      }
+
+      let currentPage = 1;
+
+      function renderPage(page) {
+        currentPage = page;
+        allCards.forEach((card, idx) => {
+          const start = (page - 1) * pageSize;
+          const end = page * pageSize;
+          card.style.display = idx >= start && idx < end ? "" : "none";
+        });
+
+        const nav = document.getElementById("post-pagination-nav");
+        if (nav) {
+          nav.querySelectorAll(".page-btn").forEach((btn) => {
+            const p = parseInt(btn.getAttribute("data-page"), 10);
+            btn.classList.toggle("active", p === currentPage);
+          });
+        }
+      }
+
+      const pagContainer = document.createElement("div");
+      pagContainer.id = "post-pagination-nav";
+      pagContainer.className = "pagination-container";
+
+      for (let p = 1; p <= totalPages; p++) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = `page-btn${p === 1 ? " active" : ""}`;
+        btn.setAttribute("data-page", p.toString());
+        btn.textContent = p.toString();
+        btn.addEventListener("click", () => {
+          renderPage(p);
+          postList.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+        pagContainer.appendChild(btn);
+      }
+
+      postList.parentNode.insertBefore(pagContainer, postList.nextSibling);
+      renderPage(1);
+    };
+
+    window.recalcPagination();
+  }
+
+  // 12. 인-사이드바 인스턴트 검색 & 스페셜 트랙 엔진
+  const searchInputs = [
+    document.getElementById("sidebar-search-input"),
+    document.getElementById("drawer-search-input")
+  ].filter(Boolean);
+
+  const clearBtn = document.getElementById("sidebar-search-clear");
+  let searchIndex = null;
+  let isFetchingIndex = false;
+
+  async function loadSearchIndex() {
+    if (searchIndex || isFetchingIndex) return searchIndex;
+    isFetchingIndex = true;
+    try {
+      const res = await fetch("/search.json");
+      if (res.ok) {
+        searchIndex = await res.json();
+      }
+    } catch (e) {
+      console.warn("Failed to load search.json", e);
+    } finally {
+      isFetchingIndex = false;
+    }
+    return searchIndex;
+  }
+
+  loadSearchIndex();
+
+  function executeSearch(query) {
+    if (!query) return;
+    const cleanQ = query.trim().toLowerCase();
+    if (!cleanQ) return;
+
+    const isHome = window.location.pathname === "/" || window.location.pathname.endsWith("/index.html");
+    if (!isHome) {
+      window.location.href = `/#search=${encodeURIComponent(cleanQ)}`;
+      return;
+    }
+
+    loadSearchIndex().then((index) => {
+      if (!index || !index.length) return;
+
+      const results = index.filter((item) => {
+        const t = (item.title || "").toLowerCase();
+        const c = (item.category || "").toLowerCase();
+        const s = (item.summary || "").toLowerCase();
+        const tags = Array.isArray(item.tags) ? item.tags.join(" ").toLowerCase() : "";
+        return t.includes(cleanQ) || c.includes(cleanQ) || s.includes(cleanQ) || tags.includes(cleanQ);
+      });
+
+      renderSearchResults(cleanQ, results);
+      history.pushState(null, null, `#search=${encodeURIComponent(cleanQ)}`);
+    });
+  }
+
+  function renderSearchResults(query, results) {
+    const mainCol = document.getElementById("main-content") || document.querySelector(".site-main-column");
+    if (!mainCol) return;
+
+    let searchSection = document.getElementById("search-results-section");
+    if (!searchSection) {
+      searchSection = document.createElement("div");
+      searchSection.id = "search-results-section";
+      searchSection.style.marginBottom = "40px";
+      mainCol.insertBefore(searchSection, mainCol.firstChild);
+    }
+
+    searchSection.innerHTML = `
+      <div class="search-status-bar">
+        <span>🔍 검색어 <strong>"${query}"</strong> 검색 결과: <strong>${results.length}</strong>건</span>
+        <button type="button" class="reset-btn" id="btn-search-reset">✕ 검색 초기화</button>
+      </div>
+      <div class="post-list" id="search-post-list">
+        ${
+          results.length === 0
+            ? '<p style="text-align: center; color: var(--text-muted); padding: 30px;">일치하는 리서치 결과가 없습니다.</p>'
+            : results
+                .map(
+                  (r) => `
+          <a href="${r.url}" class="post-card">
+            <div class="post-meta">
+              <time>📅 ${r.date}</time>
+              <span>&bull;</span>
+              <span class="category-badge">${r.category || "리서치"}</span>
+            </div>
+            <h2>${r.title}</h2>
+            <p class="post-excerpt">${r.summary}</p>
+          </a>
+        `
+                )
+                .join("")
+        }
+      </div>
+    `;
+
+    const resetBtn = document.getElementById("btn-search-reset");
+    if (resetBtn) {
+      resetBtn.addEventListener("click", () => {
+        searchSection.remove();
+        searchInputs.forEach((inp) => (inp.value = ""));
+        if (clearBtn) clearBtn.style.display = "none";
+        history.pushState(null, null, window.location.pathname);
+      });
+    }
+
+    searchSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  let debounceTimer = null;
+  searchInputs.forEach((input) => {
+    input.addEventListener("input", (e) => {
+      const val = e.target.value;
+      if (clearBtn) clearBtn.style.display = val ? "block" : "none";
+
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        if (val.trim().length >= 2) {
+          executeSearch(val);
+        }
+      }, 250);
+    });
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        clearTimeout(debounceTimer);
+        executeSearch(e.target.value);
+      }
+    });
+  });
+
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      searchInputs.forEach((inp) => (inp.value = ""));
+      clearBtn.style.display = "none";
+      const sec = document.getElementById("search-results-section");
+      if (sec) sec.remove();
+      history.pushState(null, null, window.location.pathname);
+    });
+  }
+
+  function handleUrlHash() {
+    const hash = window.location.hash;
+    if (hash && hash.startsWith("#search=")) {
+      const q = decodeURIComponent(hash.replace("#search=", ""));
+      searchInputs.forEach((inp) => (inp.value = q));
+      if (clearBtn) clearBtn.style.display = "block";
+      executeSearch(q);
+    }
+  }
+
+  window.addEventListener("popstate", handleUrlHash);
+  handleUrlHash();
 });
 

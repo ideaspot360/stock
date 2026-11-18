@@ -434,16 +434,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // 8. Sidebar Scroll Position Restoration
+  // Responsive resize: 데스크톱(>=1200px) 복귀 시 드로어 자동 닫힘 및 스크롤락 해제
+  window.addEventListener("resize", () => {
+    if (window.innerWidth >= 1200 && drawer && drawer.classList.contains("is-open")) {
+      closeDrawer();
+    }
+  });
+
+  // 8. Sidebar Scroll Position Restoration (Safari 시크릿 모드 예외 안전 방어)
   const sidebar = document.querySelector(".sidebar-desktop");
   if (sidebar) {
-    const savedPos = sessionStorage.getItem("sidebar_scroll_pos");
-    if (savedPos !== null) {
-      sidebar.scrollTop = parseInt(savedPos, 10);
-    }
-    sidebar.addEventListener("scroll", () => {
-      sessionStorage.setItem("sidebar_scroll_pos", sidebar.scrollTop.toString());
-    }, { passive: true });
+    try {
+      const savedPos = sessionStorage.getItem("sidebar_scroll_pos");
+      if (savedPos !== null) {
+        sidebar.scrollTop = parseInt(savedPos, 10);
+      }
+      sidebar.addEventListener("scroll", () => {
+        try {
+          sessionStorage.setItem("sidebar_scroll_pos", sidebar.scrollTop.toString());
+        } catch (e) {}
+      }, { passive: true });
+    } catch (e) {}
   }
 
   // 9. Category Pills Horizontal Scroll (Active Pill Center Alignment)

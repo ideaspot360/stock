@@ -170,6 +170,14 @@
   width: 100%;
 }
 
+/* 스티키 헤더에 의한 앵커 제목 가림 방지 (scroll-margin-top 24px 안전 여백) */
+.site-main-column h2,
+.site-main-column h3,
+.site-main-column h4,
+.site-main-column [id] {
+  scroll-margin-top: calc(var(--top-nav-offset) + 24px);
+}
+
 /* 브레드크럼 */
 .breadcrumbs-container {
   margin-bottom: 20px;

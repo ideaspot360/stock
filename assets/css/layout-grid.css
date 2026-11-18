@@ -142,10 +142,10 @@
 }
 
 .nav-single-item a {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 8px;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 8px !important;
   padding: 6px 10px;
   font-size: 0.85rem;
   font-weight: 600;
@@ -153,6 +153,21 @@
   text-decoration: none;
   border-radius: 4px;
   transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.nav-single-item a .nav-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  width: 20px !important;
+  text-align: center !important;
+}
+
+.nav-single-item a .nav-label {
+  flex-shrink: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 }
 
 .nav-item a:hover, .nav-single-item a:hover {
@@ -518,16 +533,31 @@
   border-radius: 4px;
 }
 .drawer-single-item a {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 8px;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 8px !important;
   padding: 6px 10px;
   font-size: 0.86rem;
   font-weight: 600;
   color: var(--text-color);
   text-decoration: none;
   border-radius: 4px;
+}
+
+.drawer-single-item a .nav-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  width: 20px !important;
+  text-align: center !important;
+}
+
+.drawer-single-item a .nav-label {
+  flex-shrink: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 }
 .drawer-nav-item.active > a, .drawer-single-item.active > a {
   color: var(--accent-color);
@@ -769,26 +799,28 @@
 .posts-list.compact-mode .post-card > div:first-child {
   display: inline-flex !important;
   align-items: center !important;
-  gap: 12px !important;
+  gap: 10px !important;
   margin: 0 !important;
   padding: 0 !important;
   flex-shrink: 0 !important;
 }
 
-/* 1열: 날짜 (한글 '📅 2026년 11월 15일' 수용을 위해 125px 고정) */
+/* 1열: 날짜 (한글 '📅 2026년 11월 17일' 글자 잘림 0% 및 밀착 수용: 138px 고정) */
 .post-list.compact-mode .post-meta time,
 .posts-list.compact-mode .post-card time {
   font-size: 0.8rem !important;
   color: var(--text-muted) !important;
   font-variant-numeric: tabular-nums !important;
   white-space: nowrap !important;
-  width: 125px !important;
-  min-width: 125px !important;
+  width: 138px !important;
+  min-width: 138px !important;
   display: inline-block !important;
   flex-shrink: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
-/* 2열: 카테고리 뱃지 (고정폭 135px, 에메랄드 뱃지 박스) */
+/* 2열: 카테고리 뱃지 (고정폭 125px, 에메랄드 뱃지 박스) */
 .post-list.compact-mode .category-badge,
 .posts-list.compact-mode .category-badge,
 .post-list.compact-mode .post-meta span:nth-of-type(2) {
@@ -803,18 +835,15 @@
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   text-align: center !important;
-  width: 135px !important;
-  min-width: 135px !important;
+  width: 125px !important;
+  min-width: 125px !important;
   display: inline-block !important;
   box-sizing: border-box !important;
   flex-shrink: 0 !important;
 }
-  box-sizing: border-box !important;
-  flex-shrink: 0 !important;
-}
 
-/* 불필요한 메타 요소 영구 숨김 (불릿 점, 작성자 등) */
-.post-list.compact-mode .post-meta span:not(.category-badge):not(:nth-of-type(2)),
+/* 불필요한 메타 요소 영구 숨김 (불릿 점, 작성자 등 100% 제거하여 1행 원장 유지) */
+.post-list.compact-mode .post-meta > span:not(.category-badge),
 .post-list.compact-mode .post-meta span:nth-of-type(1),
 .post-list.compact-mode .post-meta span:nth-of-type(3),
 .post-list.compact-mode .post-meta span:nth-of-type(4),

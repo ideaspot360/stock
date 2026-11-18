@@ -129,12 +129,26 @@
   border-left: 1px solid var(--border-subtle);
 }
 
-.nav-item a, .nav-single-item a {
+.nav-item a {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 6px 10px;
   font-size: 0.82rem;
+  color: var(--text-color);
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.nav-single-item a {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
   color: var(--text-color);
   text-decoration: none;
   border-radius: 4px;
@@ -493,12 +507,24 @@
   gap: 6px;
   border-left: 1px solid var(--border-subtle);
 }
-.drawer-nav-item a, .drawer-single-item a {
+.drawer-nav-item a {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 6px 10px;
   font-size: 0.84rem;
+  color: var(--text-color);
+  text-decoration: none;
+  border-radius: 4px;
+}
+.drawer-single-item a {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 6px 10px;
+  font-size: 0.86rem;
+  font-weight: 600;
   color: var(--text-color);
   text-decoration: none;
   border-radius: 4px;
@@ -700,79 +726,145 @@
    컴팩트 뷰 (Compact Mode) 테이블 변환 스타일
    ============================================================ */
 
-.post-list.compact-mode {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  border: 1px solid var(--border-subtle);
-  border-radius: 8px;
-  overflow: hidden;
-  background-color: var(--card-bg);
+.post-list.compact-mode,
+.posts-list.compact-mode {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  background-color: var(--card-bg) !important;
 }
-.post-list.compact-mode .post-card {
-  display: grid;
-  grid-template-columns: 100px 140px minmax(0, 1fr);
-  align-items: center;
-  gap: 12px;
-  padding: 10px 14px;
-  border-radius: 0;
-  border: none;
-  border-bottom: 1px solid var(--border-subtle);
-  margin-bottom: 0;
-  text-decoration: none;
+
+.post-list.compact-mode .post-card,
+.posts-list.compact-mode .post-card {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 14px !important;
+  padding: 10px 16px !important;
+  border-radius: 0 !important;
+  border: none !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
+  margin-bottom: 0 !important;
+  text-decoration: none !important;
+  box-sizing: border-box !important;
+  min-height: 44px !important;
 }
-.post-list.compact-mode .post-card:last-child {
-  border-bottom: none;
+
+.post-list.compact-mode .post-card:last-child,
+.posts-list.compact-mode .post-card:last-child {
+  border-bottom: none !important;
 }
-.post-list.compact-mode .post-card:hover {
-  background-color: rgba(59, 130, 246, 0.08);
-  transform: none;
+
+.post-list.compact-mode .post-card:hover,
+.posts-list.compact-mode .post-card:hover {
+  background-color: rgba(59, 130, 246, 0.08) !important;
+  transform: none !important;
 }
-.post-list.compact-mode .post-meta {
-  margin: 0;
-  display: contents;
+
+/* 1열 + 2열 래퍼 */
+.post-list.compact-mode .post-meta,
+.posts-list.compact-mode .post-card > div:first-child {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  flex-shrink: 0 !important;
 }
-.post-list.compact-mode .post-meta time {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
+
+/* 1열: 날짜 (고정폭 105px) */
+.post-list.compact-mode .post-meta time,
+.posts-list.compact-mode .post-card time {
+  font-size: 0.8rem !important;
+  color: var(--text-muted) !important;
+  font-variant-numeric: tabular-nums !important;
+  white-space: nowrap !important;
+  width: 105px !important;
+  display: inline-block !important;
+  flex-shrink: 0 !important;
 }
+
+/* 2열: 카테고리 뱃지 (고정폭 130px) */
 .post-list.compact-mode .category-badge,
+.posts-list.compact-mode .category-badge,
 .post-list.compact-mode .post-meta span:nth-of-type(2) {
-  font-size: 0.72rem;
-  padding: 2px 6px;
-  border-radius: 4px;
-  background: var(--tag-bg);
-  color: var(--tag-text);
-  font-weight: 600;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-align: center;
+  font-size: 0.72rem !important;
+  padding: 2px 8px !important;
+  border-radius: 4px !important;
+  background: var(--tag-bg) !important;
+  color: var(--tag-text) !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  text-align: center !important;
+  width: 130px !important;
+  display: inline-block !important;
+  box-sizing: border-box !important;
+  flex-shrink: 0 !important;
 }
-.post-list.compact-mode .post-card h2,
-.post-list.compact-mode .post-card h3 {
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--text-color);
-  margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.post-list.compact-mode .post-excerpt {
+
+/* 불필요한 메타 요소 영구 숨김 (불릿 점, 작성자 등) */
+.post-list.compact-mode .post-meta span:not(.category-badge):not(:nth-of-type(2)),
+.post-list.compact-mode .post-meta span:nth-of-type(1),
+.post-list.compact-mode .post-meta span:nth-of-type(3),
+.post-list.compact-mode .post-meta span:nth-of-type(4),
+.posts-list.compact-mode .post-card > div:first-child > span:not(.category-badge) {
   display: none !important;
 }
-.post-list.compact-mode .tags {
+
+/* 3열: 글 제목 (남은 너비 100% 채움 + 말줄임) */
+.post-list.compact-mode .post-card h2,
+.post-list.compact-mode .post-card h3,
+.posts-list.compact-mode .post-card h3 {
+  font-size: 0.88rem !important;
+  font-weight: 600 !important;
+  color: var(--text-color) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+.posts-list.compact-mode .post-card h3 a {
+  color: var(--text-color) !important;
+  text-decoration: none !important;
+  display: block !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* 발췌문, 태그 숨김 */
+.post-list.compact-mode .post-excerpt,
+.posts-list.compact-mode .post-card p,
+.post-list.compact-mode .tags,
+.posts-list.compact-mode .post-card .tags,
+.posts-list.compact-mode .post-card > div:last-child {
   display: none !important;
 }
 
 @media (max-width: 767px) {
-  .post-list.compact-mode .post-card {
-    grid-template-columns: 80px minmax(0, 1fr);
-    gap: 8px;
-    padding: 10px 12px;
+  .post-list.compact-mode .post-card,
+  .posts-list.compact-mode .post-card {
+    gap: 8px !important;
+    padding: 8px 10px !important;
+  }
+  .post-list.compact-mode .category-badge,
+  .posts-list.compact-mode .category-badge,
+  .post-list.compact-mode .post-meta span:nth-of-type(2) {
+    display: none !important;
+  }
+  .post-list.compact-mode .post-meta time,
+  .posts-list.compact-mode .post-card time {
+    width: 85px !important;
+    font-size: 0.75rem !important;
   }
 }
 

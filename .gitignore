@@ -6,6 +6,7 @@ __pycache__/
 
 # Internal audits and data
 *.json
+!search.json
 
 # Jekyll & OS artifacts
 .DS_Store

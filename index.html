@@ -23,7 +23,7 @@ layout: with_sidebar
     </h2>
     <span style="font-size: 0.78rem; color: var(--accent-color); font-weight: 600; background: var(--accent-light); padding: 3px 8px; border-radius: 4px;">TOP PICK</span>
   </div>
-  <a href="{{ featured_post.url | relative_url }}" class="post-card featured-card" style="display: block; border: 2px solid var(--accent-color); background: var(--card-bg); border-radius: 10px; padding: 24px; text-decoration: none; transition: transform 0.2s ease, box-shadow 0.2s ease;">
+  <a href="{{ featured_post.url | relative_url }}" class="post-card featured-card" style="display: block; border: 2px solid var(--accent-color); background: var(--card-bg); border-radius: 10px; padding: 24px; text-decoration: none;">
     <div class="post-meta" style="margin-bottom: 10px;">
       <time datetime="{{ featured_post.date | date_to_xmlschema }}">📅 {{ featured_post.date | date: "%Y년 %m월 %d일" }}</time>
       <span>&bull;</span>
@@ -67,13 +67,20 @@ layout: with_sidebar
         국내외 커버드콜 전수 실측, 배당재투자(TR) 백테스팅, 본주 맞대결 검증
       </p>
       <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px;">
-        {% assign cc_posts = site.posts | where_exp: "p", "p.category contains '커버드콜' and p.category contains '분석'" %}
-        {% for p in cc_posts limit:3 %}
-        <li style="font-size: 0.84rem;">
-          <a href="{{ p.url | relative_url }}" style="color: var(--text-color); text-decoration: none; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-            • {{ p.title }}
-          </a>
-        </li>
+        {% assign cc_cnt = 0 %}
+        {% for p in site.posts %}
+          {% if p.category contains '커버드콜' %}
+            {% if p.category contains '분석' %}
+              {% if cc_cnt < 3 %}
+                {% assign cc_cnt = cc_cnt | plus: 1 %}
+                <li style="font-size: 0.84rem;">
+                  <a href="{{ p.url | relative_url }}" style="color: var(--text-color); text-decoration: none; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                    • {{ p.title }}
+                  </a>
+                </li>
+              {% endif %}
+            {% endif %}
+          {% endif %}
         {% endfor %}
       </ul>
     </div>
@@ -88,13 +95,18 @@ layout: with_sidebar
         옵션 행사 메커니즘, 원금 잠식(NAV Decay) 해부, ISA 절세 복리 설계
       </p>
       <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px;">
-        {% assign ct_posts = site.posts | where_exp: "p", "p.category contains '이론'" %}
-        {% for p in ct_posts limit:3 %}
-        <li style="font-size: 0.84rem;">
-          <a href="{{ p.url | relative_url }}" style="color: var(--text-color); text-decoration: none; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-            • {{ p.title }}
-          </a>
-        </li>
+        {% assign ct_cnt = 0 %}
+        {% for p in site.posts %}
+          {% if p.category contains '이론' %}
+            {% if ct_cnt < 3 %}
+              {% assign ct_cnt = ct_cnt | plus: 1 %}
+              <li style="font-size: 0.84rem;">
+                <a href="{{ p.url | relative_url }}" style="color: var(--text-color); text-decoration: none; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                  • {{ p.title }}
+                </a>
+              </li>
+            {% endif %}
+          {% endif %}
         {% endfor %}
       </ul>
     </div>
@@ -109,13 +121,18 @@ layout: with_sidebar
         140년 고전 기술분석부터 일목균형표, 현대 SMC/ICT 오더블록 이론
       </p>
       <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px;">
-        {% assign ch_posts = site.posts | where_exp: "p", "p.category contains '차트' or p.category contains '실전 분석'" %}
-        {% for p in ch_posts limit:3 %}
-        <li style="font-size: 0.84rem;">
-          <a href="{{ p.url | relative_url }}" style="color: var(--text-color); text-decoration: none; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-            • {{ p.title }}
-          </a>
-        </li>
+        {% assign ch_cnt = 0 %}
+        {% for p in site.posts %}
+          {% if p.category contains '차트' or p.category contains '실전' %}
+            {% if ch_cnt < 3 %}
+              {% assign ch_cnt = ch_cnt | plus: 1 %}
+              <li style="font-size: 0.84rem;">
+                <a href="{{ p.url | relative_url }}" style="color: var(--text-color); text-decoration: none; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                  • {{ p.title }}
+                </a>
+              </li>
+            {% endif %}
+          {% endif %}
         {% endfor %}
       </ul>
     </div>
@@ -142,7 +159,7 @@ layout: with_sidebar
       </thead>
       <tbody>
         {% for post in site.posts limit:10 %}
-        <tr style="border-bottom: 1px solid var(--border-color); transition: background-color 0.15s ease;">
+        <tr style="border-bottom: 1px solid var(--border-color);">
           <td style="padding: 10px 14px; color: var(--text-muted); font-variant-numeric: tabular-nums; white-space: nowrap;">
             {{ post.date | date: "%Y-%m-%d" }}
           </td>

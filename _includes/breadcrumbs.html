@@ -4,15 +4,18 @@
     {% if page.category %}
       <li class="breadcrumb-separator">/</li>
       <li class="breadcrumb-item">
-        {% assign cat_slug = page.category %}
-        {% for cat in site.data.categories %}
-          {% if cat[1].name_ko == page.category or cat[0] == page.category %}
-            {% assign cat_slug = cat[0] %}
-            {% assign cat_name = cat[1].name_ko %}
-          {% endif %}
-        {% endfor %}
+        {% assign cat_slug = "coveredcall-analysis" %}
+        {% if page.category contains "이론" %}
+          {% assign cat_slug = "coveredcall-theory" %}
+        {% endif %}
+        {% if page.category contains "차트" %}
+          {% assign cat_slug = "chart-theory" %}
+        {% endif %}
+        {% if page.category contains "실전" %}
+          {% assign cat_slug = "chart-theory" %}
+        {% endif %}
         <a href="{{ '/category/' | append: cat_slug | append: '/' | relative_url }}">
-          {{ cat_name | default: page.category }}
+          {{ page.category }}
         </a>
       </li>
     {% endif %}

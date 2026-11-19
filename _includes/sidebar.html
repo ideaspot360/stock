@@ -63,31 +63,5 @@
     </div>
     {% endif %}
 
-    <!-- 패밀리 네트워크 (NETWORK) -->
-    {% if site.data.navigation.network %}
-    <div class="sidebar-nav-header" style="margin-top: 14px;">
-      <span class="nav-title">🌐 NETWORK</span>
-    </div>
-    <div class="sidebar-network-links">
-      {% for net in site.data.navigation.network %}
-        <a href="{{ net.url }}" class="network-link{% if net.is_kr %} nav-external-kr{% elsif net.is_us %} nav-external-us{% endif %}" target="_blank" rel="noopener">
-          {% if net.badge %}
-            <span class="edition-pill{% if net.is_us %} edition-pill-us{% endif %}">{{ net.badge }}</span>
-          {% endif %}
-          <span class="network-link-text">{{ net.title }}</span>
-          <span class="external-icon">↗</span>
-        </a>
-      {% endfor %}
-    </div>
-    {% endif %}
-
-    <!-- 공식 채널 배너 -->
-    <div class="sidebar-official-box">
-      <div class="official-title">🦁 맥락트레이딩</div>
-      <div class="official-sub">"시황으로 맥락을 읽고 차트로 타점을 잡는다"</div>
-      <a href="https://www.youtube.com/@Alpha_Context" target="_blank" rel="noopener" class="official-btn">
-        <span>▶️ YouTube 구독 바로가기</span>
-      </a>
-    </div>
   </div>
 </aside>

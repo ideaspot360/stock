@@ -38,15 +38,3 @@ special_tracks:
     query: "10선"
   - title: "🔬 원금 잠식(NAV Decay) 해부"
     query: "원금"
-
-network:
-  - title: "Market Context 360"
-    url: "https://markets.ideaspot360.com"
-    badge: "US"
-    is_us: true
-  - title: "Dev Notes"
-    url: "https://dev.ideaspot360.com"
-  - title: "Gear Studio"
-    url: "https://gear.ideaspot360.com"
-  - title: "Softwin IT"
-    url: "https://softwin.tistory.com"

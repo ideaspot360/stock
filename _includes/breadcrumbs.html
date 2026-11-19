@@ -5,13 +5,11 @@
       <li class="breadcrumb-separator">/</li>
       <li class="breadcrumb-item">
         {% assign cat_slug = "coveredcall-analysis" %}
-        {% if page.category contains "이론" %}
+        {% if page.category contains "미국" or page.category == "coveredcall-us" %}
+          {% assign cat_slug = "coveredcall-us" %}
+        {% elsif page.category contains "이론" %}
           {% assign cat_slug = "coveredcall-theory" %}
-        {% endif %}
-        {% if page.category contains "차트" %}
-          {% assign cat_slug = "chart-theory" %}
-        {% endif %}
-        {% if page.category contains "실전" %}
+        {% elsif page.category contains "차트" or page.category contains "실전" %}
           {% assign cat_slug = "chart-theory" %}
         {% endif %}
         <a href="{{ '/category/' | append: cat_slug | append: '/' | relative_url }}">

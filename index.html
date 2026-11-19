@@ -56,21 +56,21 @@ layout: with_sidebar
     <span style="font-size: 0.82rem; color: var(--text-muted);">좌측 사이드바에서 전체 목록 상시 탐색 가능</span>
   </div>
   
-  <div class="category-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
-    <!-- 커버드콜 분석 -->
+  <div class="category-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
+    <!-- 국내 커버드콜 -->
     <div class="category-showcase-box" style="border: 1px solid var(--border-color); background: var(--card-bg); border-radius: 8px; padding: 18px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-        <h3 style="font-size: 1.05rem; font-weight: 700; margin: 0;">📈 커버드콜 성과 분석</h3>
+        <h3 style="font-size: 1.05rem; font-weight: 700; margin: 0;">📈 국내 커버드콜</h3>
         <a href="{{ '/category/coveredcall-analysis/' | relative_url }}" style="font-size: 0.78rem; color: var(--accent-color); text-decoration: none; font-weight: 600;">전체보기 →</a>
       </div>
       <p style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px;">
-        국내외 커버드콜 전수 실측, 배당재투자(TR) 백테스팅, 본주 맞대결 검증
+        국내 상장 64개 커버드콜 전수 실측, 배당재투자(TR) 백테스팅, 본주 맞대결
       </p>
       <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px;">
         {% assign cc_cnt = 0 %}
         {% for p in site.posts %}
           {% if p.category contains '커버드콜' %}
-            {% if p.category contains '분석' %}
+            {% unless p.category contains '미국' or p.category contains '이론' %}
               {% if cc_cnt < 3 %}
                 {% assign cc_cnt = cc_cnt | plus: 1 %}
                 <li style="font-size: 0.84rem;">
@@ -79,6 +79,32 @@ layout: with_sidebar
                   </a>
                 </li>
               {% endif %}
+            {% endunless %}
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- 미국 커버드콜 -->
+    <div class="category-showcase-box" style="border: 1px solid var(--border-color); background: var(--card-bg); border-radius: 8px; padding: 18px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <h3 style="font-size: 1.05rem; font-weight: 700; margin: 0;">🇺🇸 미국 커버드콜</h3>
+        <a href="{{ '/category/coveredcall-us/' | relative_url }}" style="font-size: 0.78rem; color: var(--accent-color); text-decoration: none; font-weight: 600;">전체보기 →</a>
+      </div>
+      <p style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px;">
+        미국 상장 대표 커버드콜(JEPI·SPYI·GPIX·XYLD) 실측 백테스팅 및 서학개미 절세 전략
+      </p>
+      <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px;">
+        {% assign us_cnt = 0 %}
+        {% for p in site.posts %}
+          {% if p.category contains '미국' or p.category == 'coveredcall-us' %}
+            {% if us_cnt < 3 %}
+              {% assign us_cnt = us_cnt | plus: 1 %}
+              <li style="font-size: 0.84rem;">
+                <a href="{{ p.url | relative_url }}" style="color: var(--text-color); text-decoration: none; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                  • {{ p.title }}
+                </a>
+              </li>
             {% endif %}
           {% endif %}
         {% endfor %}
@@ -88,7 +114,7 @@ layout: with_sidebar
     <!-- 커버드콜 이론 -->
     <div class="category-showcase-box" style="border: 1px solid var(--border-color); background: var(--card-bg); border-radius: 8px; padding: 18px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-        <h3 style="font-size: 1.05rem; font-weight: 700; margin: 0;">🔬 커버드콜 원리 및 이론</h3>
+        <h3 style="font-size: 1.05rem; font-weight: 700; margin: 0;">🔬 커버드콜 이론</h3>
         <a href="{{ '/category/coveredcall-theory/' | relative_url }}" style="font-size: 0.78rem; color: var(--accent-color); text-decoration: none; font-weight: 600;">전체보기 →</a>
       </div>
       <p style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px;">
@@ -111,10 +137,10 @@ layout: with_sidebar
       </ul>
     </div>
 
-    <!-- 차트이론 대계 -->
+    <!-- 정통 차트이론 -->
     <div class="category-showcase-box" style="border: 1px solid var(--border-color); background: var(--card-bg); border-radius: 8px; padding: 18px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-        <h3 style="font-size: 1.05rem; font-weight: 700; margin: 0;">📐 정통 차트이론 대계</h3>
+        <h3 style="font-size: 1.05rem; font-weight: 700; margin: 0;">📐 차트이론</h3>
         <a href="{{ '/category/chart-theory/' | relative_url }}" style="font-size: 0.78rem; color: var(--accent-color); text-decoration: none; font-weight: 600;">전체보기 →</a>
       </div>
       <p style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px;">

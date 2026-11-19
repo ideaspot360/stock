@@ -1,0 +1,79 @@
+---
+layout: with_sidebar
+title: "미국 커버드콜 ETF 실측 분석 (US Covered Call ETFs)"
+permalink: /category/coveredcall-us/
+---
+
+<section class="hero">
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+    <span style="font-size: 2rem;">🇺🇸</span>
+    <h1 style="margin-bottom: 0;">미국 커버드콜 ETF 실측 분석</h1>
+  </div>
+  <p style="color: var(--accent-color); font-weight: 600; font-size: 1.05rem; margin-bottom: 8px;">
+    미국 상장 대표 커버드콜 전수 실측, 원화 환율 영향 분석, 해외 직투 vs 국내 절세 계좌 맞대결
+  </p>
+  <p>
+    JEPI, SPYI, GPIX, XYLD 등 월스트리트 대표 커버드콜 ETF들의 1년 실측 배당재투자(TR) 성과와 최대 낙폭(MDD)을 파이썬 데이터로 검증합니다. 대한민국 개인 투자자(서학개미) 관점에서 원/달러 환율 변동 효과와 해외 직투 양도소득세(22%) vs 국내 상장 커버드콜 ISA/연금저축 절세 혜택을 1:1 정밀 비교 분석합니다.
+  </p>
+  <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+    <span class="tag">#미국커버드콜</span>
+    <span class="tag">#JEPI실측분석</span>
+    <span class="tag">#SPYI토탈리턴</span>
+    <span class="tag">#GPIX백테스팅</span>
+    <span class="tag">#원화환율영향</span>
+    <span class="tag">#해외직투vsISA</span>
+  </div>
+</section>
+
+<section>
+  <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 18px;">
+    <h2 style="font-size: 1.2rem; font-weight: 700; margin: 0;">📚 미국 커버드콜 포스팅 목록</h2>
+    {% include view_toolbar.html %}
+  </div>
+  <div class="post-list" id="category-post-list">
+    {% assign has_posts = false %}
+    {% for post in site.posts %}
+      {% if post.category == '미국 커버드콜' or post.category == '미국커버드콜' or post.category == 'coveredcall-us' or post.category == '미국 커버드콜 ETF' or post.categories contains '미국 커버드콜' or post.categories contains '미국커버드콜' or post.categories contains 'coveredcall-us' or post.categories contains '미국 커버드콜 ETF' %}
+        {% assign has_posts = true %}
+        <a href="{{ post.url | relative_url }}" class="post-card">
+          <div class="post-meta">
+            <time datetime="{{ post.date | date_to_xmlschema }}">📅 {{ post.date | date: "%Y년 %m월 %d일" }}</time>
+            <span>&bull;</span>
+            <span class="category-badge">🇺🇸 미국 커버드콜</span>
+            <span>&bull;</span>
+            <span>✍️ {{ post.author | default: site.author.name }}</span>
+          </div>
+          <h2>{{ post.title }}</h2>
+          <p class="post-excerpt">{{ post.excerpt | strip_html | strip_newlines | truncate: 180 }}</p>
+          {% if post.tags %}
+          <div class="tags">
+            {% for tag in post.tags %}
+            <span class="tag">#{{ tag }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </a>
+      {% endif %}
+    {% endfor %}
+
+    {% unless has_posts %}
+    <div style="border: 1px dashed var(--border-color); background: var(--card-bg); border-radius: 8px; padding: 40px 20px; text-align: center;">
+      <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; color: var(--text-color);">🚀 미국 커버드콜 실측 분석 리포트 발행 예정</p>
+      <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 16px;">
+        JEPI, SPYI, GPIX, XYLD 등 미국 대표 월배당 커버드콜의 1년 실측 데이터와<br>
+        환율 변동성 및 해외 직투 vs 절세계좌 세금 비교 분석이 순차적으로 업데이트됩니다.
+      </p>
+      <a href="{{ '/' | relative_url }}" style="color: var(--link-color); font-weight: 500; text-decoration: none;">&larr; 전체 글 목록으로 돌아가기</a>
+    </div>
+    {% endunless %}
+  </div>
+</section>
+
+<div style="margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border-color); text-align: center;">
+  <span style="color: var(--text-muted); font-size: 0.9rem;">다른 카테고리 둘러보기:</span>
+  <div style="display: inline-flex; gap: 12px; margin-left: 8px; flex-wrap: wrap; justify-content: center;">
+    <a href="{{ '/category/coveredcall-analysis/' | relative_url }}" style="color: var(--link-color); text-decoration: none; font-weight: 500;">📈 국내 커버드콜</a>
+    <a href="{{ '/category/coveredcall-theory/' | relative_url }}" style="color: var(--link-color); text-decoration: none; font-weight: 500;">🔬 커버드콜 이론</a>
+    <a href="{{ '/category/chart-theory/' | relative_url }}" style="color: var(--link-color); text-decoration: none; font-weight: 500;">📐 차트이론</a>
+  </div>
+</div>

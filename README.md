@@ -21,7 +21,8 @@
 
 ---
 
-## 📂 3대 핵심 분석 카테고리
-- [📈 커버드콜 ETF 성과 분석](/category/coveredcall-analysis/): 국내외 커버드콜 전수 실측, 토탈리턴 백테스팅
-- [🔬 커버드콜 개념 및 이론](/category/coveredcall-theory/): 옵션 원리, 원금 잠식 구조 해부, 절세(ISA) 전략
-- [📐 차트이론](/category/chart-theory/): 다우 이론, 캔들 형태학, 추세·지지저항, 정통 패턴, 이동평균선 등 기술적 분석 이론
+## 📂 4대 핵심 분석 카테고리
+- [📈 국내 커버드콜](/category/coveredcall-analysis/): 국내 상장 64개 커버드콜 전수 실측, 본주 대비 토탈리턴(TR) 백테스팅
+- [🇺🇸 미국 커버드콜](/category/coveredcall-us/): 미국 상장 대표 커버드콜(JEPI·SPYI·GPIX·XYLD) 실측 백테스팅 및 서학개미 환율·절세 분석
+- [🔬 커버드콜 이론](/category/coveredcall-theory/): 옵션 원리, 원금 잠식 구조 해부, 절세(ISA·연금저축) 전략
+- [📐 차트이론](/category/chart-theory/): 다우 이론, 캔들 형태학, 추세·지지저항, 정통 패턴, 이동평균선 등 기술적 분석 대계

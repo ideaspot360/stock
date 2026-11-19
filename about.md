@@ -56,9 +56,9 @@ permalink: /about.html
 
   <h2>📂 블로그 3대 핵심 카테고리</h2>
   <ul>
-    <li><a href="{{ '/category/chart-theory/' | relative_url }}"><strong>📐 차트이론</strong></a>: 다우 이론, 캔들 형태학, 추세·지지저항, 정통 패턴, 이동평균선/그랜빌 등 정통 기술적 분석 아카데미</li>
-    <li><a href="{{ '/category/coveredcall-theory/' | relative_url }}"><strong>🔬 커버드콜 개념 및 이론</strong></a>: 옵션 프리미엄 원리, 원금 잠식 구조 해부, 절세(ISA·연금저축) 전략</li>
     <li><a href="{{ '/category/coveredcall-analysis/' | relative_url }}"><strong>📈 커버드콜 ETF 성과 분석</strong></a>: 국내외 커버드콜 전수 실측, 본주 대비 토탈리턴 백테스팅</li>
+    <li><a href="{{ '/category/coveredcall-theory/' | relative_url }}"><strong>🔬 커버드콜 개념 및 이론</strong></a>: 옵션 프리미엄 원리, 원금 잠식 구조 해부, 절세(ISA·연금저축) 전략</li>
+    <li><a href="{{ '/category/chart-theory/' | relative_url }}"><strong>📐 차트이론</strong></a>: 다우 이론, 캔들 형태학, 추세·지지저항, 정통 패턴, 이동평균선/그랜빌 등 정통 기술적 분석 아카데미</li>
   </ul>
 
   <hr style="margin: 32px 0; border: none; border-top: 1px solid var(--border-color);">

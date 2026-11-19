@@ -22,6 +22,6 @@
 ---
 
 ## 📂 3대 핵심 분석 카테고리
-- [📐 차트이론](/category/chart-theory/): 다우 이론, 캔들 형태학, 추세·지지저항, 정통 패턴, 이동평균선 등 기술적 분석 이론
-- [🔬 커버드콜 개념 및 이론](/category/coveredcall-theory/): 옵션 원리, 원금 잠식 구조 해부, 절세(ISA) 전략
 - [📈 커버드콜 ETF 성과 분석](/category/coveredcall-analysis/): 국내외 커버드콜 전수 실측, 토탈리턴 백테스팅
+- [🔬 커버드콜 개념 및 이론](/category/coveredcall-theory/): 옵션 원리, 원금 잠식 구조 해부, 절세(ISA) 전략
+- [📐 차트이론](/category/chart-theory/): 다우 이론, 캔들 형태학, 추세·지지저항, 정통 패턴, 이동평균선 등 기술적 분석 이론

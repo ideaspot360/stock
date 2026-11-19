@@ -769,10 +769,11 @@
 
 .post-list.compact-mode .post-card,
 .posts-list.compact-mode .post-card {
-  display: flex !important;
-  flex-direction: row !important;
+  display: grid !important;
+  grid-template-columns: 132px 125px minmax(0, 1fr) !important;
   align-items: center !important;
-  gap: 14px !important;
+  column-gap: 12px !important;
+  row-gap: 0 !important;
   padding: 10px 16px !important;
   border-radius: 0 !important;
   border: none !important;
@@ -794,36 +795,32 @@
   transform: none !important;
 }
 
-/* 1열 + 2열 래퍼 */
+/* 1열 + 2열 래퍼: CSS Grid 직계 아이템 승격을 위한 contents 처리 */
 .post-list.compact-mode .post-meta,
 .posts-list.compact-mode .post-card > div:first-child {
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 10px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  flex-shrink: 0 !important;
+  display: contents !important;
 }
 
-/* 1열: 날짜 (한글 '📅 2026년 11월 17일' 글자 잘림 0% 및 밀착 수용: 138px 고정) */
+/* 1열: 날짜 (CSS Grid 1열 132px 셀 안에서 완벽 일치 정렬) */
 .post-list.compact-mode .post-meta time,
 .posts-list.compact-mode .post-card time {
+  grid-column: 1 !important;
   font-size: 0.8rem !important;
   color: var(--text-muted) !important;
   font-variant-numeric: tabular-nums !important;
   white-space: nowrap !important;
-  width: 138px !important;
-  min-width: 138px !important;
-  display: inline-block !important;
-  flex-shrink: 0 !important;
+  width: 100% !important;
+  display: inline-flex !important;
+  align-items: center !important;
   margin: 0 !important;
   padding: 0 !important;
 }
 
-/* 2열: 카테고리 뱃지 (고정폭 125px, 에메랄드 뱃지 박스) */
+/* 2열: 카테고리 뱃지 (CSS Grid 2열 125px 셀 안에서 칼각 일직선 정렬) */
 .post-list.compact-mode .category-badge,
 .posts-list.compact-mode .category-badge,
 .post-list.compact-mode .post-meta span:nth-of-type(2) {
+  grid-column: 2 !important;
   font-size: 0.72rem !important;
   padding: 3px 8px !important;
   border-radius: 4px !important;
@@ -835,11 +832,9 @@
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   text-align: center !important;
-  width: 125px !important;
-  min-width: 125px !important;
-  display: inline-block !important;
+  width: 100% !important;
   box-sizing: border-box !important;
-  flex-shrink: 0 !important;
+  margin: 0 !important;
 }
 
 /* 불필요한 메타 요소 영구 숨김 (불릿 점, 작성자 등 100% 제거하여 1행 원장 유지) */
@@ -851,10 +846,11 @@
   display: none !important;
 }
 
-/* 3열: 글 제목 (남은 너비 100% 채움 + 말줄임) */
+/* 3열: 글 제목 (CSS Grid 3열 minmax(0, 1fr) 채움 + 말줄임) */
 .post-list.compact-mode .post-card h2,
 .post-list.compact-mode .post-card h3,
 .posts-list.compact-mode .post-card h3 {
+  grid-column: 3 !important;
   font-size: 0.88rem !important;
   font-weight: 600 !important;
   color: var(--text-color) !important;
@@ -863,8 +859,8 @@
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
-  flex: 1 !important;
   min-width: 0 !important;
+  width: 100% !important;
 }
 
 .posts-list.compact-mode .post-card h3 a {
@@ -874,6 +870,7 @@
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
+  width: 100% !important;
 }
 
 /* 발췌문, 태그 숨김 */
@@ -888,8 +885,9 @@
 @media (max-width: 767px) {
   .post-list.compact-mode .post-card,
   .posts-list.compact-mode .post-card {
-    gap: 8px !important;
-    padding: 8px 10px !important;
+    grid-template-columns: 88px minmax(0, 1fr) !important;
+    column-gap: 8px !important;
+    padding: 8px 12px !important;
   }
   .post-list.compact-mode .category-badge,
   .posts-list.compact-mode .category-badge,
@@ -898,8 +896,14 @@
   }
   .post-list.compact-mode .post-meta time,
   .posts-list.compact-mode .post-card time {
-    width: 85px !important;
+    grid-column: 1 !important;
     font-size: 0.75rem !important;
+  }
+  .post-list.compact-mode .post-card h2,
+  .post-list.compact-mode .post-card h3,
+  .posts-list.compact-mode .post-card h3 {
+    grid-column: 2 !important;
+    font-size: 0.82rem !important;
   }
 }
 

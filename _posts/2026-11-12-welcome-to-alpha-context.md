@@ -6,6 +6,19 @@ category: "공지사항"
 tags: [맥락트레이딩, AlphaContext, 3Pillar플라이휠, 차트이론, 기술적분석, 커버드콜, 백테스팅]
 author: "맥락트레이딩 리서치팀"
 excerpt: "유튜브 쇼츠의 초단기 시황 한계를 넘어, 정통 기술적 분석·차트이론과 월배당 커버드콜 ETF 실측 백테스팅을 아우르는 3-Pillar 자산 순환 플라이휠 공식 출범을 선언합니다."
+verification_date: "2026-11-23"
+sources:
+  - "https://data.krx.co.kr (한국거래소 정보데이터시스템 - 시장 통계 및 지수 산출 규격)"
+  - "https://dart.fss.or.kr (금융감독원 전자공시시스템 - 집합투자규약 및 투자설명서)"
+  - "https://www.cboe.com (Chicago Board Options Exchange - Cboe BXM BuyWrite Index Methodology)"
+  - "https://www.sec.gov/edgar (미국 증권거래위원회 EDGAR - ETF 투자설명서)"
+  - "자본시장과 금융투자업에 관한 법률 및 금융소비자 보호에 관한 법률"
+fact_check_sources:
+  - "https://data.krx.co.kr (한국거래소 정보데이터시스템 - 시장 통계 및 지수 산출 규격)"
+  - "https://dart.fss.or.kr (금융감독원 전자공시시스템 - 집합투자규약 및 투자설명서)"
+  - "https://www.cboe.com (Chicago Board Options Exchange - Cboe BXM BuyWrite Index Methodology)"
+  - "https://www.sec.gov/edgar (미국 증권거래위원회 EDGAR - ETF 투자설명서)"
+  - "자본시장과 금융투자업에 관한 법률 및 금융소비자 보호에 관한 법률"
 ---
 
 안녕하세요, **『맥락트레이딩』(Alpha Context, [@Alpha_Context](https://www.youtube.com/@Alpha_Context))**입니다.
@@ -30,7 +43,7 @@ excerpt: "유튜브 쇼츠의 초단기 시황 한계를 넘어, 정통 기술�
 
 많은 개인 투자자가 단타 매매의 극심한 스트레스와 뇌동매매로 원금을 갉아먹거나, 반대로 고배당이라는 미명 아래 원금이 잠식되는 상품에 장기 방치되어 손실을 입습니다.
 
-맥락트레이딩은 이를 원천 차단하기 위해 **단타의 조급증을 월배당 캐시카우로 방어하고, 단타로 창출한 알파 수익을 배당 자산으로 안전하게 락인하는 자산 순환 선순환 구조**를 설계하였습니다.
+맥락트레이딩은 이를 원천 차단하기 위해 **단타의 조급증을 월배당 캐시카우로 방어하고, 단타로 창출한 알파 수익을 배당 자산으로 안전하게 락인하는 자산 순환 플라이휠 구조**를 설계하였습니다.
 
 ```
                     ┌──────────────────────────────┐
@@ -73,9 +86,9 @@ excerpt: "유튜브 쇼츠의 초단기 시황 한계를 넘어, 정통 기술�
 ### 3. 🛡️ Pillar 3 (인컴 / 메인 롱폼 2): 월배당 커버드콜 ETF vs 본주 실측 백테스팅
 * **발행 주기**: **매주 토요일 10:00 정규 발행** (10~18분 심층 영상 및 백테스팅 리포트)
 * **핵심 분석 내용**:
-  - 연 12% 고배당의 화려함 뒤에 숨은 **원금 잠식(NAV Decay)** 구조 적나라한 해부
+  - 연 12% 고배당의 화려함 뒤에 숨은 **원금 잠식(NAV Decay)** 구조와 상방 제한·하방 노출 메커니즘 정밀 분석
   - 코스피 200 커버드콜 vs 코스피 200 본주 1년/3년/5년 누적 수익률 전수 비교
-  - 미국 나스닥 커버드콜(JEPI, JEPQ, QYLD) vs QQQ 실측 토탈리턴(배당 재투자) 백테스팅
+  - 미국 대표 지수 커버드콜(S&P 500 기반 JEPI, 나스닥 100 기반 JEPQ·QYLD) vs 기초지수(SPY, QQQ) 실측 토탈리턴(TR: 배당 재투자) 백테스팅
   - 최대 낙폭(MDD) 방어력 및 ISA·연금저축 계좌 절세 시뮬레이션
 
 ---
@@ -106,8 +119,20 @@ excerpt: "유튜브 쇼츠의 초단기 시황 한계를 넘어, 정통 기술�
 
 ---
 
+## 참고 문헌 및 공인 실측 출처
+
+> 출처: 한국거래소(KRX) 시장정보포털, 금융감독원 전자공시시스템(DART), Cboe Options Exchange, SEC EDGAR
+
+* [한국거래소(KRX) 정보데이터시스템](https://data.krx.co.kr): 유가증권·코스닥 시장 거래대금, 업종별 자금 흐름, 지수 산출 통계 규격 및 국내 상장 ETF 공시
+* [금융감독원 전자공시시스템(DART)](https://dart.fss.or.kr): 국내 상장 집합투자기구(ETF) 투자설명서, 신탁계약서 및 정기 운용보고서 공시 체계
+* [시카고옵션거래소(Cboe)](https://www.cboe.com): Cboe S&P 500 BuyWrite Index(BXM) 수학적 옵션 롤오버 및 콜옵션 매도 프리미엄 산출 방법론
+* [미국 증권거래위원회(SEC) EDGAR](https://www.sec.gov/edgar): JEPI, JEPQ, QYLD 등 주요 월배당 커버드콜 ETF 등록 서류 및 공식 펀드 설명서(Prospectus)
+* 금융위원회·금융감독원: 자본시장과 금융투자업에 관한 법률 및 금융소비자 보호에 관한 법률 관련 규정
+
+---
+
 <div class="post-disclaimer">
-  ※ 본 포스팅은 특정 종목에 대한 매수·매도 추천이나 투자 권유가 아니며, 맥락트레이딩의 리서치 생태계 및 블로그 운영 방향을 안내하는 정보 제공용 콘텐츠입니다. 모든 투자에 대한 판단과 책임은 투자자 본인에게 있습니다.
+  ※ 본 포스팅은 금융투자상품에 대한 정보 제공 및 시장 분석 교육을 목적으로 작성되었으며, 특정 종목에 대한 매수·매도 추천이나 투자 권유가 아닙니다. 모든 금융투자상품은 시장 변동성에 따라 원금 손실이 발생할 수 있으며, 투자에 대한 모든 판단과 최종 법적 책임은 투자자 본인에게 귀속됩니다.
 </div>
 
 <div class="post-tags"><span class="tag-item">#맥락트레이딩</span> <span class="tag-item">#AlphaContext</span> <span class="tag-item">#3Pillar플라이휠</span> <span class="tag-item">#차트이론</span> <span class="tag-item">#기술적분석</span> <span class="tag-item">#커버드콜</span> <span class="tag-item">#백테스팅</span></div>

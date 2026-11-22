@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "[커버드콜 이론 03] 옵션 가격의 수학적 분해: 내재가치와 시간가치, 그리고 머니니스"
-date: "2026-11-29 17:27:55 +09:00"
+date: "2026-11-28 17:27:55 +09:00"
 status: RESERVED
 platform: stock
 category: 커버드콜 이론

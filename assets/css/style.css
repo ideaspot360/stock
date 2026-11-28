@@ -819,16 +819,17 @@ footer.site-footer {
   gap: 16px;
 }
 
-/* Ad Slot Container */
+/* Ad Slot Container - Hidden when unfilled or empty */
 .ad-slot {
   margin: 32px 0;
-  padding: 16px;
   text-align: center;
-  background: var(--card-bg);
-  border: 1px dashed var(--border-color);
-  border-radius: 6px;
-  color: var(--text-muted);
-  font-size: 0.8rem;
+}
+
+.ad-slot:empty,
+.ad-slot:has(ins.adsbygoogle[data-ad-status="unfilled"]),
+.ad-slot:has(ins.adsbygoogle:empty),
+ins.adsbygoogle[data-ad-status="unfilled"] {
+  display: none !important;
 }
 
 /* Responsive */
